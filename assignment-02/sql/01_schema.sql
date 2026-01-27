@@ -23,6 +23,19 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+-- my code
+CREATE TABLE IF NOT EXISTS customers (
+    id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(20) UNIQUE NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    dob DATE NOT NULL CHECK (dob <= CURRENT_DATE - INTERVAL '18 years'), --check this
+    ssn CHAR(64) UNIQUE NOT NULL,
+    kyc_status VARCHAR(20) CHECK (kyc_status IN ('pending', 'verified', 'rejected')) DEFAULT 'rejected',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
 -- =============================================================================
 -- Table: account_types (SERIAL as primary key)
@@ -37,6 +50,16 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+-- my code
+CREATE TABLE IF NOT EXISTS account_types (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    interest_rate DECIMAL(5,4) NOT NULL CHECK (interest_rate BETWEEN 0 AND 1),
+    min_bal DECIMAL(15,2) NOT NULL CHECK (min_bal >= 0) DEFAULT 0.00,
+    monthly_fee DECIMAL(10,2) NOT NULL CHECK (monthly_fee >= 0) DEFAULT 0.00,
+    is_active BOOLEAN DEFAULT TRUE
+);
 
 -- =============================================================================
 -- Table: accounts (IDENTITY as primary key)
@@ -54,6 +77,22 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+-- my code
+CREATE TABLE IF NOT EXISTS accounts (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+    account_type INTEGER NOT NULL REFERENCES account_types(id),
+    account_number CHAR(16) UNIQUE NOT NULL,
+    routing_number CHAR(9) NOT NULL,
+    balance DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+    currency CHAR(3) DEFAULT 'USD',
+    status VARCHAR(20) CHECK (status IN ('active', 'frozen', 'closed')) DEFAULT 'active',
+    opened_at TIMESTAMPTZ DEFAULT NOW(),
+    closed_at TIMESTAMPTZ CHECK (
+        (closed_at IS NOT NULL AND status = 'closed') OR
+        (closed_at IS NULL AND status != 'closed')
+    )
+);
 
 -- =============================================================================
 -- Table: transactions (UUID as primary key)
@@ -72,6 +111,27 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+-- my code
+CREATE TABLE IF NOT EXISTS transactions (
+    id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
+    idempotency_key UUID UNIQUE NOT NULL,
+    source_account_id BIGINT REFERENCES accounts(id),
+    destination_account_id BIGINT REFERENCES accounts(id),
+    transaction_type VARCHAR(20) CHECK (transaction_type IN ('deposit', 'withdrawal', 'transfer', 'fee', 'interest')),
+    amount DECIMAL(15,2) NOT NULL CHECK (amount > 0),
+    currency CHAR(3) NOT NULL,
+    description TEXT CHECK (char_length(description) < 500),
+    status VARCHAR(20) CHECK (status IN ('pending', 'completed', 'failed', 'reversed')) DEFAULT 'pending',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    processed_at TIMESTAMPTZ,
+    CONSTRAINT transaction_type_validation CHECK (
+        (transaction_type = 'deposit' AND destination_account_id IS NOT NULL AND source_account_id IS NULL) OR
+        (transaction_type = 'withdrawal' AND destination_account_id IS NULL AND source_account_id IS NOT NULL) OR
+        (transaction_type = 'transfer' AND destination_account_id IS NOT NULL AND source_account_id IS NOT NULL) OR
+        (transaction_type = 'fee' AND destination_account_id IS NULL AND source_account_id IS NOT NULL) OR
+        (transaction_type = 'interest' AND destination_account_id IS NOT NULL AND source_account_id IS NULL)
+    )
+);
 
 -- =============================================================================
 -- Table: audit_log (IDENTITY as primary key)
@@ -87,6 +147,16 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS audit_log (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    table_name VARCHAR(100) NOT NULL,
+    record_id TEXT NOT NULL,
+    old_values JSONB,
+    new_values JSONB,
+    action VARCHAR(10) NOT NULL CHECK (action IN ('INSERT', 'UPDATE', 'DELETE')),
+    changed_by UUID,
+    changed_at TIMESTAMPTZ DEFAULT NOW()
+)
 
 -- =============================================================================
 -- Indexes
