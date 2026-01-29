@@ -49,7 +49,7 @@ VALUES
      '+18847234892',
      'Johnny',
      'Appleseed',
-     '1774-09-26',
+     '1994-09-26',
      encode(sha256('090283467'::bytea), 'hex'),
      'verified',
      CURRENT_TIMESTAMP - INTERVAL '4 years 3 months 1 week'),

@@ -15,7 +15,7 @@
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, email, first_name, last_name, kyc_status FROM customers
+SELECT id, email, first_name, last_name, kyc_status FROM neobank.customers
 WHERE kyc_status = 'verified'
 ORDER BY (last_name, first_name);
 
@@ -28,7 +28,7 @@ ORDER BY (last_name, first_name);
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, account_number, balance, status FROM accounts
+SELECT id, account_number, balance, status FROM neobank.accounts
 WHERE balance >= 25000
 ORDER BY balance DESC;
 
@@ -42,7 +42,7 @@ ORDER BY balance DESC;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, email, first_name, last_name, created_at FROM customers
+SELECT id, email, first_name, last_name, created_at FROM neobank.customers
 WHERE email LIKE '%@gmail.com'
 ORDER BY created_at DESC
 LIMIT 5;
@@ -57,7 +57,7 @@ LIMIT 5;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, transaction_type, amount, status, created_at FROM transactions
+SELECT id, transaction_type, amount, status, created_at FROM neobank.transactions
 WHERE created_at > (CURRENT_TIMESTAMP - INTERVAL '30 days')
 ORDER BY created_at DESC;
 
@@ -70,7 +70,7 @@ ORDER BY created_at DESC;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, email, first_name, last_name, kyc_status, created_at FROM customers
+SELECT id, email, first_name, last_name, kyc_status, created_at FROM neobank.customers
 WHERE (kyc_status = 'pending') AND (created_at < (CURRENT_TIMESTAMP - INTERVAL '7 days'))
 ORDER BY created_at;
 
@@ -83,7 +83,7 @@ ORDER BY created_at;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, account_number, balance, status, closed_at FROM accounts
+SELECT id, account_number, balance, status, closed_at FROM neobank.accounts
 WHERE status = 'frozen' OR status = 'closed'
 ORDER BY status, balance DESC;
 
@@ -96,8 +96,8 @@ ORDER BY status, balance DESC;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, transaction_type, amount, status, created_at FROM transactions
-WHERE amount > 1000
+SELECT id, transaction_type, amount, status, created_at FROM neobank.transactions
+WHERE amount > 1000 AND created_at > CURRENT_TIMESTAMP - INTERVAL '3 days' -- changed to 3 days so i can see my large pending
 ORDER BY amount DESC, created_at DESC;
 
 -- -----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ ORDER BY amount DESC, created_at DESC;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, transaction_type, amount, source_account_id, status, created_at FROM transactions
+SELECT id, transaction_type, amount, source_account_id, status, created_at FROM neobank.transactions
 WHERE transaction_type IN ('withdrawal', 'fee')
 ORDER BY created_at DESC;
 
@@ -126,7 +126,7 @@ ORDER BY created_at DESC;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, email, phone_number, first_name, last_name, date_of_birth , kyc_status FROM customers
+SELECT id, email, phone_number, first_name, last_name, date_of_birth , kyc_status FROM neobank.customers
 WHERE
     kyc_status = 'verified' AND
     date_of_birth BETWEEN '1980-01-01' AND '1995-12-31' AND
@@ -143,7 +143,13 @@ ORDER BY date_of_birth;
 -- TODO: Write your SELECT statement here
 
 -- my code
-SELECT id, account_number, balance, currency, status FROM accounts
+SELECT id, account_number, balance, currency, status FROM neobank.accounts
 WHERE balance BETWEEN 1000 AND 10000
 ORDER BY balance
 LIMIT 10;
+
+-- query 10 from .md file
+
+SELECT id, transaction_type, amount, status, created_at FROM neobank.transactions
+WHERE status = 'failed' AND created_at < CURRENT_TIMESTAMP - INTERVAL '1 year'
+ORDER BY created_at
