@@ -27,14 +27,14 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 CREATE TABLE IF NOT EXISTS customers (
     id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
-    phone_number VARCHAR(20) UNIQUE NOT NULL,
+    phone_number VARCHAR(20) UNIQUE,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    dob DATE NOT NULL CHECK (dob <= CURRENT_DATE - INTERVAL '18 years'), --check this
-    ssn CHAR(64) UNIQUE NOT NULL,
+    date_of_birth DATE NOT NULL CHECK (date_of_birth <= CURRENT_DATE - INTERVAL '18 years'), --check this
+    ssn_hash CHAR(64) UNIQUE NOT NULL,
     kyc_status VARCHAR(20) CHECK (kyc_status IN ('pending', 'verified', 'rejected')) DEFAULT 'rejected',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =============================================================================
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     balance DECIMAL(15,2) NOT NULL DEFAULT 0.00,
     currency CHAR(3) DEFAULT 'USD',
     status VARCHAR(20) CHECK (status IN ('active', 'frozen', 'closed')) DEFAULT 'active',
-    opened_at TIMESTAMPTZ DEFAULT NOW(),
+    opened_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     closed_at TIMESTAMPTZ CHECK (
         (closed_at IS NOT NULL AND status = 'closed') OR
         (closed_at IS NULL AND status != 'closed')
@@ -119,10 +119,10 @@ CREATE TABLE IF NOT EXISTS transactions (
     destination_account_id BIGINT REFERENCES accounts(id),
     transaction_type VARCHAR(20) CHECK (transaction_type IN ('deposit', 'withdrawal', 'transfer', 'fee', 'interest')),
     amount DECIMAL(15,2) NOT NULL CHECK (amount > 0),
-    currency CHAR(3) NOT NULL,
+    currency CHAR(3) NOT NULL DEFAULT 'USD',
     description TEXT CHECK (char_length(description) < 500),
     status VARCHAR(20) CHECK (status IN ('pending', 'completed', 'failed', 'reversed')) DEFAULT 'pending',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     processed_at TIMESTAMPTZ,
     CONSTRAINT transaction_type_validation CHECK (
         (transaction_type = 'deposit' AND destination_account_id IS NOT NULL AND source_account_id IS NULL) OR
@@ -147,6 +147,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+-- my code
 CREATE TABLE IF NOT EXISTS audit_log (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     table_name VARCHAR(100) NOT NULL,
@@ -155,8 +156,8 @@ CREATE TABLE IF NOT EXISTS audit_log (
     new_values JSONB,
     action VARCHAR(10) NOT NULL CHECK (action IN ('INSERT', 'UPDATE', 'DELETE')),
     changed_by UUID,
-    changed_at TIMESTAMPTZ DEFAULT NOW()
-)
+    changed_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================================================
 -- Indexes
@@ -166,3 +167,8 @@ CREATE TABLE IF NOT EXISTS audit_log (
 --   - transactions: source_account_id, destination_account_id, status, created_at
 -- =============================================================================
 -- TODO: Write your CREATE INDEX statements here
+
+-- my code
+CREATE INDEX IF NOT EXISTS customers_index ON customers (email, kyc_status);
+CREATE INDEX IF NOT EXISTS accounts_index ON accounts (customer_id, status);
+CREATE INDEX IF NOT EXISTS transactions_index ON transactions (source_account_id, destination_account_id, status, created_at);

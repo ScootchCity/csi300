@@ -14,6 +14,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, email, first_name, last_name, kyc_status FROM customers
+WHERE kyc_status = 'verified'
+ORDER BY (last_name, first_name);
 
 -- -----------------------------------------------------------------------------
 -- Query 2: High-value accounts
@@ -23,6 +27,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, account_number, balance, status FROM accounts
+WHERE balance >= 25000
+ORDER BY balance DESC;
 
 -- -----------------------------------------------------------------------------
 -- Query 3: Gmail users (pattern matching with LIKE)
@@ -33,6 +41,11 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, email, first_name, last_name, created_at FROM customers
+WHERE email LIKE '%@gmail.com'
+ORDER BY created_at DESC
+LIMIT 5;
 
 -- -----------------------------------------------------------------------------
 -- Query 4: Recent transactions (date range)
@@ -43,6 +56,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, transaction_type, amount, status, created_at FROM transactions
+WHERE created_at > (CURRENT_TIMESTAMP - INTERVAL '30 days')
+ORDER BY created_at DESC;
 
 -- -----------------------------------------------------------------------------
 -- Query 5: Pending customers for review
@@ -52,6 +69,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, email, first_name, last_name, kyc_status, created_at FROM customers
+WHERE (kyc_status = 'pending') AND (created_at < (CURRENT_TIMESTAMP - INTERVAL '7 days'))
+ORDER BY created_at;
 
 -- -----------------------------------------------------------------------------
 -- Query 6: Frozen or closed accounts (OR operator)
@@ -61,6 +82,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, account_number, balance, status, closed_at FROM accounts
+WHERE status = 'frozen' OR status = 'closed'
+ORDER BY status, balance DESC;
 
 -- -----------------------------------------------------------------------------
 -- Query 7: Large pending transactions
@@ -70,6 +95,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, transaction_type, amount, status, created_at FROM transactions
+WHERE amount > 1000
+ORDER BY amount DESC, created_at DESC;
 
 -- -----------------------------------------------------------------------------
 -- Query 8: Specific transaction types (using IN)
@@ -79,6 +108,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, transaction_type, amount, source_account_id, status, created_at FROM transactions
+WHERE transaction_type IN ('withdrawal', 'fee')
+ORDER BY created_at DESC;
 
 -- -----------------------------------------------------------------------------
 -- Query 9: Multi-condition customer search
@@ -92,6 +125,13 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+-- my code
+SELECT id, email, phone_number, first_name, last_name, date_of_birth , kyc_status FROM customers
+WHERE
+    kyc_status = 'verified' AND
+    date_of_birth BETWEEN '1980-01-01' AND '1995-12-31' AND
+    phone_number LIKE '+1%'
+ORDER BY date_of_birth;
 
 -- -----------------------------------------------------------------------------
 -- Query 10: Accounts with specific balance range
@@ -101,3 +141,9 @@
 -- Limit: 10 results
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
+
+-- my code
+SELECT id, account_number, balance, currency, status FROM accounts
+WHERE balance BETWEEN 1000 AND 10000
+ORDER BY balance
+LIMIT 10;
