@@ -152,4 +152,4 @@ LIMIT 10;
 
 SELECT id, transaction_type, amount, status, created_at FROM neobank.transactions
 WHERE status = 'failed' AND created_at < CURRENT_TIMESTAMP - INTERVAL '1 year'
-ORDER BY created_at
+ORDER BY created_at;
