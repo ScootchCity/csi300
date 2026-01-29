@@ -24,7 +24,7 @@ CREATE SCHEMA IF NOT EXISTS neobank;
 -- TODO: Write your CREATE TABLE statement here
 
 -- my code
-CREATE TABLE IF NOT EXISTS customers (
+CREATE TABLE IF NOT EXISTS neobank.customers (
     id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_number VARCHAR(20) UNIQUE,
@@ -51,12 +51,12 @@ CREATE TABLE IF NOT EXISTS customers (
 -- TODO: Write your CREATE TABLE statement here
 
 -- my code
-CREATE TABLE IF NOT EXISTS account_types (
+CREATE TABLE IF NOT EXISTS neobank.account_types (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
     interest_rate DECIMAL(5,4) NOT NULL CHECK (interest_rate BETWEEN 0 AND 1),
-    min_bal DECIMAL(15,2) NOT NULL CHECK (min_bal >= 0) DEFAULT 0.00,
+    minimum_balance DECIMAL(15,2) NOT NULL CHECK (minimum_balance >= 0) DEFAULT 0.00,
     monthly_fee DECIMAL(10,2) NOT NULL CHECK (monthly_fee >= 0) DEFAULT 0.00,
     is_active BOOLEAN DEFAULT TRUE
 );
@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS account_types (
 -- TODO: Write your CREATE TABLE statement here
 
 -- my code
-CREATE TABLE IF NOT EXISTS accounts (
+CREATE TABLE IF NOT EXISTS neobank.accounts (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
-    account_type INTEGER NOT NULL REFERENCES account_types(id),
+    customer_id UUID NOT NULL REFERENCES neobank.customers(id) ON DELETE CASCADE,
+    account_type_id INTEGER NOT NULL REFERENCES neobank.account_types(id),
     account_number CHAR(16) UNIQUE NOT NULL,
     routing_number CHAR(9) NOT NULL,
     balance DECIMAL(15,2) NOT NULL DEFAULT 0.00,
@@ -112,14 +112,14 @@ CREATE TABLE IF NOT EXISTS accounts (
 -- TODO: Write your CREATE TABLE statement here
 
 -- my code
-CREATE TABLE IF NOT EXISTS transactions (
+CREATE TABLE IF NOT EXISTS neobank.transactions (
     id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
     idempotency_key UUID UNIQUE NOT NULL,
-    source_account_id BIGINT REFERENCES accounts(id),
-    destination_account_id BIGINT REFERENCES accounts(id),
+    source_account_id BIGINT REFERENCES neobank.accounts(id),
+    destination_account_id BIGINT REFERENCES neobank.accounts(id),
     transaction_type VARCHAR(20) CHECK (transaction_type IN ('deposit', 'withdrawal', 'transfer', 'fee', 'interest')),
     amount DECIMAL(15,2) NOT NULL CHECK (amount > 0),
-    currency CHAR(3) NOT NULL DEFAULT 'USD',
+    currency CHAR(3) NOT NULL DEFAULT 'USD', -- added default to this so i don't need to specify in seeding transactions
     description TEXT CHECK (char_length(description) < 500),
     status VARCHAR(20) CHECK (status IN ('pending', 'completed', 'failed', 'reversed')) DEFAULT 'pending',
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 -- TODO: Write your CREATE TABLE statement here
 
 -- my code
-CREATE TABLE IF NOT EXISTS audit_log (
+CREATE TABLE IF NOT EXISTS neobank.audit_log (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     table_name VARCHAR(100) NOT NULL,
     record_id TEXT NOT NULL,
@@ -169,6 +169,6 @@ CREATE TABLE IF NOT EXISTS audit_log (
 -- TODO: Write your CREATE INDEX statements here
 
 -- my code
-CREATE INDEX IF NOT EXISTS customers_index ON customers (email, kyc_status);
-CREATE INDEX IF NOT EXISTS accounts_index ON accounts (customer_id, status);
-CREATE INDEX IF NOT EXISTS transactions_index ON transactions (source_account_id, destination_account_id, status, created_at);
+CREATE INDEX IF NOT EXISTS customers_index ON neobank.customers (email, kyc_status);
+CREATE INDEX IF NOT EXISTS accounts_index ON neobank.accounts (customer_id, status);
+CREATE INDEX IF NOT EXISTS transactions_index ON neobank.transactions (source_account_id, destination_account_id, status, created_at);
