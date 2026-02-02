@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Electronics - Smartphones (category 9)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('ELEC-SPH-001', 'ProPhone X1 128GB', 'Flagship smartphone with 6.5" OLED display', 9, 999.99, 450.00, 0.185, TRUE, '2024-01-15', NULL),
 ('ELEC-SPH-002', 'ProPhone X1 256GB', 'Flagship smartphone with 6.5" OLED display, 256GB', 9, 1099.99, 480.00, 0.185, TRUE, '2024-01-15', NULL),
 ('ELEC-SPH-003', 'BudgetPhone A5', 'Affordable smartphone with great battery', 9, 299.99, 120.00, 0.175, TRUE, '2024-02-01', NULL),
@@ -15,7 +15,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Electronics - Laptops (category 10)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('ELEC-LAP-001', 'ProBook 15 i7', 'Professional laptop with 15" display', 10, 1299.99, 650.00, 1.800, TRUE, '2024-02-01', NULL),
 ('ELEC-LAP-002', 'ProBook 13 M1', 'Ultralight laptop with M1 chip', 10, 1499.99, 750.00, 1.200, TRUE, '2024-02-15', NULL),
 ('ELEC-LAP-003', 'GamerBook RTX', 'Gaming laptop with RTX 4070', 10, 1899.99, 950.00, 2.500, TRUE, '2024-04-01', NULL),
@@ -27,7 +27,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Electronics - Audio (category 11)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('ELEC-AUD-001', 'ProPods Wireless', 'Premium wireless earbuds', 11, 249.99, 80.00, 0.050, TRUE, '2024-01-01', NULL),
 ('ELEC-AUD-002', 'StudioHeadphones Pro', 'Professional studio headphones', 11, 349.99, 120.00, 0.280, TRUE, '2024-02-01', NULL),
 ('ELEC-AUD-003', 'BassBoost Speaker', 'Portable Bluetooth speaker', 11, 129.99, 45.00, 0.650, TRUE, '2024-01-15', NULL),
@@ -39,7 +39,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Electronics - Cameras (category 12)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('ELEC-CAM-001', 'ProCam DSLR 4K', 'Professional DSLR camera', 12, 1899.99, 900.00, 0.850, TRUE, '2024-01-01', NULL),
 ('ELEC-CAM-002', 'ActionCam Pro', 'Waterproof action camera', 12, 349.99, 120.00, 0.120, TRUE, '2024-02-01', NULL),
 ('ELEC-CAM-003', 'VlogCam Compact', 'Compact vlogging camera', 12, 799.99, 350.00, 0.290, TRUE, '2024-03-01', NULL),
@@ -49,7 +49,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Electronics - Wearables (category 13)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('ELEC-WRB-001', 'SmartWatch Ultra', 'Premium smartwatch with GPS', 13, 449.99, 180.00, 0.052, TRUE, '2024-01-01', NULL),
 ('ELEC-WRB-002', 'FitBand Pro', 'Fitness tracker with HR monitor', 13, 129.99, 40.00, 0.028, TRUE, '2024-01-15', NULL),
 ('ELEC-WRB-003', 'SmartWatch SE', 'Affordable smartwatch', 13, 249.99, 100.00, 0.045, TRUE, '2024-02-01', NULL),
@@ -58,7 +58,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Clothing - Men's (category 14)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('CLTH-MEN-001', 'Classic Oxford Shirt', 'Cotton oxford button-down', 14, 59.99, 18.00, 0.250, TRUE, '2024-01-01', NULL),
 ('CLTH-MEN-002', 'Slim Fit Jeans', 'Modern slim fit denim', 14, 79.99, 25.00, 0.450, TRUE, '2024-01-01', NULL),
 ('CLTH-MEN-003', 'Wool Blazer', 'Classic wool sport coat', 14, 199.99, 70.00, 0.800, TRUE, '2024-02-01', NULL),
@@ -70,7 +70,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Clothing - Women's (category 15)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('CLTH-WMN-001', 'Silk Blouse', 'Elegant silk blouse', 15, 89.99, 28.00, 0.150, TRUE, '2024-01-01', NULL),
 ('CLTH-WMN-002', 'High-Waist Jeans', 'Trendy high-waist denim', 15, 84.99, 26.00, 0.420, TRUE, '2024-01-01', NULL),
 ('CLTH-WMN-003', 'Maxi Dress', 'Flowing maxi dress', 15, 129.99, 40.00, 0.350, TRUE, '2024-03-01', NULL),
@@ -82,7 +82,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Home & Garden - Furniture (category 19)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('HOME-FRN-001', 'Ergonomic Office Chair', 'Adjustable office chair with lumbar support', 19, 349.99, 140.00, 15.000, TRUE, '2024-01-01', NULL),
 ('HOME-FRN-002', 'Standing Desk', 'Electric height-adjustable desk', 19, 599.99, 250.00, 35.000, TRUE, '2024-02-01', NULL),
 ('HOME-FRN-003', 'Leather Sofa 3-Seat', 'Premium leather sofa', 19, 1299.99, 550.00, 65.000, TRUE, '2024-01-15', NULL),
@@ -94,7 +94,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Home & Garden - Kitchen (category 20)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('HOME-KIT-001', 'Smart Blender Pro', 'High-speed smart blender', 20, 199.99, 75.00, 4.500, TRUE, '2024-01-01', NULL),
 ('HOME-KIT-002', 'Coffee Maker Deluxe', 'Programmable coffee machine', 20, 149.99, 55.00, 3.800, TRUE, '2024-01-15', NULL),
 ('HOME-KIT-003', 'Air Fryer XL', 'Large capacity air fryer', 20, 129.99, 45.00, 5.200, TRUE, '2024-02-01', NULL),
@@ -106,7 +106,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Sports & Outdoors (category 4)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('SPRT-OUT-001', 'Yoga Mat Premium', 'Extra thick yoga mat', 4, 49.99, 15.00, 1.200, TRUE, '2024-01-01', NULL),
 ('SPRT-OUT-002', 'Dumbbell Set 20kg', 'Adjustable dumbbell pair', 4, 199.99, 80.00, 20.000, TRUE, '2024-01-15', NULL),
 ('SPRT-OUT-003', 'Running Shoes Pro', 'Professional running shoes', 4, 149.99, 55.00, 0.580, TRUE, '2024-02-01', NULL),
@@ -120,7 +120,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Health & Beauty (category 6)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('HLTH-BTY-001', 'Vitamin D3 Supplements', '365-day supply vitamin D', 6, 24.99, 8.00, 0.150, TRUE, '2024-01-01', NULL),
 ('HLTH-BTY-002', 'Anti-Aging Serum', 'Premium face serum', 6, 89.99, 28.00, 0.050, TRUE, '2024-02-01', NULL),
 ('HLTH-BTY-003', 'Electric Toothbrush', 'Sonic electric toothbrush', 6, 79.99, 28.00, 0.180, TRUE, '2024-01-15', NULL),
@@ -132,7 +132,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Books & Media (category 5)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('BOOK-MED-001', 'SQL Fundamentals', 'Complete guide to SQL', 5, 49.99, 15.00, 0.800, TRUE, '2024-01-01', NULL),
 ('BOOK-MED-002', 'JavaScript Mastery', 'Advanced JavaScript techniques', 5, 54.99, 18.00, 0.900, TRUE, '2024-02-01', NULL),
 ('BOOK-MED-003', 'Bestseller Novel 2024', 'Award-winning fiction', 5, 24.99, 8.00, 0.450, TRUE, '2024-03-01', NULL),
@@ -144,7 +144,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Toys & Games (category 7)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('TOYS-GAM-001', 'Building Blocks 1000pc', 'Creative building set', 7, 49.99, 18.00, 1.500, TRUE, '2024-01-01', NULL),
 ('TOYS-GAM-002', 'RC Car Racing', 'Remote control race car', 7, 79.99, 28.00, 0.850, TRUE, '2024-02-01', NULL),
 ('TOYS-GAM-003', 'Doll House Deluxe', 'Wooden dollhouse set', 7, 129.99, 48.00, 5.500, TRUE, '2024-01-15', NULL),
@@ -156,7 +156,7 @@ INSERT INTO shopflow.products (sku, name, description, category_id, price, cost,
 ON CONFLICT (sku) DO NOTHING;
 
 -- Food & Beverages (category 8)
-INSERT INTO shopflow.products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
+INSERT INTO products (sku, name, description, category_id, price, cost, weight_kg, is_active, created_at, discontinued_at) VALUES
 ('FOOD-BEV-001', 'Organic Coffee Beans 1kg', 'Premium arabica beans', 8, 29.99, 12.00, 1.100, TRUE, '2024-01-01', NULL),
 ('FOOD-BEV-002', 'Green Tea Collection', 'Assorted green tea box', 8, 24.99, 9.00, 0.250, TRUE, '2024-01-15', NULL),
 ('FOOD-BEV-003', 'Dark Chocolate Box', 'Premium dark chocolates', 8, 34.99, 14.00, 0.500, TRUE, '2024-02-01', NULL),

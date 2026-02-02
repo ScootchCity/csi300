@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Species
-INSERT INTO pawcare.species (species_name, category, avg_lifespan_years) VALUES
+INSERT INTO species (species_name, category, avg_lifespan_years) VALUES
 ('Dog', 'mammal', 12),
 ('Cat', 'mammal', 15),
 ('Rabbit', 'mammal', 10),
@@ -22,16 +22,16 @@ INSERT INTO pawcare.species (species_name, category, avg_lifespan_years) VALUES
 ON CONFLICT DO NOTHING;
 
 -- Clinics
-INSERT INTO pawcare.clinics (clinic_name, address, city, state, zip_code, phone, email, opens_at, closes_at, is_emergency_center) VALUES
-('PawCare Downtown', '100 Main Street', 'Burlington', 'Vermont', '05401', '802-555-0100', 'downtown@pawcare.vet', '08:00', '18:00', FALSE),
-('PawCare South End', '250 Pine Street', 'Burlington', 'Vermont', '05401', '802-555-0200', 'southend@pawcare.vet', '08:00', '20:00', FALSE),
-('PawCare Williston', '75 Taft Corners', 'Williston', 'Vermont', '05495', '802-555-0300', 'williston@pawcare.vet', '07:00', '19:00', FALSE),
-('PawCare Emergency', '500 Hospital Drive', 'Burlington', 'Vermont', '05401', '802-555-0911', 'emergency@pawcare.vet', '00:00', '23:59', TRUE),
-('PawCare Essex', '120 Susie Wilson Road', 'Essex Junction', 'Vermont', '05452', '802-555-0400', 'essex@pawcare.vet', '08:00', '17:00', FALSE)
+INSERT INTO clinics (clinic_name, address, city, state, zip_code, phone, email, opens_at, closes_at, is_emergency_center) VALUES
+('PawCare Downtown', '100 Main Street', 'Burlington', 'Vermont', '05401', '802-555-0100', 'downtown@vet', '08:00', '18:00', FALSE),
+('PawCare South End', '250 Pine Street', 'Burlington', 'Vermont', '05401', '802-555-0200', 'southend@vet', '08:00', '20:00', FALSE),
+('PawCare Williston', '75 Taft Corners', 'Williston', 'Vermont', '05495', '802-555-0300', 'williston@vet', '07:00', '19:00', FALSE),
+('PawCare Emergency', '500 Hospital Drive', 'Burlington', 'Vermont', '05401', '802-555-0911', 'emergency@vet', '00:00', '23:59', TRUE),
+('PawCare Essex', '120 Susie Wilson Road', 'Essex Junction', 'Vermont', '05452', '802-555-0400', 'essex@vet', '08:00', '17:00', FALSE)
 ON CONFLICT DO NOTHING;
 
 -- Vaccines
-INSERT INTO pawcare.vaccines (name, manufacturer, species_id, validity_months, is_core_vaccine, unit_price) VALUES
+INSERT INTO vaccines (name, manufacturer, species_id, validity_months, is_core_vaccine, unit_price) VALUES
 -- Dog vaccines
 ('Rabies (Canine)', 'Zoetis', 1, 36, TRUE, 25.00),
 ('DHPP (Distemper Combo)', 'Merck', 1, 12, TRUE, 35.00),
@@ -52,7 +52,7 @@ INSERT INTO pawcare.vaccines (name, manufacturer, species_id, validity_months, i
 ON CONFLICT DO NOTHING;
 
 -- Procedures
-INSERT INTO pawcare.procedures (name, category, description, base_price, duration_mins, requires_anesthesia) VALUES
+INSERT INTO procedures (name, category, description, base_price, duration_mins, requires_anesthesia) VALUES
 -- Examinations
 ('Wellness Exam', 'examination', 'Comprehensive physical examination', 55.00, 30, FALSE),
 ('Sick Visit', 'examination', 'Examination for illness or injury', 65.00, 30, FALSE),
@@ -102,7 +102,7 @@ INSERT INTO pawcare.procedures (name, category, description, base_price, duratio
 ON CONFLICT DO NOTHING;
 
 -- Medications
-INSERT INTO pawcare.medications (name, generic_name, category, form, unit, unit_price, requires_prescription, stock_quantity, reorder_level) VALUES
+INSERT INTO medications (name, generic_name, category, form, unit, unit_price, requires_prescription, stock_quantity, reorder_level) VALUES
 -- Antibiotics
 ('Clavamox', 'Amoxicillin/Clavulanate', 'antibiotic', 'tablet', 'mg', 1.50, TRUE, 500, 100),
 ('Baytril', 'Enrofloxacin', 'antibiotic', 'tablet', 'mg', 2.00, TRUE, 300, 75),

@@ -2,7 +2,7 @@ services:
   # Main PostgreSQL database for all assignments
   postgres:
     image: postgres:16-alpine
-    container_name: databases-postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -21,7 +21,7 @@ services:
   # Adminer for database management
   adminer:
     image: adminer:latest
-    container_name: databases-adminer
+    container_name: adminer
     ports:
       - "8080:8080"
     environment:

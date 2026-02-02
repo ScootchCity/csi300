@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Patients (some with insurance, some without for LEFT JOIN practice)
-INSERT INTO medcare.patients (first_name, last_name, date_of_birth, gender, email, phone, address, city, state, zip_code, insurance_id, policy_number, emergency_contact_name, emergency_contact_phone, blood_type, allergies, is_active) VALUES
+INSERT INTO patients (first_name, last_name, date_of_birth, gender, email, phone, address, city, state, zip_code, insurance_id, policy_number, emergency_contact_name, emergency_contact_phone, blood_type, allergies, is_active) VALUES
 -- Patients with insurance
 ('John', 'Smith', '1975-03-15', 'Male', 'john.smith@email.com', '802-555-2001', '123 Main St', 'Burlington', 'VT', '05401', 1, 'BCBS-VT-001234', 'Mary Smith', '802-555-2002', 'A+', 'Penicillin', true),
 ('Sarah', 'Johnson', '1982-07-22', 'Female', 'sarah.j@email.com', '802-555-2003', '456 Oak Ave', 'Burlington', 'VT', '05401', 1, 'BCBS-VT-001235', 'Tom Johnson', '802-555-2004', 'B+', NULL, true),

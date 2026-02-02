@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Appointments (2023-2025)
-INSERT INTO medcare.appointments (patient_id, doctor_id, scheduled_at, duration_mins, status, visit_type, reason, notes, room_number, created_at) VALUES
+INSERT INTO appointments (patient_id, doctor_id, scheduled_at, duration_mins, status, visit_type, reason, notes, room_number, created_at) VALUES
 -- 2023 Appointments
 (1, 2, '2023-01-15 09:00:00', 30, 'completed', 'annual_physical', 'Annual heart checkup', 'Patient reports no chest pain', '301', '2023-01-10 10:00:00'),
 (2, 6, '2023-01-20 10:00:00', 30, 'completed', 'new_patient', 'New patient intake', 'Transferred from out of state', '205', '2023-01-15 09:00:00'),

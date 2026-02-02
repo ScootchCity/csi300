@@ -1,32 +1,53 @@
 services:
-  pawcare-db:
+  postgres:
     image: postgres:16-alpine
-    container_name: pawcare-db
+    container_name: postgres
     environment:
-      POSTGRES_USER: pawcare
-      POSTGRES_PASSWORD: pawcare123
-      POSTGRES_DB: pawcare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
-      - "5434:5432"
+      - "5432:5432"
     volumes:
-      - pawcare-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - .:/app:rw
       - ./base:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pawcare -d pawcare"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   adminer:
     image: adminer:latest
-    container_name: pawcare-adminer
+    container_name: adminer
     ports:
-      - "8082:8080"
+      - "8080:8080"
     environment:
-      ADMINER_DEFAULT_SERVER: pawcare-db
+      ADMINER_DEFAULT_SERVER: postgres
     depends_on:
-      pawcare-db:
+      postgres:
         condition: service_healthy
 
+  # Verification service - run with: docker-compose run --rm verify
+  verify:
+    image: postgres:16-alpine
+    container_name: verify
+    volumes:
+      - ./sql:/sql:ro
+      - ./base:/base:ro
+      - ./verify.sh:/verify.sh:ro
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/bash", "/verify.sh"]
+    profiles:
+      - tools
+
 volumes:
-  pawcare-data:
+  postgres_data:

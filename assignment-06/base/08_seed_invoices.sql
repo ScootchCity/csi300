@@ -4,7 +4,7 @@
 
 -- Invoices (billing records)
 -- Schema: owner_id, record_id, invoice_number, invoice_date, subtotal, tax_rate, tax_amount, discount_amount, total, status, payment_method, paid_at, notes
-INSERT INTO pawcare.invoices (owner_id, record_id, invoice_number, invoice_date, subtotal, tax_amount, discount_amount, total, status, payment_method, paid_at, notes) VALUES
+INSERT INTO invoices (owner_id, record_id, invoice_number, invoice_date, subtotal, tax_amount, discount_amount, total, status, payment_method, paid_at, notes) VALUES
 -- 2023 Invoices
 (1, 1, 'INV-2023-0001', '2023-01-15', 85.00, 4.76, 0.00, 89.76, 'paid', 'credit_card', '2023-01-15 09:45:00', 'Annual wellness exam'),
 (1, 2, 'INV-2023-0002', '2023-01-15', 85.00, 4.76, 0.00, 89.76, 'paid', 'credit_card', '2023-01-15 10:15:00', 'Annual wellness exam'),

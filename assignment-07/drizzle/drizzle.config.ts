@@ -6,9 +6,9 @@ export default defineConfig({
   dialect: 'postgresql',
   dbCredentials: {
     host: 'localhost',
-    port: 5435,
-    user: 'precision',
-    password: 'precision_pass',
-    database: 'precision_manufacturing',
+    port: 5432,
+    user: 'postgres',
+    password: 'postgres',
+    database: 'postgres',
   },
 });

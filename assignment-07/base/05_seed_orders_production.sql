@@ -2,10 +2,9 @@
 -- PrecisionParts Manufacturing - Seed Data: Orders & Production
 -- =============================================================================
 
-SET search_path TO manufacturing, public;
 
 -- Production Orders
-INSERT INTO manufacturing.production_orders (order_number, customer_name, customer_po, status, priority, order_date, due_date, shipped_date, total_amount, notes, created_by) VALUES
+INSERT INTO production_orders (order_number, customer_name, customer_po, status, priority, order_date, due_date, shipped_date, total_amount, notes, created_by) VALUES
 -- Completed orders
 ('PO-2024-001', 'Boeing Commercial', 'BA-PO-445566', 'shipped', 'high', '2024-01-15', '2024-02-28', '2024-02-25', 125000.00, 'Quarterly brake caliper order', 2),
 ('PO-2024-002', 'SpaceX', 'SPX-2024-0012', 'shipped', 'urgent', '2024-02-01', '2024-03-15', '2024-03-10', 89500.00, 'Dragon capsule components', 2),
@@ -36,7 +35,7 @@ INSERT INTO manufacturing.production_orders (order_number, customer_name, custom
 ON CONFLICT (order_number) DO NOTHING;
 
 -- Order Items
-INSERT INTO manufacturing.order_items (order_id, part_id, quantity, unit_price, quantity_completed, quantity_rejected) VALUES
+INSERT INTO order_items (order_id, part_id, quantity, unit_price, quantity_completed, quantity_rejected) VALUES
 -- PO-2024-001 (Boeing)
 (1, 1, 50, 2500.00, 50, 2),  -- Aerospace Brake Caliper Housing
 (1, 4, 100, 450.00, 100, 3), -- Bushing Sleeve Assembly
@@ -100,7 +99,7 @@ INSERT INTO manufacturing.order_items (order_id, part_id, quantity, unit_price, 
 ON CONFLICT (order_id, part_id) DO NOTHING;
 
 -- Production Runs
-INSERT INTO manufacturing.production_runs (run_number, order_id, order_item_id, machine_id, operator_id, supervisor_id, status, planned_quantity, quantity_produced, quantity_scrapped, scheduled_start, actual_start, actual_end, machine_hours, notes) VALUES
+INSERT INTO production_runs (run_number, order_id, order_item_id, machine_id, operator_id, supervisor_id, status, planned_quantity, quantity_produced, quantity_scrapped, scheduled_start, actual_start, actual_end, machine_hours, notes) VALUES
 -- Completed runs for PO-2024-001
 ('RUN-2024-0001', 1, 1, 3, 13, 7, 'completed', 50, 52, 2, '2024-01-20 06:00:00', '2024-01-20 06:15:00', '2024-02-10 18:00:00', 168.5, 'Completed ahead of schedule'),
 ('RUN-2024-0002', 1, 2, 5, 14, 7, 'completed', 100, 103, 3, '2024-01-25 06:00:00', '2024-01-25 06:30:00', '2024-02-15 16:00:00', 85.0, NULL),
@@ -135,7 +134,7 @@ INSERT INTO manufacturing.production_runs (run_number, order_id, order_item_id, 
 ON CONFLICT (run_number) DO NOTHING;
 
 -- Quality Checks
-INSERT INTO manufacturing.quality_checks (run_id, inspector_id, check_type, sample_size, result, defects_found, defect_types, measurements, notes, checked_at) VALUES
+INSERT INTO quality_checks (run_id, inspector_id, check_type, sample_size, result, defects_found, defect_types, measurements, notes, checked_at) VALUES
 -- Completed run quality checks
 (1, 10, 'first_article', 1, 'pass', 0, '[]', '{"dim_a": 125.02, "dim_b": 85.01, "surface": 15}', 'First article approved', '2024-01-21 10:00:00'),
 (1, 11, 'in_process', 10, 'pass', 0, '[]', '{"dim_a_avg": 125.01, "dim_b_avg": 85.00}', 'Mid-run inspection OK', '2024-02-01 14:00:00'),

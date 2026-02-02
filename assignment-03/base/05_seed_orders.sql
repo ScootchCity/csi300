@@ -5,7 +5,7 @@
 -- Helper function for generating order data
 -- Orders span from 2024-01-01 to 2025-12-31
 
-INSERT INTO shopflow.orders (order_number, customer_id, status, subtotal, tax_amount, shipping_cost, discount_amount, total_amount, shipping_method, created_at, shipped_at, delivered_at, cancelled_at) VALUES
+INSERT INTO orders (order_number, customer_id, status, subtotal, tax_amount, shipping_cost, discount_amount, total_amount, shipping_method, created_at, shipped_at, delivered_at, cancelled_at) VALUES
 -- January 2024 Orders
 ('ORD-2024-000001', 1, 'delivered', 999.99, 80.00, 15.00, 0.00, 1094.99, 'express', '2024-01-05 10:30:00', '2024-01-06 14:00:00', '2024-01-08 16:30:00', NULL),
 ('ORD-2024-000002', 2, 'delivered', 1549.98, 124.00, 0.00, 154.99, 1518.99, 'express', '2024-01-08 14:15:00', '2024-01-09 09:00:00', '2024-01-11 11:00:00', NULL),

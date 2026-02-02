@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
 # NeoBank Assignment 2 - Automated Verification Script
 # This script tests student submissions for correctness and idempotency
 # 
-# Usage: ./verify.sh [student_sql_folder]
-# Default: ./sql
-
-set -e
+# Usage:
+#   - Local (Windows/Mac/Linux): docker-compose run --rm verify
+#   - GitHub Actions: bash ./verify.sh
 
 # Colors for output
 RED='\033[0;31m'
@@ -15,15 +15,21 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-POSTGRES_USER="${POSTGRES_USER:-postgres}"
-POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-postgres}"
-POSTGRES_DB="${POSTGRES_DB:-postgres}"
-POSTGRES_HOST="${POSTGRES_HOST:-localhost}"
-POSTGRES_PORT="${POSTGRES_PORT:-5432}"
-CONTAINER_NAME="${CONTAINER_NAME:-databases-postgres}"
+CONTAINER_NAME="${CONTAINER_NAME:-postgres}"
+DB_USER="${PGUSER:-postgres}"
+DB_NAME="${PGDATABASE:-postgres}"
 
-# Student SQL folder (default: ./sql)
-SQL_FOLDER="${1:-./sql}"
+# Detect if running inside container or on host
+if [ -n "$PGHOST" ]; then
+    # Running inside container (docker-compose run verify)
+    RUN_MODE="container"
+    DB_HOST="$PGHOST"
+    SQL_DIR="/sql"
+else
+    # Running on host (GitHub Actions or local bash)
+    RUN_MODE="host"
+    SQL_DIR="./sql"
+fi
 
 # Score tracking
 TOTAL_POINTS=0
@@ -36,12 +42,20 @@ echo ""
 
 # Function to run SQL and capture result
 run_sql() {
-    docker exec "$CONTAINER_NAME" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -t -c "$1" 2>&1
+    if [ "$RUN_MODE" = "container" ]; then
+        psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+    else
+        docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+    fi
 }
 
 # Function to run SQL file
 run_sql_file() {
-    docker exec -i "$CONTAINER_NAME" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" < "$1" 2>&1
+    if [ "$RUN_MODE" = "container" ]; then
+        psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" < "$1" 2>&1
+    else
+        docker exec -i "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" < "$1" 2>&1
+    fi
 }
 
 # Function to print test result
@@ -62,10 +76,10 @@ print_result() {
 echo "Checking for required files..."
 echo ""
 
-SCHEMA_FILE="$SQL_FOLDER/01_schema.sql"
-SEED_FILE="$SQL_FOLDER/02_seed.sql"
-QUERIES_FILE="$SQL_FOLDER/03_queries.sql"
-MODIFICATIONS_FILE="$SQL_FOLDER/04_modifications.sql"
+SCHEMA_FILE="$SQL_DIR/01_schema.sql"
+SEED_FILE="$SQL_DIR/02_seed.sql"
+QUERIES_FILE="$SQL_DIR/03_queries.sql"
+MODIFICATIONS_FILE="$SQL_DIR/04_modifications.sql"
 
 if [ ! -f "$SCHEMA_FILE" ]; then
     echo -e "${RED}ERROR: $SCHEMA_FILE not found${NC}"
@@ -82,6 +96,21 @@ echo -e "${GREEN}PASS:${NC} Found: 02_seed.sql"
 [ -f "$QUERIES_FILE" ] && echo -e "${GREEN}PASS:${NC} Found: 03_queries.sql" || echo -e "${YELLOW}⚠${NC} Optional: 03_queries.sql not found"
 [ -f "$MODIFICATIONS_FILE" ] && echo -e "${GREEN}PASS:${NC} Found: 04_modifications.sql" || echo -e "${YELLOW}⚠${NC} Optional: 04_modifications.sql not found"
 echo ""
+
+# ============================================
+# STEP 0: Ensure database is running
+# ============================================
+if [ "$RUN_MODE" = "host" ]; then
+    if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+        echo "Starting PostgreSQL via docker compose..."
+        docker compose down -v --remove-orphans 2>/dev/null || true
+        docker compose up -d postgres
+        echo "Waiting for PostgreSQL to be ready..."
+        until docker exec "$CONTAINER_NAME" pg_isready -U "$DB_USER" > /dev/null 2>&1; do
+            sleep 1
+        done
+    fi
+fi
 
 # ============================================
 # STEP 1: Clean slate - drop the schema

@@ -2,10 +2,9 @@
 -- PrecisionParts Manufacturing - Seed Data: Employees
 -- =============================================================================
 
-SET search_path TO manufacturing, public;
 
 -- Employees (various roles and departments)
-INSERT INTO manufacturing.employees (employee_number, first_name, last_name, email, role, department, hire_date, hourly_rate, is_active) VALUES
+INSERT INTO employees (employee_number, first_name, last_name, email, role, department, hire_date, hourly_rate, is_active) VALUES
 -- Management
 ('EMP001', 'Robert', 'Chen', 'r.chen@precisionparts.com', 'manager', 'Administration', '2018-03-15', 85.00, true),
 ('EMP002', 'Sarah', 'Williams', 's.williams@precisionparts.com', 'manager', 'Production', '2019-01-10', 75.00, true),
@@ -58,10 +57,10 @@ INSERT INTO manufacturing.employees (employee_number, first_name, last_name, ema
 ON CONFLICT (employee_number) DO NOTHING;
 
 -- Soft-delete some employees for testing
-UPDATE manufacturing.employees 
+UPDATE employees 
 SET deleted_at = '2024-06-15 10:00:00', is_active = false 
 WHERE employee_number = 'EMP029';
 
-UPDATE manufacturing.employees 
+UPDATE employees 
 SET deleted_at = '2024-09-01 14:30:00', is_active = false 
 WHERE employee_number = 'EMP030';

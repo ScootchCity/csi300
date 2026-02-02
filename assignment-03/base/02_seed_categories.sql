@@ -5,7 +5,7 @@
 -- =============================================================================
 -- Categories (8 main categories)
 -- =============================================================================
-INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
+INSERT INTO categories (name, description, parent_id, is_active) VALUES
 ('Electronics', 'Electronic devices and accessories', NULL, TRUE),
 ('Clothing', 'Apparel and fashion items', NULL, TRUE),
 ('Home & Garden', 'Home decor, furniture, and garden supplies', NULL, TRUE),
@@ -17,7 +17,7 @@ INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
 ON CONFLICT (name) DO NOTHING;
 
 -- Subcategories for Electronics
-INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
+INSERT INTO categories (name, description, parent_id, is_active) VALUES
 ('Smartphones', 'Mobile phones and accessories', 1, TRUE),
 ('Laptops', 'Notebook computers', 1, TRUE),
 ('Audio', 'Headphones, speakers, and audio equipment', 1, TRUE),
@@ -26,7 +26,7 @@ INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
 ON CONFLICT (name) DO NOTHING;
 
 -- Subcategories for Clothing
-INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
+INSERT INTO categories (name, description, parent_id, is_active) VALUES
 ('Men''s Clothing', 'Clothing for men', 2, TRUE),
 ('Women''s Clothing', 'Clothing for women', 2, TRUE),
 ('Kids'' Clothing', 'Clothing for children', 2, TRUE),
@@ -35,7 +35,7 @@ INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
 ON CONFLICT (name) DO NOTHING;
 
 -- Subcategories for Home & Garden
-INSERT INTO shopflow.categories (name, description, parent_id, is_active) VALUES
+INSERT INTO categories (name, description, parent_id, is_active) VALUES
 ('Furniture', 'Home and office furniture', 3, TRUE),
 ('Kitchen', 'Kitchen appliances and utensils', 3, TRUE),
 ('Bedding', 'Bedding and linens', 3, TRUE),
@@ -45,7 +45,7 @@ ON CONFLICT (name) DO NOTHING;
 -- =============================================================================
 -- Warehouses (5 locations)
 -- =============================================================================
-INSERT INTO shopflow.warehouses (name, country, city, capacity, is_active) VALUES
+INSERT INTO warehouses (name, country, city, capacity, is_active) VALUES
 ('East Coast Hub', 'USA', 'New Jersey', 50000, TRUE),
 ('West Coast Hub', 'USA', 'California', 45000, TRUE),
 ('Central Distribution', 'USA', 'Texas', 35000, TRUE),

@@ -4,7 +4,7 @@
 
 -- Lab Results (linked to patients, tests, and ordering doctors)
 -- Schema: patient_id, test_id, doctor_id, appointment_id, ordered_at, collected_at, resulted_at, result_value, is_abnormal, status, notes
-INSERT INTO medcare.lab_results (patient_id, test_id, doctor_id, appointment_id, ordered_at, collected_at, resulted_at, result_value, is_abnormal, status, notes) VALUES
+INSERT INTO lab_results (patient_id, test_id, doctor_id, appointment_id, ordered_at, collected_at, resulted_at, result_value, is_abnormal, status, notes) VALUES
 -- Complete Blood Count results
 (1, 1, 2, 1, '2023-01-15 09:30:00', '2023-01-15 10:00:00', '2023-01-15 14:00:00', '14.2 g/dL', false, 'completed', 'Normal hemoglobin'),
 (2, 1, 6, 2, '2023-01-20 10:30:00', '2023-01-20 11:00:00', '2023-01-20 15:00:00', '11.8 g/dL', true, 'completed', 'Mild anemia'),

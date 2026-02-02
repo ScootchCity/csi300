@@ -107,13 +107,13 @@ By completing this assignment, you will:
    ```
 
 3. **Access the database:**
-   - **Adminer (Web UI):** http://localhost:8083
+   - **Adminer (Web UI):** http://localhost:8080
      - System: PostgreSQL
-     - Server: db
+     - Server: postgres
      - Username: postgres
      - Password: postgres
-     - Database: precision_parts
-   - **Direct connection:** `postgresql://postgres:postgres@localhost:5435/precision_parts`
+     - Database: postgres
+   - **Direct connection:** `postgresql://postgres:postgres@localhost:5432/postgres`
 
 4. **Install Node.js dependencies (for Exercise 5):**
    ```bash
@@ -143,7 +143,7 @@ docker-compose down -v     # Stop and remove data volumes
 
 1. Complete all exercises in the `sql/` directory
 2. Complete the Drizzle ORM exercise in `drizzle/src/`
-3. Run `./verify.sh` to validate your solutions
+3. Run `docker-compose run --rm verify` to validate your solutions
 4. Commit and push your changes to GitHub
 
 ## Grading Rubric
@@ -159,9 +159,5 @@ docker-compose down -v     # Stop and remove data volumes
 
 ## Resources
 
-- [Schema Patterns Reading](../schema-patterns.md)
-- [Functions, Procedures & Triggers Reading](../functions-procedures-triggers.md)
-- [Transactions Reading](../transactions.md)
-- [Access Control Reading](../access-control.md)
 - [Drizzle ORM Documentation](https://orm.drizzle.team/)
 - [PostgreSQL Functions Documentation](https://www.postgresql.org/docs/current/sql-createfunction.html)

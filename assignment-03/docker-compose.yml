@@ -1,18 +1,19 @@
 services:
-  db:
+  postgres:
     image: postgres:16-alpine
-    container_name: shopflow_db
+    container_name: postgres
     environment:
-      POSTGRES_USER: shopflow_admin
-      POSTGRES_PASSWORD: shopflow_secure_2024
-      POSTGRES_DB: shopflow_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
-      - shopflow_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - .:/app:rw
       - ./base:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U shopflow_admin -d shopflow_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,30 +21,51 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: shopflow_adminer
+    container_name: adminer
     ports:
-      - "8081:8080"
+      - "8080:8080"
     environment:
-      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_SERVER: postgres
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
     restart: unless-stopped
 
+  # Verification service - run with: docker-compose run --rm verify
+  verify:
+    image: postgres:16-alpine
+    container_name: verify
+    volumes:
+      - ./sql:/sql:ro
+      - ./base:/base:ro
+      - ./verify.sh:/verify.sh:ro
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/bash", "/verify.sh"]
+    profiles:
+      - tools
+
 volumes:
-  shopflow_data:
+  postgres_data:
 
 # Usage:
-#   docker-compose up -d          # Start containers
-#   docker-compose down           # Stop containers
-#   docker-compose down -v        # Stop and remove volumes (reset data)
+#   docker-compose up -d              # Start database and adminer
+#   docker-compose run --rm verify    # Run verification tests
+#   docker-compose down               # Stop containers
+#   docker-compose down -v            # Stop and remove volumes (reset data)
 #
 # Database Connection:
-#   Host: localhost (or db from within Docker network)
-#   Port: 5433 (mapped from container's 5432)
-#   Database: shopflow_db
-#   User: shopflow_admin
-#   Password: shopflow_secure_2024
+#   Host: localhost (or postgres from within Docker network)
+#   Port: 5432
+#   Database: postgres
+#   User: postgres
+#   Password: postgres
 #
 # Adminer Web UI:
-#   http://localhost:8081
+#   http://localhost:8080

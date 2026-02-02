@@ -112,24 +112,24 @@ The PawCare database (`pawcare` schema) contains the following tables:
    ```
 
 4. Access the database:
-   - **Adminer** (Web UI): http://localhost:8082
+   - **Adminer** (Web UI): http://localhost:8080
      - System: PostgreSQL
-     - Server: pawcare-db
-     - Username: pawcare
-     - Password: pawcare123
-     - Database: pawcare
+     - Server: postgres
+     - Username: postgres
+     - Password: postgres
+     - Database: postgres
    
    - **psql** (Command line):
      ```bash
-     docker exec -it pawcare-db psql -U pawcare -d pawcare
+     docker-compose exec postgres psql -U postgres -d postgres
      ```
 
 ### Port Configuration
 
 | Service | Port | Purpose |
 |---------|------|---------|
-| PostgreSQL | 5434 | Database connections |
-| Adminer | 8082 | Web-based SQL interface |
+| PostgreSQL | 5432 | Database connections |
+| Adminer | 8080 | Web-based SQL interface |
 
 > **Note:** These ports differ from previous assignments to allow running multiple databases simultaneously.
 
@@ -149,9 +149,9 @@ Complete all 5 exercises for a total of 100 points.
 
 1. Create your SQL files in the `sql/` directory following the naming convention
 2. Test your queries against the running database
-3. Run the verification script:
+3. Run the verification script via docker compose:
    ```bash
-   ./verify.sh
+   docker-compose run --rm verify
    ```
 4. Submit your `sql/` directory
 

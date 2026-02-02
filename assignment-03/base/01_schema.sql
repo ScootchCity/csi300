@@ -5,17 +5,14 @@
 -- This file creates the database structure. DO NOT MODIFY.
 -- =============================================================================
 
--- Create schema
-CREATE SCHEMA IF NOT EXISTS shopflow;
-
 -- =============================================================================
 -- Table: categories
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.categories (
+CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    parent_id INTEGER REFERENCES shopflow.categories(id),
+    parent_id INTEGER REFERENCES categories(id),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -23,12 +20,12 @@ CREATE TABLE IF NOT EXISTS shopflow.categories (
 -- =============================================================================
 -- Table: products
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.products (
+CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     sku VARCHAR(50) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    category_id INTEGER NOT NULL REFERENCES shopflow.categories(id),
+    category_id INTEGER NOT NULL REFERENCES categories(id),
     price DECIMAL(10,2) NOT NULL,
     cost DECIMAL(10,2) NOT NULL,
     weight_kg DECIMAL(8,3),
@@ -44,7 +41,7 @@ CREATE TABLE IF NOT EXISTS shopflow.products (
 -- =============================================================================
 -- Table: warehouses
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.warehouses (
+CREATE TABLE IF NOT EXISTS warehouses (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL,
@@ -56,10 +53,10 @@ CREATE TABLE IF NOT EXISTS shopflow.warehouses (
 -- =============================================================================
 -- Table: inventory
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.inventory (
+CREATE TABLE IF NOT EXISTS inventory (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER NOT NULL REFERENCES shopflow.products(id),
-    warehouse_id INTEGER NOT NULL REFERENCES shopflow.warehouses(id),
+    product_id INTEGER NOT NULL REFERENCES products(id),
+    warehouse_id INTEGER NOT NULL REFERENCES warehouses(id),
     quantity INTEGER NOT NULL DEFAULT 0,
     reserved_quantity INTEGER NOT NULL DEFAULT 0,
     last_restock_at TIMESTAMPTZ,
@@ -72,7 +69,7 @@ CREATE TABLE IF NOT EXISTS shopflow.inventory (
 -- =============================================================================
 -- Table: customers
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.customers (
+CREATE TABLE IF NOT EXISTS customers (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     first_name VARCHAR(100) NOT NULL,
@@ -90,10 +87,10 @@ CREATE TABLE IF NOT EXISTS shopflow.customers (
 -- =============================================================================
 -- Table: orders
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.orders (
+CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     order_number VARCHAR(20) NOT NULL UNIQUE,
-    customer_id INTEGER NOT NULL REFERENCES shopflow.customers(id),
+    customer_id INTEGER NOT NULL REFERENCES customers(id),
     status VARCHAR(30) NOT NULL DEFAULT 'pending',
     subtotal DECIMAL(12,2) NOT NULL,
     tax_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -113,10 +110,10 @@ CREATE TABLE IF NOT EXISTS shopflow.orders (
 -- =============================================================================
 -- Table: order_items
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.order_items (
+CREATE TABLE IF NOT EXISTS order_items (
     id SERIAL PRIMARY KEY,
-    order_id INTEGER NOT NULL REFERENCES shopflow.orders(id) ON DELETE CASCADE,
-    product_id INTEGER NOT NULL REFERENCES shopflow.products(id),
+    order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES products(id),
     quantity INTEGER NOT NULL,
     unit_price DECIMAL(10,2) NOT NULL,
     discount_pct DECIMAL(5,2) NOT NULL DEFAULT 0,
@@ -130,10 +127,10 @@ CREATE TABLE IF NOT EXISTS shopflow.order_items (
 -- =============================================================================
 -- Table: product_reviews
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS shopflow.product_reviews (
+CREATE TABLE IF NOT EXISTS product_reviews (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER NOT NULL REFERENCES shopflow.products(id),
-    customer_id INTEGER NOT NULL REFERENCES shopflow.customers(id),
+    product_id INTEGER NOT NULL REFERENCES products(id),
+    customer_id INTEGER NOT NULL REFERENCES customers(id),
     rating INTEGER NOT NULL,
     title VARCHAR(200),
     comment TEXT,
@@ -147,15 +144,15 @@ CREATE TABLE IF NOT EXISTS shopflow.product_reviews (
 -- =============================================================================
 -- Indexes for performance
 -- =============================================================================
-CREATE INDEX IF NOT EXISTS idx_products_category ON shopflow.products(category_id);
-CREATE INDEX IF NOT EXISTS idx_products_price ON shopflow.products(price);
-CREATE INDEX IF NOT EXISTS idx_products_active ON shopflow.products(is_active);
-CREATE INDEX IF NOT EXISTS idx_customers_country ON shopflow.customers(country);
-CREATE INDEX IF NOT EXISTS idx_customers_tier ON shopflow.customers(tier);
-CREATE INDEX IF NOT EXISTS idx_orders_customer ON shopflow.orders(customer_id);
-CREATE INDEX IF NOT EXISTS idx_orders_status ON shopflow.orders(status);
-CREATE INDEX IF NOT EXISTS idx_orders_created ON shopflow.orders(created_at);
-CREATE INDEX IF NOT EXISTS idx_order_items_order ON shopflow.order_items(order_id);
-CREATE INDEX IF NOT EXISTS idx_order_items_product ON shopflow.order_items(product_id);
-CREATE INDEX IF NOT EXISTS idx_reviews_product ON shopflow.product_reviews(product_id);
-CREATE INDEX IF NOT EXISTS idx_reviews_rating ON shopflow.product_reviews(rating);
+CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
+CREATE INDEX IF NOT EXISTS idx_products_price ON products(price);
+CREATE INDEX IF NOT EXISTS idx_products_active ON products(is_active);
+CREATE INDEX IF NOT EXISTS idx_customers_country ON customers(country);
+CREATE INDEX IF NOT EXISTS idx_customers_tier ON customers(tier);
+CREATE INDEX IF NOT EXISTS idx_orders_customer ON orders(customer_id);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(created_at);
+CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_product ON order_items(product_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_product ON product_reviews(product_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_rating ON product_reviews(rating);

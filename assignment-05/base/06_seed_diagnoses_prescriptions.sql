@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Diagnoses (linked to appointments)
-INSERT INTO medcare.diagnoses (appointment_id, icd_code, description, severity, is_primary, notes) VALUES
+INSERT INTO diagnoses (appointment_id, icd_code, description, severity, is_primary, notes) VALUES
 -- 2023 Diagnoses
 (1, 'I25.10', 'Atherosclerotic heart disease', 'moderate', true, 'Stable angina, well-controlled'),
 (2, 'E11.9', 'Type 2 diabetes mellitus without complications', 'mild', true, 'New diagnosis, lifestyle counseling'),
@@ -90,7 +90,7 @@ ON CONFLICT DO NOTHING;
 
 -- Prescriptions (linked to diagnoses, with patient and doctor from appointment)
 -- Schema: diagnosis_id, patient_id, doctor_id, medication_id, dosage, frequency, duration_days, quantity, refills_allowed, refills_remaining, instructions, prescribed_at, is_active
-INSERT INTO medcare.prescriptions (diagnosis_id, patient_id, doctor_id, medication_id, dosage, frequency, duration_days, quantity, refills_allowed, refills_remaining, instructions, prescribed_at, is_active) VALUES
+INSERT INTO prescriptions (diagnosis_id, patient_id, doctor_id, medication_id, dosage, frequency, duration_days, quantity, refills_allowed, refills_remaining, instructions, prescribed_at, is_active) VALUES
 -- Cardiac medications (Patient 1, Dr 1)
 (1, 1, 1, 1, '325mg', 'once daily', 365, 90, 3, 3, 'Take with food', '2023-01-15 09:30:00', true),
 (1, 1, 1, 2, '20mg', 'once daily', 365, 90, 3, 3, 'Take in evening', '2023-01-15 09:30:00', true),

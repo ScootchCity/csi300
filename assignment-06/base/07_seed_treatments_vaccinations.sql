@@ -5,7 +5,7 @@
 -- Treatments (procedures performed during visits)
 -- Schema: record_id, procedure_id, medication_id, quantity, unit_price, notes, created_at
 -- Note: Either procedure_id OR medication_id must be set (not both)
-INSERT INTO pawcare.treatments (record_id, procedure_id, quantity, unit_price, notes, created_at) VALUES
+INSERT INTO treatments (record_id, procedure_id, quantity, unit_price, notes, created_at) VALUES
 -- Wellness exam treatments
 (1, 1, 1, 75.00, 'Comprehensive physical exam', '2023-01-15 09:30:00'),
 (2, 1, 1, 75.00, 'Comprehensive physical exam', '2023-01-15 10:00:00'),
@@ -91,7 +91,7 @@ ON CONFLICT DO NOTHING;
 
 -- Vaccinations
 -- Schema: pet_id, vaccine_id, administered_by, record_id, administered_at, next_due_date, batch_number, notes
-INSERT INTO pawcare.vaccinations (pet_id, vaccine_id, administered_by, administered_at, next_due_date, batch_number, notes) VALUES
+INSERT INTO vaccinations (pet_id, vaccine_id, administered_by, administered_at, next_due_date, batch_number, notes) VALUES
 -- 2023 vaccinations
 (1, 1, 7, '2023-01-15 09:20:00', '2024-01-15', 'DHPP-2023-001', 'Annual booster'),
 (2, 1, 7, '2023-01-15 09:50:00', '2024-01-15', 'DHPP-2023-001', 'Annual booster'),
@@ -139,7 +139,7 @@ ON CONFLICT DO NOTHING;
 
 -- Prescriptions
 -- Schema: record_id, medication_id, prescribed_by, dosage, quantity, refills_allowed, refills_used, instructions, start_date, end_date, is_filled
-INSERT INTO pawcare.prescriptions (record_id, medication_id, prescribed_by, dosage, quantity, refills_allowed, refills_used, instructions, start_date, end_date, is_filled) VALUES
+INSERT INTO prescriptions (record_id, medication_id, prescribed_by, dosage, quantity, refills_allowed, refills_used, instructions, start_date, end_date, is_filled) VALUES
 -- Gastritis treatment
 (4, 10, 9, '10mg once daily', 30, 2, 0, 'Give in morning on empty stomach', '2023-02-10', '2023-03-12', TRUE),
 (4, 13, 9, '8mg twice daily', 20, 0, 0, 'Give with food', '2023-02-10', '2023-02-20', TRUE),

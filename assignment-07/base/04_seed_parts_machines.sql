@@ -2,10 +2,9 @@
 -- PrecisionParts Manufacturing - Seed Data: Parts & Machines
 -- =============================================================================
 
-SET search_path TO manufacturing, public;
 
 -- Parts catalog
-INSERT INTO manufacturing.parts (part_number, name, description, category, current_version, base_price, production_time_mins, requires_certification) VALUES
+INSERT INTO parts (part_number, name, description, category, current_version, base_price, production_time_mins, requires_certification) VALUES
 -- Aerospace parts
 ('AERO-BRK-001', 'Aerospace Brake Caliper Housing', 'High-precision brake caliper housing for commercial aircraft', 'aerospace', 3, 2500.00, 480, true),
 ('AERO-HNG-002', 'Wing Hinge Assembly Mount', 'Titanium mounting bracket for wing hinge mechanism', 'aerospace', 2, 3200.00, 360, true),
@@ -45,12 +44,12 @@ INSERT INTO manufacturing.parts (part_number, name, description, category, curre
 ON CONFLICT (part_number) DO NOTHING;
 
 -- Soft-delete some parts for testing
-UPDATE manufacturing.parts 
+UPDATE parts 
 SET deleted_at = '2024-07-15 11:00:00' 
 WHERE part_number = 'PROTO-001';
 
 -- Part versions
-INSERT INTO manufacturing.part_versions (part_id, version, specifications, drawing_url, change_notes, approved_by, approved_at, created_by) VALUES
+INSERT INTO part_versions (part_id, version, specifications, drawing_url, change_notes, approved_by, approved_at, created_by) VALUES
 -- AERO-BRK-001 versions
 (1, 1, '{"material": "AL7075-T6", "tolerance": "0.001", "surface_finish": "32", "weight_kg": 2.5}', 'drawings/AERO-BRK-001-v1.pdf', 'Initial release', 4, '2022-03-15 10:00:00', 5),
 (1, 2, '{"material": "AL7075-T6", "tolerance": "0.0005", "surface_finish": "16", "weight_kg": 2.4}', 'drawings/AERO-BRK-001-v2.pdf', 'Improved surface finish, tighter tolerances', 4, '2023-01-20 14:00:00', 6),
@@ -68,7 +67,7 @@ INSERT INTO manufacturing.part_versions (part_id, version, specifications, drawi
 ON CONFLICT (part_id, version) DO NOTHING;
 
 -- Part materials (bill of materials)
-INSERT INTO manufacturing.part_materials (part_id, material_id, quantity_needed, notes) VALUES
+INSERT INTO part_materials (part_id, material_id, quantity_needed, notes) VALUES
 -- AERO-BRK-001: Aluminum sheet, fasteners
 (1, 3, 2.0, 'Main housing material'),
 (1, 18, 24, 'Assembly screws'),
@@ -86,7 +85,7 @@ INSERT INTO manufacturing.part_materials (part_id, material_id, quantity_needed,
 ON CONFLICT (part_id, material_id) DO NOTHING;
 
 -- Machines
-INSERT INTO manufacturing.machines (machine_code, name, type, manufacturer, model, serial_number, status, location, hourly_cost, maintenance_interval_hours, total_run_hours, last_maintenance_at, next_maintenance_due) VALUES
+INSERT INTO machines (machine_code, name, type, manufacturer, model, serial_number, status, location, hourly_cost, maintenance_interval_hours, total_run_hours, last_maintenance_at, next_maintenance_due) VALUES
 -- CNC Mills
 ('CNC-M-001', 'Haas VF-4 Vertical Mill', 'cnc_mill', 'Haas Automation', 'VF-4', 'HAS-VF4-2019-001', 'operational', 'Bay A-1', 85.00, 500, 4250.50, '2024-11-15 08:00:00', '2025-01-20 08:00:00'),
 ('CNC-M-002', 'Haas VF-2 Vertical Mill', 'cnc_mill', 'Haas Automation', 'VF-2', 'HAS-VF2-2020-002', 'operational', 'Bay A-2', 75.00, 500, 3100.25, '2024-12-01 08:00:00', '2025-02-15 08:00:00'),
@@ -109,6 +108,6 @@ INSERT INTO manufacturing.machines (machine_code, name, type, manufacturer, mode
 ON CONFLICT (machine_code) DO NOTHING;
 
 -- Soft-delete a machine for testing
-UPDATE manufacturing.machines 
+UPDATE machines 
 SET deleted_at = '2024-10-01 09:00:00', status = 'retired' 
 WHERE machine_code = 'PRS-001';

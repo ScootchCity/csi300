@@ -6,7 +6,7 @@
 -- Use ON CONFLICT DO NOTHING for idempotency
 -- =============================================================================
 
-SET search_path TO edulearn, public;
+-- All tables are in the public schema (default)
 
 -- =============================================================================
 -- DEPARTMENTS (extract unique departments from CSV)
