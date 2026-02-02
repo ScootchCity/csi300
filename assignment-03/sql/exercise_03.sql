@@ -14,6 +14,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT id, name, price, CASE
+    WHEN price < 50 THEN 'budget'
+    WHEN price >= 50 AND price < 200 THEN 'mid-range'
+    WHEN price >= 200 AND price < 500 THEN 'premium'
+    WHEN price > 500 THEN 'luxury'
+    ELSE 'bad price data' END
+    AS price_tier FROM products
+ORDER BY price;
 
 -- Task 3.2: Order Status Labels (4 points)
 -- Create human-readable status labels:
@@ -31,6 +39,18 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT id, order_number, status, CASE
+    WHEN status = 'pending' THEN 'Awaiting Confirmation'
+    WHEN status = 'confirmed' THEN 'Order Confirmed'
+    WHEN status = 'processing' THEN 'Being Prepared'
+    WHEN status = 'shipped' THEN 'In Transit'
+    WHEN status = 'delivered' THEN 'Completed'
+    WHEN status = 'cancelled' THEN 'Cancelled'
+    WHEN status = 'refunded' THEN 'Refunded'
+    ELSE 'Unknown' END
+    AS status_label
+FROM orders
+ORDER BY id;
 
 -- Task 3.3: Black Friday Orders (4 points)
 -- Find orders from November 25-29, 2024
@@ -40,6 +60,9 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT id, order_number, customer_id, total_amount, created_at FROM orders
+WHERE created_at >= 2024-11-25 AND created_at < 2024-11-29
+ORDER BY created_at;
 
 -- Task 3.4: Monthly Order Distribution 2024 (4 points)
 -- Get all orders from 2024 with month number
