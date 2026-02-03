@@ -61,7 +61,7 @@ ORDER BY id;
 -- TODO: Write your SELECT statement here
 
 SELECT id, order_number, customer_id, total_amount, created_at FROM orders
-WHERE created_at >= 2024-11-25 AND created_at < 2024-11-29
+WHERE created_at >= '2024-11-25' AND created_at < '2024-11-29'
 ORDER BY created_at;
 
 -- Task 3.4: Monthly Order Distribution 2024 (4 points)
@@ -72,6 +72,9 @@ ORDER BY created_at;
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT id, order_number, EXTRACT(MONTH FROM created_at) AS order_month, total_amount FROM orders
+WHERE EXTRACT(YEAR FROM created_at) = '2024'
+ORDER BY order_month, id;
 
 -- Task 3.5: Review Sentiment Categories (4 points)
 -- Categorize reviews by sentiment:
@@ -84,3 +87,17 @@ ORDER BY created_at;
 -- Tip: Use CASE for sentiment, comment IS NOT NULL for has_comment
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
+
+SELECT id, product_id, rating,
+CASE
+    WHEN rating BETWEEN 1 AND 2 THEN 'Negative'
+    WHEN rating = 3 THEN 'Neutral'
+    WHEN rating BETWEEN 4 AND 5 THEN 'Positive'
+    ELSE 'Unknown' END
+    AS sentiment,
+CASE
+    WHEN comment IS NOT NULL THEN 'TRUE'
+    WHEN comment IS NULL THEN 'FALSE' END
+    AS has_comment
+FROM product_reviews
+ORDER BY rating DESC, id;
