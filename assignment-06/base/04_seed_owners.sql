@@ -2,7 +2,7 @@
 -- PawCare Seed Data - Part 3: Owners
 -- =============================================================================
 
-INSERT INTO pawcare.owners (first_name, last_name, email, phone, address, city, state, zip_code, preferred_clinic_id, registered_at, is_active) VALUES
+INSERT INTO owners (first_name, last_name, email, phone, address, city, state, zip_code, preferred_clinic_id, registered_at, is_active) VALUES
 -- Active owners with multiple pets
 ('John', 'Smith', 'john.smith@email.com', '802-555-0001', '123 Maple Street', 'Burlington', 'Vermont', '05401', 1, '2020-01-15 10:00:00', TRUE),
 ('Sarah', 'Johnson', 'sarah.j@email.com', '802-555-0002', '456 Oak Avenue', 'Burlington', 'Vermont', '05401', 1, '2020-02-20 14:30:00', TRUE),

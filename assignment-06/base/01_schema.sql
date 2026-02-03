@@ -3,18 +3,12 @@
 -- Assignment 6: Subqueries, CTEs & Views
 -- =============================================================================
 
--- Create schema
-CREATE SCHEMA IF NOT EXISTS pawcare;
-
--- Set search path
-SET search_path TO pawcare, public;
-
 -- =============================================================================
 -- Core Reference Tables
 -- =============================================================================
 
 -- Species lookup table
-CREATE TABLE IF NOT EXISTS pawcare.species (
+CREATE TABLE IF NOT EXISTS species (
     species_id SERIAL PRIMARY KEY,
     species_name VARCHAR(50) NOT NULL UNIQUE,
     category VARCHAR(30) NOT NULL CHECK (category IN ('mammal', 'bird', 'reptile', 'fish', 'amphibian')),
@@ -23,7 +17,7 @@ CREATE TABLE IF NOT EXISTS pawcare.species (
 );
 
 -- Clinic locations
-CREATE TABLE IF NOT EXISTS pawcare.clinics (
+CREATE TABLE IF NOT EXISTS clinics (
     clinic_id SERIAL PRIMARY KEY,
     clinic_name VARCHAR(100) NOT NULL,
     address VARCHAR(200) NOT NULL,
@@ -43,7 +37,7 @@ CREATE TABLE IF NOT EXISTS pawcare.clinics (
 -- =============================================================================
 
 -- Pet owners/clients
-CREATE TABLE IF NOT EXISTS pawcare.owners (
+CREATE TABLE IF NOT EXISTS owners (
     owner_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -53,13 +47,13 @@ CREATE TABLE IF NOT EXISTS pawcare.owners (
     city VARCHAR(100),
     state VARCHAR(50),
     zip_code VARCHAR(20),
-    preferred_clinic_id INTEGER REFERENCES pawcare.clinics(clinic_id),
+    preferred_clinic_id INTEGER REFERENCES clinics(clinic_id),
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE
 );
 
 -- Staff members (vets, technicians, receptionists)
-CREATE TABLE IF NOT EXISTS pawcare.staff (
+CREATE TABLE IF NOT EXISTS staff (
     staff_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -70,8 +64,8 @@ CREATE TABLE IF NOT EXISTS pawcare.staff (
     license_number VARCHAR(50),
     hire_date DATE NOT NULL,
     salary DECIMAL(10, 2),
-    reports_to INTEGER REFERENCES pawcare.staff(staff_id),
-    clinic_id INTEGER REFERENCES pawcare.clinics(clinic_id),
+    reports_to INTEGER REFERENCES staff(staff_id),
+    clinic_id INTEGER REFERENCES clinics(clinic_id),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -81,10 +75,10 @@ CREATE TABLE IF NOT EXISTS pawcare.staff (
 -- =============================================================================
 
 -- Pets
-CREATE TABLE IF NOT EXISTS pawcare.pets (
+CREATE TABLE IF NOT EXISTS pets (
     pet_id SERIAL PRIMARY KEY,
-    owner_id INTEGER NOT NULL REFERENCES pawcare.owners(owner_id),
-    species_id INTEGER NOT NULL REFERENCES pawcare.species(species_id),
+    owner_id INTEGER NOT NULL REFERENCES owners(owner_id),
+    species_id INTEGER NOT NULL REFERENCES species(species_id),
     breed VARCHAR(100),
     pet_name VARCHAR(50) NOT NULL,
     date_of_birth DATE,
@@ -104,11 +98,11 @@ CREATE TABLE IF NOT EXISTS pawcare.pets (
 -- =============================================================================
 
 -- Vaccines catalog
-CREATE TABLE IF NOT EXISTS pawcare.vaccines (
+CREATE TABLE IF NOT EXISTS vaccines (
     vaccine_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     manufacturer VARCHAR(100),
-    species_id INTEGER REFERENCES pawcare.species(species_id),
+    species_id INTEGER REFERENCES species(species_id),
     validity_months INTEGER NOT NULL DEFAULT 12,
     is_core_vaccine BOOLEAN DEFAULT FALSE, -- Required vs optional
     unit_price DECIMAL(8, 2) NOT NULL,
@@ -116,7 +110,7 @@ CREATE TABLE IF NOT EXISTS pawcare.vaccines (
 );
 
 -- Procedures catalog
-CREATE TABLE IF NOT EXISTS pawcare.procedures (
+CREATE TABLE IF NOT EXISTS procedures (
     procedure_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     category VARCHAR(50) NOT NULL CHECK (category IN ('examination', 'surgery', 'dental', 'diagnostic', 'grooming', 'preventive', 'emergency')),
@@ -128,7 +122,7 @@ CREATE TABLE IF NOT EXISTS pawcare.procedures (
 );
 
 -- Medications catalog
-CREATE TABLE IF NOT EXISTS pawcare.medications (
+CREATE TABLE IF NOT EXISTS medications (
     medication_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     generic_name VARCHAR(100),
@@ -143,11 +137,11 @@ CREATE TABLE IF NOT EXISTS pawcare.medications (
 );
 
 -- Appointments
-CREATE TABLE IF NOT EXISTS pawcare.appointments (
+CREATE TABLE IF NOT EXISTS appointments (
     appointment_id SERIAL PRIMARY KEY,
-    pet_id INTEGER NOT NULL REFERENCES pawcare.pets(pet_id),
-    vet_id INTEGER NOT NULL REFERENCES pawcare.staff(staff_id),
-    clinic_id INTEGER NOT NULL REFERENCES pawcare.clinics(clinic_id),
+    pet_id INTEGER NOT NULL REFERENCES pets(pet_id),
+    vet_id INTEGER NOT NULL REFERENCES staff(staff_id),
+    clinic_id INTEGER NOT NULL REFERENCES clinics(clinic_id),
     scheduled_at TIMESTAMP NOT NULL,
     duration_mins INTEGER DEFAULT 30,
     status VARCHAR(20) NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show')),
@@ -157,11 +151,11 @@ CREATE TABLE IF NOT EXISTS pawcare.appointments (
 );
 
 -- Medical records (one per visit)
-CREATE TABLE IF NOT EXISTS pawcare.medical_records (
+CREATE TABLE IF NOT EXISTS medical_records (
     record_id SERIAL PRIMARY KEY,
-    pet_id INTEGER NOT NULL REFERENCES pawcare.pets(pet_id),
-    vet_id INTEGER NOT NULL REFERENCES pawcare.staff(staff_id),
-    appointment_id INTEGER REFERENCES pawcare.appointments(appointment_id),
+    pet_id INTEGER NOT NULL REFERENCES pets(pet_id),
+    vet_id INTEGER NOT NULL REFERENCES staff(staff_id),
+    appointment_id INTEGER REFERENCES appointments(appointment_id),
     visit_date DATE NOT NULL,
     chief_complaint TEXT,
     diagnosis TEXT,
@@ -175,11 +169,11 @@ CREATE TABLE IF NOT EXISTS pawcare.medical_records (
 );
 
 -- Treatments (procedures and medications given during a visit)
-CREATE TABLE IF NOT EXISTS pawcare.treatments (
+CREATE TABLE IF NOT EXISTS treatments (
     treatment_id SERIAL PRIMARY KEY,
-    record_id INTEGER NOT NULL REFERENCES pawcare.medical_records(record_id),
-    procedure_id INTEGER REFERENCES pawcare.procedures(procedure_id),
-    medication_id INTEGER REFERENCES pawcare.medications(medication_id),
+    record_id INTEGER NOT NULL REFERENCES medical_records(record_id),
+    procedure_id INTEGER REFERENCES procedures(procedure_id),
+    medication_id INTEGER REFERENCES medications(medication_id),
     quantity DECIMAL(8, 2) DEFAULT 1,
     unit_price DECIMAL(10, 2) NOT NULL,
     notes TEXT,
@@ -191,12 +185,12 @@ CREATE TABLE IF NOT EXISTS pawcare.treatments (
 );
 
 -- Vaccinations administered
-CREATE TABLE IF NOT EXISTS pawcare.vaccinations (
+CREATE TABLE IF NOT EXISTS vaccinations (
     vaccination_id SERIAL PRIMARY KEY,
-    pet_id INTEGER NOT NULL REFERENCES pawcare.pets(pet_id),
-    vaccine_id INTEGER NOT NULL REFERENCES pawcare.vaccines(vaccine_id),
-    administered_by INTEGER NOT NULL REFERENCES pawcare.staff(staff_id),
-    record_id INTEGER REFERENCES pawcare.medical_records(record_id),
+    pet_id INTEGER NOT NULL REFERENCES pets(pet_id),
+    vaccine_id INTEGER NOT NULL REFERENCES vaccines(vaccine_id),
+    administered_by INTEGER NOT NULL REFERENCES staff(staff_id),
+    record_id INTEGER REFERENCES medical_records(record_id),
     administered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     next_due_date DATE,
     batch_number VARCHAR(50),
@@ -205,11 +199,11 @@ CREATE TABLE IF NOT EXISTS pawcare.vaccinations (
 );
 
 -- Prescriptions
-CREATE TABLE IF NOT EXISTS pawcare.prescriptions (
+CREATE TABLE IF NOT EXISTS prescriptions (
     prescription_id SERIAL PRIMARY KEY,
-    record_id INTEGER NOT NULL REFERENCES pawcare.medical_records(record_id),
-    medication_id INTEGER NOT NULL REFERENCES pawcare.medications(medication_id),
-    prescribed_by INTEGER NOT NULL REFERENCES pawcare.staff(staff_id),
+    record_id INTEGER NOT NULL REFERENCES medical_records(record_id),
+    medication_id INTEGER NOT NULL REFERENCES medications(medication_id),
+    prescribed_by INTEGER NOT NULL REFERENCES staff(staff_id),
     dosage VARCHAR(100) NOT NULL, -- e.g., "10mg twice daily"
     quantity INTEGER NOT NULL,
     refills_allowed INTEGER DEFAULT 0,
@@ -226,10 +220,10 @@ CREATE TABLE IF NOT EXISTS pawcare.prescriptions (
 -- =============================================================================
 
 -- Invoices
-CREATE TABLE IF NOT EXISTS pawcare.invoices (
+CREATE TABLE IF NOT EXISTS invoices (
     invoice_id SERIAL PRIMARY KEY,
-    owner_id INTEGER NOT NULL REFERENCES pawcare.owners(owner_id),
-    record_id INTEGER REFERENCES pawcare.medical_records(record_id),
+    owner_id INTEGER NOT NULL REFERENCES owners(owner_id),
+    record_id INTEGER REFERENCES medical_records(record_id),
     invoice_number VARCHAR(20) NOT NULL UNIQUE,
     invoice_date DATE NOT NULL DEFAULT CURRENT_DATE,
     subtotal DECIMAL(10, 2) NOT NULL DEFAULT 0,
@@ -248,19 +242,19 @@ CREATE TABLE IF NOT EXISTS pawcare.invoices (
 -- Indexes for Performance
 -- =============================================================================
 
-CREATE INDEX IF NOT EXISTS idx_pets_owner ON pawcare.pets(owner_id);
-CREATE INDEX IF NOT EXISTS idx_pets_species ON pawcare.pets(species_id);
-CREATE INDEX IF NOT EXISTS idx_appointments_pet ON pawcare.appointments(pet_id);
-CREATE INDEX IF NOT EXISTS idx_appointments_vet ON pawcare.appointments(vet_id);
-CREATE INDEX IF NOT EXISTS idx_appointments_scheduled ON pawcare.appointments(scheduled_at);
-CREATE INDEX IF NOT EXISTS idx_appointments_status ON pawcare.appointments(status);
-CREATE INDEX IF NOT EXISTS idx_medical_records_pet ON pawcare.medical_records(pet_id);
-CREATE INDEX IF NOT EXISTS idx_medical_records_vet ON pawcare.medical_records(vet_id);
-CREATE INDEX IF NOT EXISTS idx_medical_records_date ON pawcare.medical_records(visit_date);
-CREATE INDEX IF NOT EXISTS idx_treatments_record ON pawcare.treatments(record_id);
-CREATE INDEX IF NOT EXISTS idx_vaccinations_pet ON pawcare.vaccinations(pet_id);
-CREATE INDEX IF NOT EXISTS idx_prescriptions_record ON pawcare.prescriptions(record_id);
-CREATE INDEX IF NOT EXISTS idx_invoices_owner ON pawcare.invoices(owner_id);
-CREATE INDEX IF NOT EXISTS idx_invoices_status ON pawcare.invoices(status);
-CREATE INDEX IF NOT EXISTS idx_staff_reports_to ON pawcare.staff(reports_to);
-CREATE INDEX IF NOT EXISTS idx_staff_clinic ON pawcare.staff(clinic_id);
+CREATE INDEX IF NOT EXISTS idx_pets_owner ON pets(owner_id);
+CREATE INDEX IF NOT EXISTS idx_pets_species ON pets(species_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_pet ON appointments(pet_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_vet ON appointments(vet_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_scheduled ON appointments(scheduled_at);
+CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
+CREATE INDEX IF NOT EXISTS idx_medical_records_pet ON medical_records(pet_id);
+CREATE INDEX IF NOT EXISTS idx_medical_records_vet ON medical_records(vet_id);
+CREATE INDEX IF NOT EXISTS idx_medical_records_date ON medical_records(visit_date);
+CREATE INDEX IF NOT EXISTS idx_treatments_record ON treatments(record_id);
+CREATE INDEX IF NOT EXISTS idx_vaccinations_pet ON vaccinations(pet_id);
+CREATE INDEX IF NOT EXISTS idx_prescriptions_record ON prescriptions(record_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_owner ON invoices(owner_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
+CREATE INDEX IF NOT EXISTS idx_staff_reports_to ON staff(reports_to);
+CREATE INDEX IF NOT EXISTS idx_staff_clinic ON staff(clinic_id);

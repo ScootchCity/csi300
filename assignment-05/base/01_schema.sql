@@ -3,18 +3,12 @@
 -- Assignment 5: SQL Joins
 -- =============================================================================
 
--- Create schema
-CREATE SCHEMA IF NOT EXISTS medcare;
-
--- Set search path
-SET search_path TO medcare, public;
-
 -- =============================================================================
 -- Reference Tables
 -- =============================================================================
 
 -- Departments
-CREATE TABLE medcare.departments (
+CREATE TABLE departments (
     department_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     building VARCHAR(50) NOT NULL,
@@ -26,7 +20,7 @@ CREATE TABLE medcare.departments (
 );
 
 -- Medical Specializations
-CREATE TABLE medcare.specializations (
+CREATE TABLE specializations (
     specialization_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
@@ -35,7 +29,7 @@ CREATE TABLE medcare.specializations (
 );
 
 -- Insurance Providers
-CREATE TABLE medcare.insurance_providers (
+CREATE TABLE insurance_providers (
     provider_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     plan_type VARCHAR(50) NOT NULL, -- HMO, PPO, EPO, POS
@@ -48,7 +42,7 @@ CREATE TABLE medcare.insurance_providers (
 );
 
 -- Medications Catalog
-CREATE TABLE medcare.medications (
+CREATE TABLE medications (
     medication_id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     generic_name VARCHAR(200),
@@ -62,7 +56,7 @@ CREATE TABLE medcare.medications (
 );
 
 -- Lab Tests Catalog
-CREATE TABLE medcare.lab_tests (
+CREATE TABLE lab_tests (
     test_id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     code VARCHAR(20) UNIQUE,
@@ -81,29 +75,29 @@ CREATE TABLE medcare.lab_tests (
 -- =============================================================================
 
 -- Doctors
-CREATE TABLE medcare.doctors (
+CREATE TABLE doctors (
     doctor_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20),
-    department_id INTEGER REFERENCES medcare.departments(department_id),
+    department_id INTEGER REFERENCES departments(department_id),
     hire_date DATE NOT NULL,
     license_number VARCHAR(50) NOT NULL UNIQUE,
-    supervisor_id INTEGER REFERENCES medcare.doctors(doctor_id),
+    supervisor_id INTEGER REFERENCES doctors(doctor_id),
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Add foreign key for department head
-ALTER TABLE medcare.departments 
+ALTER TABLE departments 
 ADD CONSTRAINT fk_department_head 
-FOREIGN KEY (head_doctor_id) REFERENCES medcare.doctors(doctor_id);
+FOREIGN KEY (head_doctor_id) REFERENCES doctors(doctor_id);
 
 -- Doctor Specializations (many-to-many)
-CREATE TABLE medcare.doctor_specializations (
-    doctor_id INTEGER NOT NULL REFERENCES medcare.doctors(doctor_id),
-    specialization_id INTEGER NOT NULL REFERENCES medcare.specializations(specialization_id),
+CREATE TABLE doctor_specializations (
+    doctor_id INTEGER NOT NULL REFERENCES doctors(doctor_id),
+    specialization_id INTEGER NOT NULL REFERENCES specializations(specialization_id),
     is_primary BOOLEAN DEFAULT false,
     certified_at DATE,
     expires_at DATE,
@@ -111,7 +105,7 @@ CREATE TABLE medcare.doctor_specializations (
 );
 
 -- Patients
-CREATE TABLE medcare.patients (
+CREATE TABLE patients (
     patient_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -123,7 +117,7 @@ CREATE TABLE medcare.patients (
     city VARCHAR(100),
     state VARCHAR(2) DEFAULT 'VT',
     zip_code VARCHAR(10),
-    insurance_id INTEGER REFERENCES medcare.insurance_providers(provider_id),
+    insurance_id INTEGER REFERENCES insurance_providers(provider_id),
     policy_number VARCHAR(50),
     emergency_contact_name VARCHAR(100),
     emergency_contact_phone VARCHAR(20),
@@ -134,10 +128,10 @@ CREATE TABLE medcare.patients (
 );
 
 -- Appointments
-CREATE TABLE medcare.appointments (
+CREATE TABLE appointments (
     appointment_id SERIAL PRIMARY KEY,
-    patient_id INTEGER NOT NULL REFERENCES medcare.patients(patient_id),
-    doctor_id INTEGER NOT NULL REFERENCES medcare.doctors(doctor_id),
+    patient_id INTEGER NOT NULL REFERENCES patients(patient_id),
+    doctor_id INTEGER NOT NULL REFERENCES doctors(doctor_id),
     scheduled_at TIMESTAMP NOT NULL,
     duration_mins INTEGER DEFAULT 30,
     status VARCHAR(20) DEFAULT 'scheduled' 
@@ -151,9 +145,9 @@ CREATE TABLE medcare.appointments (
 );
 
 -- Diagnoses
-CREATE TABLE medcare.diagnoses (
+CREATE TABLE diagnoses (
     diagnosis_id SERIAL PRIMARY KEY,
-    appointment_id INTEGER NOT NULL REFERENCES medcare.appointments(appointment_id),
+    appointment_id INTEGER NOT NULL REFERENCES appointments(appointment_id),
     icd_code VARCHAR(20) NOT NULL, -- ICD-10 code
     description VARCHAR(500) NOT NULL,
     severity VARCHAR(20) DEFAULT 'moderate'
@@ -165,12 +159,12 @@ CREATE TABLE medcare.diagnoses (
 );
 
 -- Prescriptions
-CREATE TABLE medcare.prescriptions (
+CREATE TABLE prescriptions (
     prescription_id SERIAL PRIMARY KEY,
-    diagnosis_id INTEGER REFERENCES medcare.diagnoses(diagnosis_id),
-    patient_id INTEGER NOT NULL REFERENCES medcare.patients(patient_id),
-    doctor_id INTEGER NOT NULL REFERENCES medcare.doctors(doctor_id),
-    medication_id INTEGER NOT NULL REFERENCES medcare.medications(medication_id),
+    diagnosis_id INTEGER REFERENCES diagnoses(diagnosis_id),
+    patient_id INTEGER NOT NULL REFERENCES patients(patient_id),
+    doctor_id INTEGER NOT NULL REFERENCES doctors(doctor_id),
+    medication_id INTEGER NOT NULL REFERENCES medications(medication_id),
     dosage VARCHAR(100) NOT NULL,
     frequency VARCHAR(100) NOT NULL,
     duration_days INTEGER,
@@ -186,12 +180,12 @@ CREATE TABLE medcare.prescriptions (
 );
 
 -- Lab Results
-CREATE TABLE medcare.lab_results (
+CREATE TABLE lab_results (
     result_id SERIAL PRIMARY KEY,
-    patient_id INTEGER NOT NULL REFERENCES medcare.patients(patient_id),
-    test_id INTEGER NOT NULL REFERENCES medcare.lab_tests(test_id),
-    doctor_id INTEGER NOT NULL REFERENCES medcare.doctors(doctor_id),
-    appointment_id INTEGER REFERENCES medcare.appointments(appointment_id),
+    patient_id INTEGER NOT NULL REFERENCES patients(patient_id),
+    test_id INTEGER NOT NULL REFERENCES lab_tests(test_id),
+    doctor_id INTEGER NOT NULL REFERENCES doctors(doctor_id),
+    appointment_id INTEGER REFERENCES appointments(appointment_id),
     ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     collected_at TIMESTAMP,
     resulted_at TIMESTAMP,
@@ -204,11 +198,11 @@ CREATE TABLE medcare.lab_results (
 );
 
 -- Insurance Claims
-CREATE TABLE medcare.claims (
+CREATE TABLE claims (
     claim_id SERIAL PRIMARY KEY,
-    patient_id INTEGER NOT NULL REFERENCES medcare.patients(patient_id),
-    appointment_id INTEGER REFERENCES medcare.appointments(appointment_id),
-    provider_id INTEGER NOT NULL REFERENCES medcare.insurance_providers(provider_id),
+    patient_id INTEGER NOT NULL REFERENCES patients(patient_id),
+    appointment_id INTEGER REFERENCES appointments(appointment_id),
+    provider_id INTEGER NOT NULL REFERENCES insurance_providers(provider_id),
     claim_number VARCHAR(50) UNIQUE,
     amount_billed DECIMAL(10,2) NOT NULL,
     amount_covered DECIMAL(10,2) DEFAULT 0,
@@ -225,18 +219,18 @@ CREATE TABLE medcare.claims (
 -- Indexes
 -- =============================================================================
 
-CREATE INDEX idx_doctors_department ON medcare.doctors(department_id);
-CREATE INDEX idx_doctors_supervisor ON medcare.doctors(supervisor_id);
-CREATE INDEX idx_patients_insurance ON medcare.patients(insurance_id);
-CREATE INDEX idx_appointments_patient ON medcare.appointments(patient_id);
-CREATE INDEX idx_appointments_doctor ON medcare.appointments(doctor_id);
-CREATE INDEX idx_appointments_scheduled ON medcare.appointments(scheduled_at);
-CREATE INDEX idx_appointments_status ON medcare.appointments(status);
-CREATE INDEX idx_diagnoses_appointment ON medcare.diagnoses(appointment_id);
-CREATE INDEX idx_diagnoses_icd ON medcare.diagnoses(icd_code);
-CREATE INDEX idx_prescriptions_patient ON medcare.prescriptions(patient_id);
-CREATE INDEX idx_prescriptions_doctor ON medcare.prescriptions(doctor_id);
-CREATE INDEX idx_lab_results_patient ON medcare.lab_results(patient_id);
-CREATE INDEX idx_lab_results_test ON medcare.lab_results(test_id);
-CREATE INDEX idx_claims_patient ON medcare.claims(patient_id);
-CREATE INDEX idx_claims_status ON medcare.claims(status);
+CREATE INDEX idx_doctors_department ON doctors(department_id);
+CREATE INDEX idx_doctors_supervisor ON doctors(supervisor_id);
+CREATE INDEX idx_patients_insurance ON patients(insurance_id);
+CREATE INDEX idx_appointments_patient ON appointments(patient_id);
+CREATE INDEX idx_appointments_doctor ON appointments(doctor_id);
+CREATE INDEX idx_appointments_scheduled ON appointments(scheduled_at);
+CREATE INDEX idx_appointments_status ON appointments(status);
+CREATE INDEX idx_diagnoses_appointment ON diagnoses(appointment_id);
+CREATE INDEX idx_diagnoses_icd ON diagnoses(icd_code);
+CREATE INDEX idx_prescriptions_patient ON prescriptions(patient_id);
+CREATE INDEX idx_prescriptions_doctor ON prescriptions(doctor_id);
+CREATE INDEX idx_lab_results_patient ON lab_results(patient_id);
+CREATE INDEX idx_lab_results_test ON lab_results(test_id);
+CREATE INDEX idx_claims_patient ON claims(patient_id);
+CREATE INDEX idx_claims_status ON claims(status);

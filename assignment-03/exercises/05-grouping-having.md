@@ -26,7 +26,7 @@ Calculate total revenue from order items grouped by product category. Only inclu
 **Return:** `category_id`, `total_revenue`, `items_sold`  
 **Order by:** `total_revenue` descending
 
-> **Hint:** This requires a JOIN. Use: `FROM shopflow.order_items oi, shopflow.products p WHERE oi.product_id = p.product_id`
+> **Hint:** Use multiple tables with comma syntax: `FROM order_items oi, products p WHERE oi.product_id = p.id`
 
 ### Task 5.3: Customer Order Frequency (4 points)
 Find customers who have placed 3 or more orders. Count their orders and calculate their total spending.

@@ -3,7 +3,7 @@
 -- =============================================================================
 -- Links orders to products with quantities, prices, and discounts
 
-INSERT INTO shopflow.order_items (order_id, product_id, quantity, unit_price, discount_pct, line_total) VALUES
+INSERT INTO order_items (order_id, product_id, quantity, unit_price, discount_pct, line_total) VALUES
 -- ORD-2024-000001 (customer 1 - laptop)
 (1, 1, 1, 999.99, 0.00, 999.99),
 

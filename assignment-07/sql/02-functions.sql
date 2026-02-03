@@ -6,7 +6,7 @@
 -- Problem 2.1: Calculate Material Value (4 points)
 -- Create a function that calculates the total inventory value for a given material
 -- 
--- Function: manufacturing.calculate_material_value(p_material_id INTEGER)
+-- Function: calculate_material_value(p_material_id INTEGER)
 -- Returns: NUMERIC(12,2)
 -- Logic:
 --   - Find the material by ID (excluding soft-deleted)
@@ -24,7 +24,7 @@
 -- Problem 2.2: Production Run Duration (4 points)
 -- Create a function that calculates how long a production run took (or is taking)
 -- 
--- Function: manufacturing.get_run_duration_hours(p_run_id INTEGER)
+-- Function: get_run_duration_hours(p_run_id INTEGER)
 -- Returns: NUMERIC(10,2)
 -- Logic:
 --   - If run not found, return 0
@@ -40,7 +40,7 @@
 -- Problem 2.3: Part Production Cost Estimate (5 points)
 -- Create a function that estimates the production cost for a part
 -- 
--- Function: manufacturing.estimate_part_cost(p_part_id INTEGER, p_quantity INTEGER DEFAULT 1)
+-- Function: estimate_part_cost(p_part_id INTEGER, p_quantity INTEGER DEFAULT 1)
 -- Returns: NUMERIC(12,2)
 -- Logic:
 --   - Sum material costs from bill of materials (part_materials table)
@@ -57,7 +57,7 @@
 -- Problem 2.4: Quality Pass Rate (4 points)
 -- Create a function that returns the quality pass rate for a specific part
 -- 
--- Function: manufacturing.get_part_quality_rate(p_part_number VARCHAR)
+-- Function: get_part_quality_rate(p_part_number VARCHAR)
 -- Returns: NUMERIC(5,2) (percentage)
 -- Logic:
 --   - Count total quality checks for the part
@@ -73,7 +73,7 @@
 -- Problem 2.5: Generate Part Number (3 points)
 -- Create a function that generates a standardized part number
 -- 
--- Function: manufacturing.generate_part_number(p_category VARCHAR, p_sequence INTEGER)
+-- Function: generate_part_number(p_category VARCHAR, p_sequence INTEGER)
 -- Returns: VARCHAR
 -- Logic:
 --   - Format: {CATEGORY}-{SEQUENCE}-{CHECKSUM}

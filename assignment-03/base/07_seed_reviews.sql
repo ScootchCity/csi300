@@ -3,7 +3,7 @@
 -- =============================================================================
 -- Reviews with ratings 1-5, some with NULL comments
 
-INSERT INTO shopflow.product_reviews (product_id, customer_id, rating, title, comment, is_verified_purchase, created_at) VALUES
+INSERT INTO product_reviews (product_id, customer_id, rating, title, comment, is_verified_purchase, created_at) VALUES
 -- Laptop reviews (product 1)
 (1, 1, 5, 'Excellent laptop!', 'Fast, reliable, and great battery life. Perfect for work and gaming.', TRUE, '2024-01-15 14:30:00'),
 (1, 2, 5, 'Best purchase ever', 'This laptop exceeded all my expectations. Highly recommend!', TRUE, '2024-01-20 10:15:00'),

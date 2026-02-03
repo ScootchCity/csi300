@@ -14,7 +14,7 @@ jobs:
         assignment: ['01', '02', '03', '04', '05', '06', '07']
     
     env:
-      CONTAINER_NAME: databases-postgres
+      CONTAINER_NAME: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres

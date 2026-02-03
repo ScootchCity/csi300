@@ -2,10 +2,9 @@
 -- PrecisionParts Manufacturing - Seed Data: Materials
 -- =============================================================================
 
-SET search_path TO manufacturing, public;
 
 -- Materials/Raw inventory
-INSERT INTO manufacturing.materials (sku, name, type, unit, unit_cost, stock_quantity, reorder_level, lead_time_days, supplier) VALUES
+INSERT INTO materials (sku, name, type, unit, unit_cost, stock_quantity, reorder_level, lead_time_days, supplier) VALUES
 -- Metals
 ('MTL-AL6061-SH', 'Aluminum 6061-T6 Sheet 0.125"', 'metal', 'sheet', 45.00, 150, 50, 5, 'MetalSource Inc.'),
 ('MTL-AL6061-RD', 'Aluminum 6061-T6 Rod 1"', 'metal', 'foot', 8.50, 500, 100, 5, 'MetalSource Inc.'),
@@ -58,11 +57,11 @@ INSERT INTO manufacturing.materials (sku, name, type, unit, unit_cost, stock_qua
 ON CONFLICT (sku) DO NOTHING;
 
 -- Soft-delete some materials for testing
-UPDATE manufacturing.materials 
+UPDATE materials 
 SET deleted_at = '2024-08-01 09:00:00' 
 WHERE sku = 'RAW-SAND-CAST';
 
 -- Set some materials below reorder level for testing
-UPDATE manufacturing.materials SET stock_quantity = 8 WHERE sku = 'MTL-TI64-SH';
-UPDATE manufacturing.materials SET stock_quantity = 18 WHERE sku = 'MTL-TI64-RD';
-UPDATE manufacturing.materials SET stock_quantity = 12 WHERE sku = 'CMP-CF-SH';
+UPDATE materials SET stock_quantity = 8 WHERE sku = 'MTL-TI64-SH';
+UPDATE materials SET stock_quantity = 18 WHERE sku = 'MTL-TI64-RD';
+UPDATE materials SET stock_quantity = 12 WHERE sku = 'CMP-CF-SH';

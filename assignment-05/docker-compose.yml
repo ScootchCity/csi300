@@ -1,32 +1,53 @@
 services:
-  db:
+  postgres:
     image: postgres:16-alpine
-    container_name: medcare-db
+    container_name: postgres
     environment:
-      POSTGRES_USER: medcare
-      POSTGRES_PASSWORD: medcare123
-      POSTGRES_DB: medcare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
-      - medcare_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - .:/app:rw
       - ./base:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U medcare -d medcare"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   adminer:
     image: adminer:latest
-    container_name: medcare-adminer
+    container_name: adminer
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
     environment:
-      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_SERVER: postgres
+
+  # Verification service - run with: docker-compose run --rm verify
+  verify:
+    image: postgres:16-alpine
+    container_name: verify
+    volumes:
+      - ./sql:/sql:ro
+      - ./base:/base:ro
+      - ./verify.sh:/verify.sh:ro
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/bash", "/verify.sh"]
+    profiles:
+      - tools
 
 volumes:
-  medcare_data:
+  postgres_data:

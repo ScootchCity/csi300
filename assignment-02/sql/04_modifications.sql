@@ -17,7 +17,13 @@
 -- TODO: Write your UPDATE statement here
 
 -- my code
-
+UPDATE neobank.customers
+SET
+    kyc_status = 'rejected',
+    updated_at = CURRENT_TIMESTAMP
+WHERE
+    kyc_status = 'pending' AND
+    created_at < CURRENT_TIMESTAMP - INTERVAL '7 days';
 
 -- -----------------------------------------------------------------------------
 -- Update 2: Interest Rate Adjustment
@@ -27,6 +33,12 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your UPDATE statement here
 
+-- my code
+UPDATE neobank.account_types
+SET
+    interest_rate = LEAST (interest_rate + 0.0050, 1.0)
+WHERE
+    name LIKE '%Savings%';
 
 -- -----------------------------------------------------------------------------
 -- Update 3: Process Pending Fees
@@ -35,6 +47,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your UPDATE statement here
 
+-- my code
+UPDATE neobank.transactions
+SET
+    status = 'completed',
+    processed_at = CURRENT_TIMESTAMP
+WHERE
+    status = 'pending' AND
+    transaction_type IN ('fee', 'interest');
 
 -- -----------------------------------------------------------------------------
 -- Update 4: Freeze Low Balance Accounts
@@ -43,6 +63,13 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your UPDATE statement here
 
+-- my code
+UPDATE neobank.accounts
+SET
+    status = 'frozen'
+WHERE
+    status = 'active' AND
+    balance <= 0;
 
 -- -----------------------------------------------------------------------------
 -- Update 5: Add Bonus to Loyal Accounts
@@ -52,6 +79,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your UPDATE statement here
 
+-- my code
+UPDATE neobank.accounts
+SET
+    balance = balance + 50
+WHERE
+    status = 'active' AND
+    opened_at < CURRENT_TIMESTAMP - INTERVAL '90 days' AND
+    balance > 1000;
 
 -- =============================================================================
 -- DELETE OPERATIONS
@@ -63,6 +98,11 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your DELETE statement here
 
+-- my code
+DELETE FROM neobank.transactions
+WHERE
+    status = 'failed' AND
+    created_at < CURRENT_TIMESTAMP - INTERVAL '1 year';
 
 -- -----------------------------------------------------------------------------
 -- Delete 2: Remove Test Data
@@ -78,6 +118,32 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your DELETE statements here (multiple steps)
 
+DELETE FROM neobank.transactions
+WHERE
+    source_account_id IN (
+        SELECT a.id FROM neobank.accounts a
+        WHERE a.customer_id IN (
+            SELECT c.id FROM neobank.customers c
+            WHERE c.email LIKE '%@test.neobank.local'
+        )
+    ) OR
+    destination_account_id IN (
+        SELECT a.id FROM neobank.accounts a
+        WHERE a.customer_id IN (
+            SELECT c.id FROM neobank.customers c
+            WHERE c.email LIKE '%@test.neobank.local'
+        )
+    );
+
+DELETE FROM neobank.accounts
+WHERE
+    customer_id IN (
+        SELECT id FROM neobank.customers
+        WHERE email LIKE '%test.neobank.local'
+    );
+
+DELETE FROM neobank.customers
+WHERE email LIKE '%@test.neobank.local';
 
 -- =============================================================================
 -- VERIFICATION QUERIES

@@ -4,7 +4,7 @@
 
 -- Insurance Claims (linked to patients, appointments, and insurance providers)
 -- Schema: patient_id, appointment_id, provider_id, claim_number, amount_billed, amount_covered, amount_owed, status, filed_at, processed_at, denial_reason
-INSERT INTO medcare.claims (patient_id, appointment_id, provider_id, claim_number, amount_billed, amount_covered, amount_owed, status, filed_at, processed_at, denial_reason) VALUES
+INSERT INTO claims (patient_id, appointment_id, provider_id, claim_number, amount_billed, amount_covered, amount_owed, status, filed_at, processed_at, denial_reason) VALUES
 -- 2023 Claims - Various statuses
 (1, 1, 1, 'CLM-2023-001001', 450.00, 320.00, 130.00, 'paid', '2023-01-16 10:00:00', '2023-01-25 14:00:00', NULL),
 (2, 2, 2, 'CLM-2023-001002', 350.00, 240.00, 110.00, 'paid', '2023-01-21 09:00:00', '2023-02-01 11:00:00', NULL),

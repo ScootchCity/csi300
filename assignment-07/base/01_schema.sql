@@ -2,18 +2,12 @@
 -- PrecisionParts Manufacturing - Schema Definition
 -- =============================================================================
 
--- Create schema
-CREATE SCHEMA IF NOT EXISTS manufacturing;
-
--- Set search path
-SET search_path TO manufacturing, public;
-
 -- =============================================================================
 -- Core Tables
 -- =============================================================================
 
 -- Employees table with soft-delete and role-based access
-CREATE TABLE manufacturing.employees (
+CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     employee_number VARCHAR(20) NOT NULL UNIQUE,
     first_name VARCHAR(50) NOT NULL,
@@ -36,7 +30,7 @@ CREATE TABLE manufacturing.employees (
 );
 
 -- Materials/Raw inventory with soft-delete
-CREATE TABLE manufacturing.materials (
+CREATE TABLE materials (
     id SERIAL PRIMARY KEY,
     sku VARCHAR(30) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
@@ -58,7 +52,7 @@ CREATE TABLE manufacturing.materials (
 );
 
 -- Parts catalog with soft-delete
-CREATE TABLE manufacturing.parts (
+CREATE TABLE parts (
     id SERIAL PRIMARY KEY,
     part_number VARCHAR(30) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
@@ -76,32 +70,32 @@ CREATE TABLE manufacturing.parts (
 );
 
 -- Part versions for tracking design changes
-CREATE TABLE manufacturing.part_versions (
+CREATE TABLE part_versions (
     id SERIAL PRIMARY KEY,
-    part_id INT NOT NULL REFERENCES manufacturing.parts(id),
+    part_id INT NOT NULL REFERENCES parts(id),
     version INT NOT NULL,
     specifications JSONB NOT NULL DEFAULT '{}',
     drawing_url VARCHAR(255),
     change_notes TEXT,
-    approved_by INT REFERENCES manufacturing.employees(id),
+    approved_by INT REFERENCES employees(id),
     approved_at TIMESTAMP,
-    created_by INT NOT NULL REFERENCES manufacturing.employees(id),
+    created_by INT NOT NULL REFERENCES employees(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(part_id, version)
 );
 
 -- Bill of materials - what materials are needed for each part
-CREATE TABLE manufacturing.part_materials (
+CREATE TABLE part_materials (
     id SERIAL PRIMARY KEY,
-    part_id INT NOT NULL REFERENCES manufacturing.parts(id),
-    material_id INT NOT NULL REFERENCES manufacturing.materials(id),
+    part_id INT NOT NULL REFERENCES parts(id),
+    material_id INT NOT NULL REFERENCES materials(id),
     quantity_needed DECIMAL(12, 4) NOT NULL CHECK (quantity_needed > 0),
     notes VARCHAR(255),
     UNIQUE(part_id, material_id)
 );
 
 -- Machines/Equipment with soft-delete
-CREATE TABLE manufacturing.machines (
+CREATE TABLE machines (
     id SERIAL PRIMARY KEY,
     machine_code VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
@@ -127,7 +121,7 @@ CREATE TABLE manufacturing.machines (
 );
 
 -- Production orders (customer orders)
-CREATE TABLE manufacturing.production_orders (
+CREATE TABLE production_orders (
     id SERIAL PRIMARY KEY,
     order_number VARCHAR(20) NOT NULL UNIQUE,
     customer_name VARCHAR(100) NOT NULL,
@@ -144,16 +138,16 @@ CREATE TABLE manufacturing.production_orders (
     shipped_date DATE,
     total_amount DECIMAL(14, 2) DEFAULT 0,
     notes TEXT,
-    created_by INT REFERENCES manufacturing.employees(id),
+    created_by INT REFERENCES employees(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Order line items
-CREATE TABLE manufacturing.order_items (
+CREATE TABLE order_items (
     id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL REFERENCES manufacturing.production_orders(id),
-    part_id INT NOT NULL REFERENCES manufacturing.parts(id),
+    order_id INT NOT NULL REFERENCES production_orders(id),
+    part_id INT NOT NULL REFERENCES parts(id),
     quantity INT NOT NULL CHECK (quantity > 0),
     unit_price DECIMAL(12, 2) NOT NULL CHECK (unit_price >= 0),
     quantity_completed INT DEFAULT 0,
@@ -162,14 +156,14 @@ CREATE TABLE manufacturing.order_items (
 );
 
 -- Production runs (actual manufacturing batches)
-CREATE TABLE manufacturing.production_runs (
+CREATE TABLE production_runs (
     id SERIAL PRIMARY KEY,
     run_number VARCHAR(20) NOT NULL UNIQUE,
-    order_id INT NOT NULL REFERENCES manufacturing.production_orders(id),
-    order_item_id INT NOT NULL REFERENCES manufacturing.order_items(id),
-    machine_id INT NOT NULL REFERENCES manufacturing.machines(id),
-    operator_id INT NOT NULL REFERENCES manufacturing.employees(id),
-    supervisor_id INT REFERENCES manufacturing.employees(id),
+    order_id INT NOT NULL REFERENCES production_orders(id),
+    order_item_id INT NOT NULL REFERENCES order_items(id),
+    machine_id INT NOT NULL REFERENCES machines(id),
+    operator_id INT NOT NULL REFERENCES employees(id),
+    supervisor_id INT REFERENCES employees(id),
     status VARCHAR(20) NOT NULL DEFAULT 'scheduled' CHECK (status IN (
         'scheduled', 'setup', 'running', 'paused', 'completed', 'aborted'
     )),
@@ -186,10 +180,10 @@ CREATE TABLE manufacturing.production_runs (
 );
 
 -- Quality control inspections
-CREATE TABLE manufacturing.quality_checks (
+CREATE TABLE quality_checks (
     id SERIAL PRIMARY KEY,
-    run_id INT NOT NULL REFERENCES manufacturing.production_runs(id),
-    inspector_id INT NOT NULL REFERENCES manufacturing.employees(id),
+    run_id INT NOT NULL REFERENCES production_runs(id),
+    inspector_id INT NOT NULL REFERENCES employees(id),
     check_type VARCHAR(20) NOT NULL CHECK (check_type IN (
         'in_process', 'final', 'first_article', 'random_sample', 'customer_return'
     )),
@@ -210,7 +204,7 @@ CREATE TABLE manufacturing.quality_checks (
 -- =============================================================================
 
 -- General audit log for tracking all changes
-CREATE TABLE manufacturing.audit_log (
+CREATE TABLE audit_log (
     id SERIAL PRIMARY KEY,
     table_name VARCHAR(50) NOT NULL,
     record_id INT NOT NULL,
@@ -218,16 +212,16 @@ CREATE TABLE manufacturing.audit_log (
     old_data JSONB,
     new_data JSONB,
     changed_fields TEXT[],
-    performed_by INT REFERENCES manufacturing.employees(id),
+    performed_by INT REFERENCES employees(id),
     performed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip_address INET,
     session_info JSONB
 );
 
 -- Inventory movement log
-CREATE TABLE manufacturing.inventory_log (
+CREATE TABLE inventory_log (
     id SERIAL PRIMARY KEY,
-    material_id INT NOT NULL REFERENCES manufacturing.materials(id),
+    material_id INT NOT NULL REFERENCES materials(id),
     change_type VARCHAR(20) NOT NULL CHECK (change_type IN (
         'received', 'consumed', 'adjusted', 'scrapped', 'returned', 'transferred'
     )),
@@ -238,25 +232,25 @@ CREATE TABLE manufacturing.inventory_log (
     reference_type VARCHAR(30),
     reference_id INT,
     reason TEXT,
-    performed_by INT REFERENCES manufacturing.employees(id),
+    performed_by INT REFERENCES employees(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Order status history
-CREATE TABLE manufacturing.order_status_history (
+CREATE TABLE order_status_history (
     id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL REFERENCES manufacturing.production_orders(id),
+    order_id INT NOT NULL REFERENCES production_orders(id),
     old_status VARCHAR(20),
     new_status VARCHAR(20) NOT NULL,
-    changed_by INT REFERENCES manufacturing.employees(id),
+    changed_by INT REFERENCES employees(id),
     change_reason TEXT,
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Machine maintenance log
-CREATE TABLE manufacturing.maintenance_log (
+CREATE TABLE maintenance_log (
     id SERIAL PRIMARY KEY,
-    machine_id INT NOT NULL REFERENCES manufacturing.machines(id),
+    machine_id INT NOT NULL REFERENCES machines(id),
     maintenance_type VARCHAR(20) NOT NULL CHECK (maintenance_type IN (
         'preventive', 'corrective', 'emergency', 'calibration', 'inspection'
     )),
@@ -264,7 +258,7 @@ CREATE TABLE manufacturing.maintenance_log (
     parts_replaced JSONB DEFAULT '[]',
     labor_hours DECIMAL(6, 2),
     cost DECIMAL(10, 2),
-    performed_by INT REFERENCES manufacturing.employees(id),
+    performed_by INT REFERENCES employees(id),
     completed_at TIMESTAMP,
     next_due_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -274,80 +268,80 @@ CREATE TABLE manufacturing.maintenance_log (
 -- Indexes for Performance
 -- =============================================================================
 
-CREATE INDEX idx_employees_active ON manufacturing.employees(is_active) WHERE deleted_at IS NULL;
-CREATE INDEX idx_employees_department ON manufacturing.employees(department);
-CREATE INDEX idx_employees_role ON manufacturing.employees(role);
+CREATE INDEX idx_employees_active ON employees(is_active) WHERE deleted_at IS NULL;
+CREATE INDEX idx_employees_department ON employees(department);
+CREATE INDEX idx_employees_role ON employees(role);
 
-CREATE INDEX idx_materials_type ON manufacturing.materials(type) WHERE deleted_at IS NULL;
-CREATE INDEX idx_materials_reorder ON manufacturing.materials(stock_quantity, reorder_level) WHERE deleted_at IS NULL;
+CREATE INDEX idx_materials_type ON materials(type) WHERE deleted_at IS NULL;
+CREATE INDEX idx_materials_reorder ON materials(stock_quantity, reorder_level) WHERE deleted_at IS NULL;
 
-CREATE INDEX idx_parts_category ON manufacturing.parts(category) WHERE deleted_at IS NULL;
-CREATE INDEX idx_parts_number ON manufacturing.parts(part_number) WHERE deleted_at IS NULL;
+CREATE INDEX idx_parts_category ON parts(category) WHERE deleted_at IS NULL;
+CREATE INDEX idx_parts_number ON parts(part_number) WHERE deleted_at IS NULL;
 
-CREATE INDEX idx_machines_status ON manufacturing.machines(status) WHERE deleted_at IS NULL;
-CREATE INDEX idx_machines_maintenance ON manufacturing.machines(next_maintenance_due);
+CREATE INDEX idx_machines_status ON machines(status) WHERE deleted_at IS NULL;
+CREATE INDEX idx_machines_maintenance ON machines(next_maintenance_due);
 
-CREATE INDEX idx_orders_status ON manufacturing.production_orders(status);
-CREATE INDEX idx_orders_due_date ON manufacturing.production_orders(due_date);
-CREATE INDEX idx_orders_customer ON manufacturing.production_orders(customer_name);
+CREATE INDEX idx_orders_status ON production_orders(status);
+CREATE INDEX idx_orders_due_date ON production_orders(due_date);
+CREATE INDEX idx_orders_customer ON production_orders(customer_name);
 
-CREATE INDEX idx_runs_status ON manufacturing.production_runs(status);
-CREATE INDEX idx_runs_machine ON manufacturing.production_runs(machine_id);
-CREATE INDEX idx_runs_operator ON manufacturing.production_runs(operator_id);
+CREATE INDEX idx_runs_status ON production_runs(status);
+CREATE INDEX idx_runs_machine ON production_runs(machine_id);
+CREATE INDEX idx_runs_operator ON production_runs(operator_id);
 
-CREATE INDEX idx_quality_run ON manufacturing.quality_checks(run_id);
-CREATE INDEX idx_quality_result ON manufacturing.quality_checks(result);
+CREATE INDEX idx_quality_run ON quality_checks(run_id);
+CREATE INDEX idx_quality_result ON quality_checks(result);
 
-CREATE INDEX idx_audit_table ON manufacturing.audit_log(table_name, record_id);
-CREATE INDEX idx_audit_time ON manufacturing.audit_log(performed_at);
+CREATE INDEX idx_audit_table ON audit_log(table_name, record_id);
+CREATE INDEX idx_audit_time ON audit_log(performed_at);
 
-CREATE INDEX idx_inventory_material ON manufacturing.inventory_log(material_id);
-CREATE INDEX idx_inventory_time ON manufacturing.inventory_log(created_at);
+CREATE INDEX idx_inventory_material ON inventory_log(material_id);
+CREATE INDEX idx_inventory_time ON inventory_log(created_at);
 
 -- =============================================================================
 -- Views for Common Queries
 -- =============================================================================
 
 -- Active employees only (soft-delete aware)
-CREATE VIEW manufacturing.active_employees AS
+CREATE VIEW active_employees AS
 SELECT id, employee_number, first_name, last_name, email, role, department, 
        hire_date, hourly_rate, is_active, created_at
-FROM manufacturing.employees
+FROM employees
 WHERE deleted_at IS NULL AND is_active = true;
 
 -- Active materials only
-CREATE VIEW manufacturing.active_materials AS
+CREATE VIEW active_materials AS
 SELECT id, sku, name, type, unit, unit_cost, stock_quantity, reorder_level,
        lead_time_days, supplier, created_at
-FROM manufacturing.materials
+FROM materials
 WHERE deleted_at IS NULL;
 
 -- Active parts only
-CREATE VIEW manufacturing.active_parts AS
+CREATE VIEW active_parts AS
 SELECT id, part_number, name, description, category, current_version,
        base_price, production_time_mins, requires_certification, created_at
-FROM manufacturing.parts
+FROM parts
 WHERE deleted_at IS NULL;
 
 -- Active machines only
-CREATE VIEW manufacturing.active_machines AS
+CREATE VIEW active_machines AS
 SELECT id, machine_code, name, type, manufacturer, model, status, location,
        hourly_cost, total_run_hours, next_maintenance_due, created_at
-FROM manufacturing.machines
+FROM machines
 WHERE deleted_at IS NULL;
 
 -- Materials that need reordering
-CREATE VIEW manufacturing.materials_to_reorder AS
+CREATE VIEW materials_to_reorder AS
 SELECT m.id, m.sku, m.name, m.type, m.unit, m.unit_cost, m.stock_quantity,
        m.reorder_level, m.lead_time_days, m.supplier, m.created_at,
        (m.reorder_level - m.stock_quantity) AS quantity_to_order,
        CURRENT_DATE + m.lead_time_days AS expected_arrival
-FROM manufacturing.materials m
+FROM materials m
 WHERE m.deleted_at IS NULL
   AND m.stock_quantity <= m.reorder_level;
 
 -- Open orders summary
-CREATE VIEW manufacturing.open_orders_summary AS
+CREATE VIEW open_orders_summary AS
 SELECT 
     po.id,
     po.order_number,
@@ -360,7 +354,7 @@ SELECT
     SUM(oi.quantity) AS total_parts_ordered,
     SUM(oi.quantity_completed) AS total_parts_completed,
     ROUND(SUM(oi.quantity_completed)::DECIMAL / NULLIF(SUM(oi.quantity), 0) * 100, 1) AS completion_pct
-FROM manufacturing.production_orders po
-LEFT JOIN manufacturing.order_items oi ON po.id = oi.order_id
+FROM production_orders po
+LEFT JOIN order_items oi ON po.id = oi.order_id
 WHERE po.status NOT IN ('completed', 'shipped', 'cancelled')
 GROUP BY po.id, po.order_number, po.customer_name, po.status, po.priority, po.due_date;

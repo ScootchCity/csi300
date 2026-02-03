@@ -2,7 +2,7 @@
 -- PawCare Seed Data - Part 4: Pets
 -- =============================================================================
 
-INSERT INTO pawcare.pets (owner_id, species_id, breed, pet_name, date_of_birth, gender, weight_kg, color, is_neutered, microchip_id, allergies, notes, is_deceased, created_at) VALUES
+INSERT INTO pets (owner_id, species_id, breed, pet_name, date_of_birth, gender, weight_kg, color, is_neutered, microchip_id, allergies, notes, is_deceased, created_at) VALUES
 -- Owner 1 (John Smith) - 2 dogs
 (1, 1, 'Golden Retriever', 'Max', '2019-03-15', 'male', 32.5, 'Golden', TRUE, 'MC-2020-00001', NULL, 'Friendly, loves swimming', FALSE, '2020-01-15 10:00:00'),
 (1, 1, 'Labrador Retriever', 'Bella', '2020-06-20', 'female', 28.0, 'Black', TRUE, 'MC-2020-00002', 'Chicken', 'High energy, needs daily exercise', FALSE, '2020-07-01 11:00:00'),

@@ -1,13 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 # =============================================================================
 # PrecisionParts Manufacturing - Assignment 07 Verification Script
 # =============================================================================
 # This script verifies student SQL solutions for Soft-Delete, Functions,
 # Triggers, and Transactions
-# Usage: ./verify.sh
+# Usage:
+#   - Local (Windows/Mac/Linux): docker-compose run --rm verify
+#   - GitHub Actions: bash ./verify.sh
 # =============================================================================
-
-set -e
 
 # Colors for output
 RED='\033[0;31m'
@@ -16,12 +17,23 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-CONTAINER_NAME="${CONTAINER_NAME:-databases-postgres}"
-DB_NAME="${DB_NAME:-precision_parts}"
-DB_USER="${DB_USER:-postgres}"
-SQL_DIR="./sql"
-SOLUTIONS_DIR="./solutions"
-OUTPUT_DIR="./output"
+CONTAINER_NAME="${CONTAINER_NAME:-postgres}"
+DB_USER="${PGUSER:-postgres}"
+DB_NAME="${PGDATABASE:-postgres}"
+
+# Detect if running inside container or on host
+if [ -n "$PGHOST" ]; then
+    # Running inside container (docker-compose run verify)
+    RUN_MODE="container"
+    DB_HOST="$PGHOST"
+    SQL_DIR="/sql"
+else
+    # Running on host (GitHub Actions or local bash)
+    RUN_MODE="host"
+    SQL_DIR="./sql"
+fi
+
+OUTPUT_DIR="/tmp/output"
 
 # Score tracking
 TOTAL_POINTS=0
@@ -43,14 +55,22 @@ mkdir -p "$OUTPUT_DIR"
 
 # Function to run SQL and capture result
 run_sql() {
-    docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+    if [ "$RUN_MODE" = "container" ]; then
+        psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+    else
+        docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+    fi
 }
 
 # Function to run SQL file
 run_sql_file() {
     local sql_file="$1"
     local output_file="$2"
-    docker exec -i "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" < "$sql_file" > "$output_file" 2>&1
+    if [ "$RUN_MODE" = "container" ]; then
+        psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" < "$sql_file" > "$output_file" 2>&1
+    else
+        docker exec -i "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" < "$sql_file" > "$output_file" 2>&1
+    fi
 }
 
 # Function to print test result
@@ -81,15 +101,28 @@ compare_outputs() {
 # STEP 1: Check environment
 # ============================================
 echo "----------------------------------------"
-echo "Step 1: Checking environment..."
+echo "Step 1: Checking database connection..."
 echo "----------------------------------------"
 
-if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
-    echo -e "${RED}Error: Container '$CONTAINER_NAME' is not running.${NC}"
-    echo "Please start the database with: docker-compose up -d"
-    exit 1
+if [ "$RUN_MODE" = "container" ]; then
+    if ! psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" > /dev/null 2>&1; then
+        echo -e "${RED}Error: Cannot connect to database.${NC}"
+        echo "Please make sure the database is running with: docker-compose up -d"
+        exit 1
+    fi
+else
+    # Start docker compose if postgres is not running
+    if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+        echo "Starting PostgreSQL via docker compose..."
+        docker compose down -v --remove-orphans 2>/dev/null || true
+        docker compose up -d postgres
+        echo "Waiting for PostgreSQL to be ready..."
+        until docker exec "$CONTAINER_NAME" pg_isready -U "$DB_USER" > /dev/null 2>&1; do
+            sleep 1
+        done
+    fi
 fi
-echo -e "${GREEN}PASS:${NC} Container '$CONTAINER_NAME' is running"
+echo -e "${GREEN}PASS:${NC} Database connection successful"
 echo ""
 
 # ============================================
@@ -192,9 +225,9 @@ fi
 exercise_file="$SQL_DIR/04-transactions.sql"
 if [ -f "$exercise_file" ]; then
     # Clean up test data from previous runs to ensure idempotency
-    run_sql "DELETE FROM manufacturing.order_items WHERE order_id IN (SELECT id FROM manufacturing.production_orders WHERE order_number = 'PO-2024-100');" > /dev/null 2>&1 || true
-    run_sql "DELETE FROM manufacturing.production_orders WHERE order_number = 'PO-2024-100';" > /dev/null 2>&1 || true
-    run_sql "DELETE FROM manufacturing.production_runs WHERE id > 1000;" > /dev/null 2>&1 || true
+    run_sql "DELETE FROM order_items WHERE order_id IN (SELECT id FROM production_orders WHERE order_number = 'PO-2024-100');" > /dev/null 2>&1 || true
+    run_sql "DELETE FROM production_orders WHERE order_number = 'PO-2024-100';" > /dev/null 2>&1 || true
+    run_sql "DELETE FROM production_runs WHERE id > 1000;" > /dev/null 2>&1 || true
     
     student_output="$OUTPUT_DIR/student_ex4.txt"
     

@@ -2,10 +2,9 @@
 -- PrecisionParts Manufacturing - Seed Data: Audit & Inventory Logs
 -- =============================================================================
 
-SET search_path TO manufacturing, public;
 
 -- Inventory movement logs
-INSERT INTO manufacturing.inventory_log (material_id, change_type, quantity_change, quantity_before, quantity_after, unit_cost, reference_type, reference_id, reason, performed_by, created_at) VALUES
+INSERT INTO inventory_log (material_id, change_type, quantity_change, quantity_before, quantity_after, unit_cost, reference_type, reference_id, reason, performed_by, created_at) VALUES
 -- Material receipts
 (1, 'received', 100.00, 50.00, 150.00, 45.00, 'purchase_order', 1001, 'PO-MAT-2024-001 from MetalSource', 24, '2024-01-10 09:00:00'),
 (2, 'received', 200.00, 300.00, 500.00, 8.50, 'purchase_order', 1001, 'PO-MAT-2024-001 from MetalSource', 24, '2024-01-10 09:00:00'),
@@ -36,7 +35,7 @@ INSERT INTO manufacturing.inventory_log (material_id, change_type, quantity_chan
 ON CONFLICT DO NOTHING;
 
 -- Order status history
-INSERT INTO manufacturing.order_status_history (order_id, old_status, new_status, changed_by, change_reason, changed_at) VALUES
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, change_reason, changed_at) VALUES
 -- PO-2024-001 history
 (1, NULL, 'pending', 2, 'Order created', '2024-01-15 09:00:00'),
 (1, 'pending', 'confirmed', 2, 'Customer PO received', '2024-01-16 10:00:00'),
@@ -63,7 +62,7 @@ INSERT INTO manufacturing.order_status_history (order_id, old_status, new_status
 ON CONFLICT DO NOTHING;
 
 -- Maintenance logs
-INSERT INTO manufacturing.maintenance_log (machine_id, maintenance_type, description, parts_replaced, labor_hours, cost, performed_by, completed_at, next_due_at, created_at) VALUES
+INSERT INTO maintenance_log (machine_id, maintenance_type, description, parts_replaced, labor_hours, cost, performed_by, completed_at, next_due_at, created_at) VALUES
 -- Recent maintenance
 (1, 'preventive', 'Scheduled 500-hour maintenance: spindle inspection, way lubrication, coolant change', '["coolant_filter", "way_lube_5gal"]', 4.0, 450.00, 21, '2024-11-15 12:00:00', '2025-01-20 08:00:00', '2024-11-15 08:00:00'),
 (2, 'preventive', 'Scheduled maintenance: axis calibration, tool changer service', '["tool_gripper_spring"]', 3.0, 280.00, 22, '2024-12-01 12:00:00', '2025-02-15 08:00:00', '2024-12-01 08:00:00'),
@@ -81,7 +80,7 @@ INSERT INTO manufacturing.maintenance_log (machine_id, maintenance_type, descrip
 ON CONFLICT DO NOTHING;
 
 -- Sample audit log entries (these would normally be created by triggers)
-INSERT INTO manufacturing.audit_log (table_name, record_id, action, old_data, new_data, changed_fields, performed_by, performed_at) VALUES
+INSERT INTO audit_log (table_name, record_id, action, old_data, new_data, changed_fields, performed_by, performed_at) VALUES
 ('employees', 29, 'UPDATE', 
  '{"is_active": true, "deleted_at": null}', 
  '{"is_active": false, "deleted_at": "2024-06-15T10:00:00"}', 

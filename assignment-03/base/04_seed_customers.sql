@@ -2,7 +2,7 @@
 -- ShopFlow Seed Data - Part 3: Customers
 -- =============================================================================
 
-INSERT INTO shopflow.customers (email, first_name, last_name, phone, country, city, tier, created_at, last_order_at) VALUES
+INSERT INTO customers (email, first_name, last_name, phone, country, city, tier, created_at, last_order_at) VALUES
 -- USA Customers
 ('john.smith@gmail.com', 'John', 'Smith', '+1-555-0101', 'USA', 'New York', 'gold', '2023-01-15', '2025-12-15'),
 ('emily.johnson@yahoo.com', 'Emily', 'Johnson', '+1-555-0102', 'USA', 'Los Angeles', 'platinum', '2022-06-20', '2025-12-28'),
@@ -71,7 +71,7 @@ INSERT INTO shopflow.customers (email, first_name, last_name, phone, country, ci
 
 -- More diverse customers for better query practice
 ('inactive.user@oldmail.com', 'Inactive', 'User', NULL, 'USA', 'Detroit', 'bronze', '2022-01-01', NULL),
-('test.customer@shopflow.local', 'Test', 'Customer', '+1-555-9999', 'USA', 'Test City', 'bronze', '2025-01-01', NULL),
+('test.customer@local', 'Test', 'Customer', '+1-555-9999', 'USA', 'Test City', 'bronze', '2025-01-01', NULL),
 ('vip.shopper@luxury.com', 'Victoria', 'Premium', '+1-555-8888', 'USA', 'Beverly Hills', 'platinum', '2021-06-15', '2025-12-31'),
 ('bulk.buyer@wholesale.com', 'Bob', 'Wholesale', '+1-555-7777', 'USA', 'Miami', 'gold', '2022-03-20', '2025-12-20'),
 ('new.signup@recent.com', 'Nancy', 'Newcomer', NULL, 'USA', 'Seattle', 'bronze', '2025-12-01', NULL),

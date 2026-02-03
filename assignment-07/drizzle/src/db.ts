@@ -3,7 +3,7 @@ import postgres from 'postgres';
 import * as schema from './schema.js';
 
 // Connection configuration
-const connectionString = 'postgres://precision:precision_pass@localhost:5435/precision_manufacturing';
+const connectionString = 'postgres://postgres:postgres@localhost:5432/postgres';
 
 // Create the connection
 const queryClient = postgres(connectionString);

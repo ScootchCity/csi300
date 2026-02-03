@@ -3,23 +3,23 @@
 -- =============================================================================
 
 -- Departments
-INSERT INTO medcare.departments (name, building, floor, phone, email) VALUES
-('Cardiology', 'Main Building', 3, '802-555-0101', 'cardiology@medcare.com'),
-('Neurology', 'Main Building', 4, '802-555-0102', 'neurology@medcare.com'),
-('Orthopedics', 'West Wing', 2, '802-555-0103', 'orthopedics@medcare.com'),
-('Pediatrics', 'East Wing', 1, '802-555-0104', 'pediatrics@medcare.com'),
-('Internal Medicine', 'Main Building', 2, '802-555-0105', 'internalmedicine@medcare.com'),
-('Dermatology', 'West Wing', 1, '802-555-0106', 'dermatology@medcare.com'),
-('Oncology', 'Main Building', 5, '802-555-0107', 'oncology@medcare.com'),
-('Psychiatry', 'East Wing', 3, '802-555-0108', 'psychiatry@medcare.com'),
-('Obstetrics & Gynecology', 'East Wing', 2, '802-555-0109', 'obgyn@medcare.com'),
-('Emergency Medicine', 'Main Building', 1, '802-555-0110', 'emergency@medcare.com'),
-('Radiology', 'Main Building', 1, '802-555-0111', 'radiology@medcare.com'),
-('Gastroenterology', 'West Wing', 3, '802-555-0112', 'gastro@medcare.com')
+INSERT INTO departments (name, building, floor, phone, email) VALUES
+('Cardiology', 'Main Building', 3, '802-555-0101', 'cardiology@com'),
+('Neurology', 'Main Building', 4, '802-555-0102', 'neurology@com'),
+('Orthopedics', 'West Wing', 2, '802-555-0103', 'orthopedics@com'),
+('Pediatrics', 'East Wing', 1, '802-555-0104', 'pediatrics@com'),
+('Internal Medicine', 'Main Building', 2, '802-555-0105', 'internalmedicine@com'),
+('Dermatology', 'West Wing', 1, '802-555-0106', 'dermatology@com'),
+('Oncology', 'Main Building', 5, '802-555-0107', 'oncology@com'),
+('Psychiatry', 'East Wing', 3, '802-555-0108', 'psychiatry@com'),
+('Obstetrics & Gynecology', 'East Wing', 2, '802-555-0109', 'obgyn@com'),
+('Emergency Medicine', 'Main Building', 1, '802-555-0110', 'emergency@com'),
+('Radiology', 'Main Building', 1, '802-555-0111', 'radiology@com'),
+('Gastroenterology', 'West Wing', 3, '802-555-0112', 'gastro@com')
 ON CONFLICT DO NOTHING;
 
 -- Specializations
-INSERT INTO medcare.specializations (name, description, requires_certification) VALUES
+INSERT INTO specializations (name, description, requires_certification) VALUES
 ('Interventional Cardiology', 'Catheter-based treatment of heart diseases', true),
 ('Electrophysiology', 'Diagnosis and treatment of heart rhythm disorders', true),
 ('General Cardiology', 'Diagnosis and treatment of heart conditions', true),
@@ -48,7 +48,7 @@ INSERT INTO medcare.specializations (name, description, requires_certification) 
 ON CONFLICT DO NOTHING;
 
 -- Insurance Providers
-INSERT INTO medcare.insurance_providers (name, plan_type, coverage_level, phone, email, website, is_active) VALUES
+INSERT INTO insurance_providers (name, plan_type, coverage_level, phone, email, website, is_active) VALUES
 ('Blue Cross Blue Shield VT', 'PPO', 'premium', '800-247-2583', 'members@bcbsvt.com', 'www.bcbsvt.com', true),
 ('Blue Cross Blue Shield VT', 'HMO', 'standard', '800-247-2583', 'members@bcbsvt.com', 'www.bcbsvt.com', true),
 ('MVP Health Care', 'HMO', 'standard', '800-687-6277', 'member@mvphealthcare.com', 'www.mvphealthcare.com', true),
@@ -67,7 +67,7 @@ INSERT INTO medcare.insurance_providers (name, plan_type, coverage_level, phone,
 ON CONFLICT DO NOTHING;
 
 -- Medications
-INSERT INTO medcare.medications (name, generic_name, category, dosage_form, strength, manufacturer, requires_prescription, controlled_substance) VALUES
+INSERT INTO medications (name, generic_name, category, dosage_form, strength, manufacturer, requires_prescription, controlled_substance) VALUES
 -- Cardiovascular
 ('Lipitor', 'Atorvastatin', 'Cardiovascular', 'tablet', '10mg', 'Pfizer', true, false),
 ('Lipitor', 'Atorvastatin', 'Cardiovascular', 'tablet', '20mg', 'Pfizer', true, false),
@@ -118,7 +118,7 @@ INSERT INTO medcare.medications (name, generic_name, category, dosage_form, stre
 ON CONFLICT DO NOTHING;
 
 -- Lab Tests
-INSERT INTO medcare.lab_tests (name, code, category, description, normal_range, unit, turnaround_hours, base_cost, requires_fasting) VALUES
+INSERT INTO lab_tests (name, code, category, description, normal_range, unit, turnaround_hours, base_cost, requires_fasting) VALUES
 -- Blood Tests
 ('Complete Blood Count', 'CBC', 'Hematology', 'Measures different components of blood', 'Varies by component', 'cells/μL', 4, 35.00, false),
 ('Basic Metabolic Panel', 'BMP', 'Chemistry', 'Measures glucose, calcium, and electrolytes', 'Varies by component', 'Various', 4, 45.00, true),

@@ -1,174 +1,205 @@
-# Exercise 1: Data Analysis (25 points)
+# Exercise 1: Data Analysis Quiz (25 points)
+
+DO THIS EXERCISE ON CANVAS ONLY. DO NOT SUBMIT ANY FILES HERE.
 
 ## Objective
 
-Analyze the unnormalized LMS data to identify problems, anomalies, and functional dependencies. This analysis will guide your normalization decisions.
+Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify problems, anomalies, and functional dependencies.
 
-## Instructions
+**Instructions:** Review the CSV file and answer the following multiple-choice questions.
 
-Review the data in `data/unnormalized_lms.csv` and create a Markdown file `sql/01_analysis.md` that documents your findings.
+## Part 1.1: Update Anomalies (4 points)
 
----
+**Q1.1.1** (1 pt): If Dr. Sarah Smith changes her office from "Room 301" to "Room 305", how many rows need to be updated?
 
-## Part 1.1: Identify Data Anomalies (10 points)
+- [ ] A) 3
+- [ ] B) 5
+- [ ] C) 7
+- [ ] D) 9
 
-For each type of anomaly, provide **at least 2 specific examples** from the data:
+**Q1.1.2** (1 pt): If the course title for CS101 changes from "Introduction to Programming" to "Programming Fundamentals", how many rows need to be updated?
 
-### Update Anomalies
-Identify situations where updating one piece of information requires updating multiple rows.
+- [ ] A) 2
+- [ ] B) 4
+- [ ] C) 6
+- [ ] D) 8
 
-**Example format:**
-> If Dr. Sarah Smith changes her office from "Room 301" to "Room 305", we must update rows: 1, 3, 6, 7, 10, 11, 14 (7 rows!)
+**Q1.1.3** (1 pt): If Alice Johnson changes her name to Alice Smith, how many rows need to be updated?
 
-Find and document:
-1. Two examples of instructor-related update anomalies
-2. Two examples of course-related update anomalies
-3. One example of student-related update anomalies
+- [ ] A) 1
+- [ ] B) 2
+- [ ] C) 3
+- [ ] D) 4
 
-### Insert Anomalies
-Identify situations where you cannot insert certain data without unrelated data.
+**Q1.1.4** (1 pt): If the Computer Science department moves from "Tech Building" to "Engineering Building", how many rows need to be updated?
 
-**Example format:**
-> We cannot add a new course "AI500 - Artificial Intelligence" to the catalog without having at least one student enrolled in it.
+- [ ] A) 6
+- [ ] B) 8
+- [ ] C) 10
+- [ ] D) 12
 
-Find and document:
-1. How would you add a new instructor who hasn't been assigned any courses yet?
-2. How would you add a new module to an existing course?
-3. How would you record a new department?
+## Part 1.2: Insert Anomalies (3 points)
 
-### Delete Anomalies
-Identify situations where deleting data causes unintended loss of other information.
+**Q1.2.1** (1 pt): Can we add a new instructor "Dr. Jane Doe" who hasn't been assigned any courses yet?
 
-**Example format:**
-> If we delete enrollment_id 11 (Frank Garcia's only enrollment), we lose all record that Frank Garcia exists as a student.
+- [ ] A) Yes, we can add a row with just instructor information
+- [ ] B) No, we need enrollment_id which requires a student enrollment
+- [ ] C) Yes, if we leave student fields NULL
+- [ ] D) No, but we can add them to a separate instructors table
 
-Find and document:
-1. What happens if David Miller drops ML400?
-2. What information would be lost if we deleted all WEB300 enrollments?
+**Q1.2.2** (1 pt): Can we add a new department "Data Science" in "Analytics Building" without any courses or students?
 
----
+- [ ] A) Yes, departments are independent entities in this structure
+- [ ] B) No, department info only exists as part of instructor records tied to enrollments
+- [ ] C) Yes, by adding a row with NULL enrollment_id
+- [ ] D) No, but we can use a placeholder student
 
-## Part 1.2: Identify Normal Form Violations (8 points)
+**Q1.2.3** (1 pt): To add a new module "Advanced Topics" to course ML400, what must we do?
 
-### 1NF Violations (2 points)
-List all columns that contain non-atomic (multi-valued) data:
+- [ ] A) Add a new row with module information only
+- [ ] B) Update the module_id, module_title, module_order columns in ALL ML400 rows
+- [ ] C) Add a new enrollment with the new module
+- [ ] D) Modules can be added independently without any issues
 
-| Column Name | Example Value | Problem |
-|-------------|---------------|---------|
-| ? | ? | Contains multiple values separated by commas |
+## Part 1.3: Delete Anomalies (3 points)
 
-### 2NF Violations (3 points)
-Assuming the primary key is `enrollment_id`, identify partial dependencies where a non-key attribute depends on only PART of what could be a composite key:
+**Q1.3.1** (1 pt): If Frank Garcia (enrollment_id 11) withdraws from CS101, what information is lost?
 
-| Attribute | Depends Only On | Not The Full Key |
-|-----------|-----------------|------------------|
-| ? | ? | ? |
+- [ ] A) Only the enrollment record
+- [ ] B) Frank Garcia's existence as a student (his only enrollment)
+- [ ] C) The CS101 course information
+- [ ] D) Dr. Sarah Smith's information
 
-### 3NF Violations (3 points)
-Identify transitive dependencies (non-key attribute depends on another non-key attribute):
+**Q1.3.2** (1 pt): If we delete ALL enrollments for course STAT250 (rows 8 and 13), what unique instructor information would be lost?
 
-| Attribute | Depends On | Which Depends On |
-|-----------|------------|------------------|
-| ? | ? | (primary key) |
+- [ ] A) Dr. Sarah Smith's information
+- [ ] B) Dr. Michael Jones's information
+- [ ] C) Dr. Robert Chen's information (only teaches STAT250)
+- [ ] D) No instructor information would be lost
 
----
+**Q1.3.3** (1 pt): What happens if we delete enrollment_id 4 (Bob Williams in WEB300)?
 
-## Part 1.3: Document Functional Dependencies (7 points)
+- [ ] A) We lose Bob Williams as a student entirely
+- [ ] B) We lose the WEB300 course information
+- [ ] C) Bob Williams still exists (enrolled in CS101), no course info lost
+- [ ] D) Dr. Jennifer Lee's information is lost
 
-List ALL functional dependencies you can identify in the data.
+## Part 2.1: First Normal Form (1NF) Violations (2 points)
 
-### Format
-```
-determinant → dependent_attribute(s)
-```
+**Q2.1.1** (1 pt): Which columns violate 1NF by containing multiple comma-separated values? (Select ALL that apply)
 
-### Student-Related Dependencies (2 points)
-```
-student_email → ???
-```
+- [ ] A) student_email
+- [ ] B) student_phone
+- [ ] C) course_code
+- [ ] D) module_id
+- [ ] E) module_title
+- [ ] F) module_order
+- [ ] G) assignment_names
+- [ ] H) assignment_due_dates
+- [ ] I) assignment_points
 
-### Instructor-Related Dependencies (2 points)
-```
-instructor_email → ???
-```
+**Q2.1.2** (1 pt): How many columns in total violate 1NF (contain multi-valued data)?
 
-### Course-Related Dependencies (2 points)
-```
-course_code → ???
-```
+- [ ] A) 4
+- [ ] B) 5
+- [ ] C) 6
+- [ ] D) 7
 
-### Enrollment-Related Dependencies (1 point)
-```
-enrollment_id → ???
-(student_email, course_code) → ???
-```
+## Part 2.2: Second Normal Form (2NF) Violations (3 points)
 
----
+*Consider (student_email, course_code) as a composite candidate key for enrollment data.*
 
-## Deliverable
+**Q2.2.1** (1 pt): Which attribute depends ONLY on student_email (partial dependency)?
 
-Create `sql/01_analysis.md` with the following structure:
+- [ ] A) enrollment_date
+- [ ] B) student_name
+- [ ] C) grade
+- [ ] D) completion_date
 
-```markdown
-# EduLearn LMS - Data Analysis
+**Q2.2.2** (1 pt): Which attribute depends ONLY on course_code (partial dependency)?
 
-## 1. Data Anomalies
+- [ ] A) grade_points
+- [ ] B) certificate_issued
+- [ ] C) course_credits
+- [ ] D) enrollment_date
 
-### 1.1 Update Anomalies
-[Your examples here]
+**Q2.2.3** (1 pt): Which attributes depend on the FULL composite key (student_email, course_code)?
 
-### 1.2 Insert Anomalies
-[Your examples here]
+- [ ] A) student_name, student_phone
+- [ ] B) course_title, course_description
+- [ ] C) enrollment_date, grade, completion_date
+- [ ] D) instructor_email, instructor_name
 
-### 1.3 Delete Anomalies
-[Your examples here]
+## Part 2.3: Third Normal Form (3NF) Violations (3 points)
 
-## 2. Normal Form Violations
+**Q2.3.1** (1 pt): In the dependency chain: course_code → instructor_email → instructor_name, what type of dependency does instructor_name have on course_code?
 
-### 2.1 First Normal Form (1NF) Violations
-[Your findings]
+- [ ] A) Direct dependency
+- [ ] B) Partial dependency
+- [ ] C) Transitive dependency
+- [ ] D) No dependency
 
-### 2.2 Second Normal Form (2NF) Violations
-[Your findings]
+**Q2.3.2** (1 pt): Which shows a transitive dependency through instructor_department?
 
-### 2.3 Third Normal Form (3NF) Violations
-[Your findings]
+- [ ] A) course_code → instructor_department → department_building
+- [ ] B) student_email → course_code → instructor_department
+- [ ] C) enrollment_id → student_email → student_name
+- [ ] D) instructor_email → instructor_department → department_building
 
-## 3. Functional Dependencies
+**Q2.3.3** (1 pt): How many "hops" are in this transitive chain: enrollment_id → course_code → instructor_email → instructor_department → department_building?
 
-### 3.1 Student Dependencies
-[List of FDs]
+- [ ] A) 2
+- [ ] B) 3
+- [ ] C) 4
+- [ ] D) 5
 
-### 3.2 Instructor Dependencies
-[List of FDs]
+## Part 3: Functional Dependencies (7 points)
 
-### 3.3 Course Dependencies
-[List of FDs]
+**Q3.1** (1 pt): Which is the correct functional dependency for students?
 
-### 3.4 Module Dependencies
-[List of FDs]
+- [ ] A) student_name → student_email, student_phone
+- [ ] B) student_email → student_name, student_phone
+- [ ] C) student_phone → student_email, student_name
+- [ ] D) enrollment_id → student_email only
 
-### 3.5 Assignment Dependencies
-[List of FDs]
+**Q3.2** (1 pt): Which is the correct functional dependency for instructors?
 
-### 3.6 Enrollment Dependencies
-[List of FDs]
+- [ ] A) instructor_name → instructor_email, instructor_office, instructor_department
+- [ ] B) instructor_department → instructor_email, instructor_name, instructor_office
+- [ ] C) instructor_email → instructor_name, instructor_office, instructor_department
+- [ ] D) instructor_office → instructor_email, instructor_name
 
-### 3.7 Department Dependencies
-[List of FDs]
-```
+**Q3.3** (1 pt): Which is the correct functional dependency for courses?
 
----
+- [ ] A) course_title → course_code, course_description, course_credits, instructor_email
+- [ ] B) course_code → course_title, course_description, course_credits, instructor_email
+- [ ] C) course_credits → course_code, course_title, course_description
+- [ ] D) instructor_email → course_code, course_title
 
-## Grading Rubric
+**Q3.4** (1 pt): What does module_id functionally determine?
 
-| Criterion | Points |
-|-----------|--------|
-| Update anomalies (5 examples) | 4 |
-| Insert anomalies (3 examples) | 3 |
-| Delete anomalies (2 examples) | 3 |
-| 1NF violations identified | 2 |
-| 2NF violations identified | 3 |
-| 3NF violations identified | 3 |
-| Functional dependencies documented | 7 |
-| **Total** | **25** |
+- [ ] A) module_id → module_title, module_order, course_code
+- [ ] B) module_id → module_title, module_order only
+- [ ] C) module_id → course_code only
+- [ ] D) module_title → module_id, module_order
+
+**Q3.5** (1 pt): What is the correct dependency for enrollment-specific data?
+
+- [ ] A) student_email → enrollment_date, grade, completion_date
+- [ ] B) course_code → enrollment_date, grade, completion_date
+- [ ] C) enrollment_id → student_email, course_code, enrollment_date, grade, completion_date
+- [ ] D) grade → enrollment_id, grade_points
+
+**Q3.6** (1 pt): What does instructor_department functionally determine?
+
+- [ ] A) instructor_department → instructor_email, instructor_name
+- [ ] B) instructor_department → department_building
+- [ ] C) department_building → instructor_department
+- [ ] D) instructor_department → course_code
+
+**Q3.7** (1 pt): The composite key (student_email, course_code) determines which of the following?
+
+- [ ] A) student_name, student_phone
+- [ ] B) course_title, course_description
+- [ ] C) grade, grade_points, enrollment_date, completion_date
+- [ ] D) instructor_email, instructor_name

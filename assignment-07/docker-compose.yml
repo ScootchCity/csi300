@@ -1,15 +1,16 @@
 services:
-  db:
+  postgres:
     image: postgres:16-alpine
-    container_name: precision_parts_db
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: precision_parts
+      POSTGRES_DB: postgres
     ports:
-      - "5435:5432"
+      - "5432:5432"
     volumes:
-      - precision_parts_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - .:/app:rw
       - ./base:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -19,15 +20,35 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: precision_parts_adminer
+    container_name: adminer
     ports:
-      - "8083:8080"
+      - "8080:8080"
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
     environment:
-      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_SERVER: postgres
       ADMINER_DESIGN: pepa-linha-dark
 
+  # Verification service - run with: docker-compose run --rm verify
+  verify:
+    image: postgres:16-alpine
+    container_name: verify
+    volumes:
+      - ./sql:/sql:ro
+      - ./base:/base:ro
+      - ./verify.sh:/verify.sh:ro
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/bash", "/verify.sh"]
+    profiles:
+      - tools
+
 volumes:
-  precision_parts_data:
+  postgres_data:

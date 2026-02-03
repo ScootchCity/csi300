@@ -5,7 +5,7 @@
 -- Some products have 0 stock (sold out) for filtering exercises
 -- Reserved quantities for pending orders
 
-INSERT INTO shopflow.inventory (product_id, warehouse_id, quantity, reserved_quantity, last_restock_at) VALUES
+INSERT INTO inventory (product_id, warehouse_id, quantity, reserved_quantity, last_restock_at) VALUES
 -- Electronics (products 1-20) - distributed across all warehouses
 -- Laptop Pro X1 (product 1)
 (1, 1, 45, 5, '2024-12-15 08:00:00'),
@@ -205,7 +205,7 @@ INSERT INTO shopflow.inventory (product_id, warehouse_id, quantity, reserved_qua
 (50, 5, 35, 3, '2024-12-18 08:00:00');
 
 -- Add more inventory entries for remaining products
-INSERT INTO shopflow.inventory (product_id, warehouse_id, quantity, reserved_quantity, last_restock_at) VALUES
+INSERT INTO inventory (product_id, warehouse_id, quantity, reserved_quantity, last_restock_at) VALUES
 (51, 1, 60, 5, '2024-12-22 08:00:00'),
 (52, 1, 40, 3, '2024-12-21 08:00:00'),
 (53, 1, 75, 7, '2024-12-22 08:00:00'),

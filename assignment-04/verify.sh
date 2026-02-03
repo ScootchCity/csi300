@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 # =============================================================================
 # EduLearn LMS - Assignment 04 Verification Script
 # =============================================================================
 # This script verifies student submissions for the normalization assignment
-# Usage: ./verify.sh
+# Usage:
+#   - Local (Windows/Mac/Linux): docker-compose run --rm verify
+#   - GitHub Actions: bash ./verify.sh
 # =============================================================================
-
-set -e
 
 # Colors for output
 RED='\033[0;31m'
@@ -15,11 +16,20 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-CONTAINER_NAME="${CONTAINER_NAME:-databases-postgres}"
-DB_NAME="${DB_NAME:-edulearn_lms}"
-DB_USER="${DB_USER:-postgres}"
-DB_SCHEMA="edulearn"
-SQL_DIR="./sql"
+CONTAINER_NAME="${CONTAINER_NAME:-postgres}"
+DB_USER="${PGUSER:-postgres}"
+DB_NAME="${PGDATABASE:-postgres}"
+DB_SCHEMA="public"
+
+# Detect if running inside container or on host
+if [ -n "$PGHOST" ]; then
+    RUN_MODE="container"
+    DB_HOST="$PGHOST"
+    SQL_DIR="/sql"
+else
+    RUN_MODE="host"
+    SQL_DIR="./sql"
+fi
 
 # Score tracking
 TOTAL_POINTS=0
@@ -32,25 +42,24 @@ echo ""
 
 # Function to run SQL and capture result
 run_sql() {
-    docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -t -c "$1" 2>/dev/null | grep -v '^$' | head -1 | tr -d ' '
-}
-
-# Function to run SQL with search path set
-run_sql_with_schema() {
-    docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -c "SET search_path TO $DB_SCHEMA; $1" -t -A 2>/dev/null
+    if [ "$RUN_MODE" = "container" ]; then
+        psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -t -c "$1" 2>/dev/null | grep -v '^$' | head -1 | tr -d ' '
+    else
+        docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -t -c "$1" 2>/dev/null | grep -v '^$' | head -1 | tr -d ' '
+    fi
 }
 
 # Function to print test result
 print_result() {
-    local test_name=$1
-    local passed=$2
-    local points=$3
+    _test_name=$1
+    _passed=$2
+    _points=$3
 
-    if [ "$passed" = true ]; then
-        echo -e "${GREEN}PASS${NC}: $test_name (+$points pts)"
-        TOTAL_POINTS=$((TOTAL_POINTS + points))
+    if [ "$_passed" = "true" ]; then
+        echo "${GREEN}PASS${NC}: $_test_name (+$_points pts)"
+        TOTAL_POINTS=$((TOTAL_POINTS + _points))
     else
-        echo -e "${RED}FAIL${NC}: $test_name (0/$points pts)"
+        echo "${RED}FAIL${NC}: $_test_name (0/$_points pts)"
     fi
 }
 
@@ -58,15 +67,28 @@ print_result() {
 # STEP 1: Check environment
 # ============================================
 echo "----------------------------------------"
-echo "Step 1: Checking environment..."
+echo "Step 1: Checking database connection..."
 echo "----------------------------------------"
 
-if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
-    echo -e "${RED}Error: Container '$CONTAINER_NAME' is not running.${NC}"
-    echo "Please start the database with: docker-compose up -d"
-    exit 1
+if [ "$RUN_MODE" = "container" ]; then
+    if ! psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" > /dev/null 2>&1; then
+        echo "${RED}Error: Cannot connect to database.${NC}"
+        echo "Please make sure the database is running with: docker-compose up -d"
+        exit 1
+    fi
+else
+    # Start docker-compose if postgres is not running
+    if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+        echo "Starting PostgreSQL via docker compose..."
+        docker compose down -v --remove-orphans 2>/dev/null || true
+        docker compose up -d postgres
+        echo "Waiting for PostgreSQL to be ready..."
+        until docker exec "$CONTAINER_NAME" pg_isready -U "$DB_USER" > /dev/null 2>&1; do
+            sleep 1
+        done
+    fi
 fi
-echo -e "${GREEN}PASS:${NC} Container '$CONTAINER_NAME' is running"
+echo "${GREEN}PASS:${NC} Database connection successful"
 echo ""
 
 # ============================================
@@ -106,23 +128,13 @@ echo "----------------------------------------"
 echo "Step 3: Verifying schema (40 points)..."
 echo "----------------------------------------"
 
-# Check if schema exists (5 pts)
-SCHEMA_EXISTS=$(run_sql "SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name = '$DB_SCHEMA';")
-if [ "$SCHEMA_EXISTS" = "1" ]; then
-    print_result "Schema '$DB_SCHEMA' exists" true 5
-else
-    print_result "Schema '$DB_SCHEMA' exists" false 5
-fi
-
-# Required tables (20 pts - 2 each)
-REQUIRED_TABLES=("departments" "instructors" "students" "student_phones" "courses" "modules" "assignments" "enrollments" "grades" "certificates")
-
-for table in "${REQUIRED_TABLES[@]}"; do
+# Check tables exist (20 pts - 2 each)
+for table in departments instructors students student_phones courses modules assignments enrollments grades certificates; do
     EXISTS=$(run_sql "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '$DB_SCHEMA' AND table_name = '$table';")
     if [ "$EXISTS" = "1" ]; then
-        print_result "Table '$table' exists" true 2
+        print_result "Table '$table' exists" "true" 2
     else
-        print_result "Table '$table' exists" false 2
+        print_result "Table '$table' exists" "false" 2
     fi
 done
 
@@ -130,18 +142,18 @@ done
 FK_COUNT=$(run_sql "SELECT COUNT(*) FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY' AND table_schema = '$DB_SCHEMA';")
 FK_COUNT=${FK_COUNT:-0}
 if [ "$FK_COUNT" -ge 8 ]; then
-    print_result "Foreign key constraints (found $FK_COUNT, min 8)" true 10
+    print_result "Foreign key constraints (found $FK_COUNT, min 8)" "true" 10
 else
-    print_result "Foreign key constraints (found $FK_COUNT, min 8)" false 10
+    print_result "Foreign key constraints (found $FK_COUNT, min 8)" "false" 10
 fi
 
-# Check unique constraints (5 pts)
+# Check unique constraints (10 pts)
 UNIQUE_COUNT=$(run_sql "SELECT COUNT(*) FROM information_schema.table_constraints WHERE constraint_type = 'UNIQUE' AND table_schema = '$DB_SCHEMA';")
 UNIQUE_COUNT=${UNIQUE_COUNT:-0}
 if [ "$UNIQUE_COUNT" -ge 5 ]; then
-    print_result "Unique constraints (found $UNIQUE_COUNT, min 5)" true 5
+    print_result "Unique constraints (found $UNIQUE_COUNT, min 5)" "true" 10
 else
-    print_result "Unique constraints (found $UNIQUE_COUNT, min 5)" false 5
+    print_result "Unique constraints (found $UNIQUE_COUNT, min 5)" "false" 10
 fi
 echo ""
 
@@ -152,30 +164,29 @@ echo "----------------------------------------"
 echo "Step 4: Verifying seed data (30 points)..."
 echo "----------------------------------------"
 
-# Expected counts (3 pts each)
-declare -A EXPECTED_COUNTS
-EXPECTED_COUNTS["departments"]=3
-EXPECTED_COUNTS["instructors"]=4
-EXPECTED_COUNTS["students"]=8
-EXPECTED_COUNTS["student_phones"]=12
-EXPECTED_COUNTS["courses"]=5
-EXPECTED_COUNTS["modules"]=18
-EXPECTED_COUNTS["assignments"]=15
-EXPECTED_COUNTS["enrollments"]=15
-EXPECTED_COUNTS["grades"]=9
-EXPECTED_COUNTS["certificates"]=7
-
-for table in "${REQUIRED_TABLES[@]}"; do
-    EXPECTED=${EXPECTED_COUNTS[$table]}
-    ACTUAL=$(run_sql "SELECT COUNT(*) FROM $DB_SCHEMA.$table;" 2>/dev/null || echo "0")
+# Function to check row count
+check_count() {
+    _table=$1
+    _expected=$2
+    ACTUAL=$(run_sql "SELECT COUNT(*) FROM $_table;" 2>/dev/null || echo "0")
     ACTUAL=${ACTUAL:-0}
-    
-    if [ "$ACTUAL" = "$EXPECTED" ]; then
-        print_result "$table has $ACTUAL rows (expected $EXPECTED)" true 3
+    if [ "$ACTUAL" = "$_expected" ]; then
+        print_result "$_table has $ACTUAL rows (expected $_expected)" "true" 3
     else
-        print_result "$table has $ACTUAL rows (expected $EXPECTED)" false 3
+        print_result "$_table has $ACTUAL rows (expected $_expected)" "false" 3
     fi
-done
+}
+
+check_count "departments" 3
+check_count "instructors" 4
+check_count "students" 8
+check_count "student_phones" 12
+check_count "courses" 5
+check_count "modules" 18
+check_count "assignments" 15
+check_count "enrollments" 15
+check_count "grades" 9
+check_count "certificates" 7
 echo ""
 
 # ============================================
@@ -186,25 +197,18 @@ echo "Step 5: Verifying indexes (30 points)..."
 echo "----------------------------------------"
 
 # Count custom indexes (20 pts for 10+ indexes)
-INDEX_COUNT=$(run_sql "
-SELECT COUNT(DISTINCT indexname) 
-FROM pg_indexes 
-WHERE schemaname = '$DB_SCHEMA' 
-AND indexname NOT LIKE '%_pkey'
-AND indexname NOT LIKE '%_key';
-")
+INDEX_COUNT=$(run_sql "SELECT COUNT(DISTINCT indexname) FROM pg_indexes WHERE schemaname = '$DB_SCHEMA' AND indexname NOT LIKE '%_pkey' AND indexname NOT LIKE '%_key';")
 INDEX_COUNT=${INDEX_COUNT:-0}
 
 if [ "$INDEX_COUNT" -ge 10 ]; then
-    print_result "Custom indexes created (found $INDEX_COUNT, min 10)" true 20
+    print_result "Custom indexes created (found $INDEX_COUNT, min 10)" "true" 20
 else
-    print_result "Custom indexes created (found $INDEX_COUNT, min 10)" false 20
+    print_result "Custom indexes created (found $INDEX_COUNT, min 10)" "false" 20
 fi
 
 # Check for specific important indexes (10 pts)
-IMPORTANT_INDEXES=("idx_enrollments_student" "idx_enrollments_course" "idx_modules_course" "idx_assignments_course")
 FOUND_IMPORTANT=0
-for idx in "${IMPORTANT_INDEXES[@]}"; do
+for idx in idx_enrollments_student idx_enrollments_course idx_modules_course idx_assignments_course; do
     EXISTS=$(run_sql "SELECT COUNT(*) FROM pg_indexes WHERE schemaname = '$DB_SCHEMA' AND indexname = '$idx';")
     if [ "$EXISTS" = "1" ]; then
         FOUND_IMPORTANT=$((FOUND_IMPORTANT + 1))
@@ -212,9 +216,9 @@ for idx in "${IMPORTANT_INDEXES[@]}"; do
 done
 
 if [ "$FOUND_IMPORTANT" -ge 4 ]; then
-    print_result "Key indexes present ($FOUND_IMPORTANT/4 found)" true 10
+    print_result "Key indexes present ($FOUND_IMPORTANT/4 found)" "true" 10
 else
-    print_result "Key indexes present ($FOUND_IMPORTANT/4 found)" false 10
+    print_result "Key indexes present ($FOUND_IMPORTANT/4 found)" "false" 10
 fi
 echo ""
 
@@ -225,20 +229,20 @@ echo "========================================"
 echo "           FINAL SCORE"
 echo "========================================"
 echo ""
-echo -e "Total Points: ${GREEN}$TOTAL_POINTS${NC} / $MAX_POINTS"
+echo "Total Points: ${GREEN}$TOTAL_POINTS${NC} / $MAX_POINTS"
 echo ""
 
 # Grade calculation
 if [ $TOTAL_POINTS -ge 90 ]; then
-    echo -e "Grade: ${GREEN}A${NC}"
+    echo "Grade: ${GREEN}A${NC}"
 elif [ $TOTAL_POINTS -ge 80 ]; then
-    echo -e "Grade: ${GREEN}B${NC}"
+    echo "Grade: ${GREEN}B${NC}"
 elif [ $TOTAL_POINTS -ge 70 ]; then
-    echo -e "Grade: ${YELLOW}C${NC}"
+    echo "Grade: ${YELLOW}C${NC}"
 elif [ $TOTAL_POINTS -ge 60 ]; then
-    echo -e "Grade: ${YELLOW}D${NC}"
+    echo "Grade: ${YELLOW}D${NC}"
 else
-    echo -e "Grade: ${RED}F${NC}"
+    echo "Grade: ${RED}F${NC}"
 fi
 
 echo ""

@@ -3,9 +3,7 @@
 -- Assignment 04: Database Normalization
 -- =============================================================================
 
--- Create schema
-CREATE SCHEMA IF NOT EXISTS edulearn;
-SET search_path TO edulearn, public;
+-- All tables are created in the public schema (default)
 
 -- =============================================================================
 -- ENTITY RELATIONSHIP DIAGRAM

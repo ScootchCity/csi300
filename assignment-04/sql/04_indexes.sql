@@ -5,7 +5,7 @@
 -- This file creates appropriate indexes for common query patterns
 -- =============================================================================
 
-SET search_path TO edulearn, public;
+-- All tables are in the public schema (default)
 
 -- =============================================================================
 -- FOREIGN KEY INDEXES (Required for JOIN performance)

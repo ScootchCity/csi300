@@ -1,7 +1,5 @@
 # Assignment 02 — SQL Fundamentals: DDL, DQL & DML
 
-[![Assignment SQL](https://i.imgflip.com/2/6ywlhc.jpg)](https://imgflip.com)
-
 ## Overview
 
 In this assignment, you will design and implement a **fintech banking system** database schema from scratch. You will practice DDL (Data Definition Language), DQL (Data Query Language), and DML (Data Manipulation Language) operations while applying proper constraints, data types, and idempotency patterns.
@@ -103,27 +101,24 @@ Before submitting, run the verification script:
 # Make sure Docker is running
 docker-compose up -d
 
-# Run the verification script
-./verify.sh
+# Run the verification script via docker compose
+docker-compose run --rm verify
 
 # Or test manually - run schema twice to check idempotency:
-psql -h localhost -U postgres -d postgres -f sql/01_schema.sql
-psql -h localhost -U postgres -d postgres -f sql/01_schema.sql  # Should NOT fail!
-psql -h localhost -U postgres -d postgres -f sql/02_seed.sql
+docker-compose exec -T postgres psql -U postgres -d postgres -f sql/01_schema.sql
+docker-compose exec -T postgres psql -U postgres -d postgres -f sql/01_schema.sql  # Should NOT fail!
+docker-compose exec -T postgres psql -U postgres -d postgres -f sql/02_seed.sql
 ```
 
 ## Common Mistakes to Avoid
 
-- ❌ Using `CREATE TABLE` without `IF NOT EXISTS` (not idempotent!)
-- ❌ Using `CREATE SCHEMA` without `IF NOT EXISTS` (not idempotent!)
-- ❌ Using INTEGER for monetary values (use DECIMAL)
-- ❌ Forgetting NOT NULL on required fields
-- ❌ Missing foreign key constraints
-- ❌ Hardcoding dates instead of using relative dates
-- ❌ Not handling NULL values in WHERE clauses
-- ❌ Running DELETE before checking foreign key dependencies
-- ❌ Forgetting the schema prefix (`neobank.`) on table names
+- Using `CREATE TABLE` without `IF NOT EXISTS` (not idempotent!)
+- Using `CREATE SCHEMA` without `IF NOT EXISTS` (not idempotent!)
+- Using INTEGER for monetary values (use DECIMAL)
+- Forgetting NOT NULL on required fields
+- Missing foreign key constraints
+- Hardcoding dates instead of using relative dates
+- Not handling NULL values in WHERE clauses
+- Running DELETE before checking foreign key dependencies
+- Forgetting the schema prefix (`neobank.`) on table names
 
----
-
-Good luck, and may your transactions always be ACID-compliant! 🏦

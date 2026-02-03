@@ -96,8 +96,8 @@ docker-compose up -d
 ```
 
 This starts:
-- **PostgreSQL 16** on port `5433` (different from Assignment 2!)
-- **Adminer** web UI on port `8081`
+- **PostgreSQL 16** on port `5432`
+- **Adminer** web UI on port `8080`
 
 ### Step 2: Load the Base Data
 
@@ -106,38 +106,38 @@ The database comes pre-loaded! The `base/00_complete_setup.sql` file runs automa
 To verify the data loaded correctly:
 
 ```bash
-# Connect to the database
-docker exec -it shopflow_db psql -U shopflow_admin -d shopflow_db
+# Connect to the database via docker compose
+docker-compose exec postgres psql -U postgres -d postgres
 
 # Check table counts
-SELECT 'categories' as tbl, COUNT(*) FROM shopflow.categories
-UNION ALL SELECT 'products', COUNT(*) FROM shopflow.products
-UNION ALL SELECT 'customers', COUNT(*) FROM shopflow.customers
-UNION ALL SELECT 'orders', COUNT(*) FROM shopflow.orders
-UNION ALL SELECT 'order_items', COUNT(*) FROM shopflow.order_items;
+SELECT 'categories' as tbl, COUNT(*) FROM categories
+UNION ALL SELECT 'products', COUNT(*) FROM products
+UNION ALL SELECT 'customers', COUNT(*) FROM customers
+UNION ALL SELECT 'orders', COUNT(*) FROM orders
+UNION ALL SELECT 'order_items', COUNT(*) FROM order_items;
 ```
 
 ### Step 3: Access the Database
 
 **Option A: Adminer (Web UI)**
-- URL: http://localhost:8081
+- URL: http://localhost:8080
 - System: PostgreSQL
-- Server: db
-- Username: shopflow_admin
-- Password: shopflow_secure_2024
-- Database: shopflow_db
+- Server: postgres
+- Username: postgres
+- Password: postgres
+- Database: postgres
 
 **Option B: Command Line**
 ```bash
-docker exec -it shopflow_db psql -U shopflow_admin -d shopflow_db
+docker-compose exec postgres psql -U postgres -d postgres
 ```
 
 **Option C: External Client (DBeaver, DataGrip)**
 - Host: localhost
-- Port: 5433
-- Database: shopflow_db
-- User: shopflow_admin
-- Password: shopflow_secure_2024
+- Port: 5432
+- Database: postgres
+- User: postgres
+- Password: postgres
 
 ## Exercises
 
@@ -179,10 +179,10 @@ Each file should contain numbered queries matching the exercise requirements.
 
 ### Automated Verification
 
-Your submission will be tested using `verify.sh`:
+Your submission will be tested using `verify.sh` via docker compose:
 
 ```bash
-./verify.sh
+docker-compose run --rm verify
 ```
 
 The script will:
@@ -199,12 +199,12 @@ The script will:
 
 ### Common Mistakes to Avoid
 
-1. ❌ Forgetting that `NULL = NULL` is not TRUE (use `IS NULL`)
-2. ❌ Using `WHERE column = NULL` instead of `WHERE column IS NULL`
-3. ❌ Placing aggregate conditions in WHERE instead of HAVING
-4. ❌ Forgetting to include non-aggregated columns in GROUP BY
-5. ❌ Case sensitivity in LIKE patterns (PostgreSQL is case-sensitive!)
-6. ❌ Integer division issues (cast to DECIMAL/NUMERIC for percentages)
+1. Forgetting that `NULL = NULL` is not TRUE (use `IS NULL`)
+2. Using `WHERE column = NULL` instead of `WHERE column IS NULL`
+3. Placing aggregate conditions in WHERE instead of HAVING
+4. Forgetting to include non-aggregated columns in GROUP BY
+5. Case sensitivity in LIKE patterns (PostgreSQL is case-sensitive!)
+6. Integer division issues (cast to DECIMAL/NUMERIC for percentages)
 
 ## File Structure
 
@@ -253,12 +253,6 @@ assignment/
 ## Submission
 
 1. Ensure all 5 SQL files are in the `sql/` folder
-2. Run `./verify.sh` to check your work
+2. Run `docker-compose run --rm verify` to check your work
 3. Commit and push to your repository
 4. GitHub Actions will run automated tests
-
-## Due Date
-
-**Due: 2026/02/01 at 11:59 PM EST**
-
-Late submissions: 1% penalty per day, maximum 25% penalty.

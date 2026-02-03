@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Appointments (2023-2025)
-INSERT INTO pawcare.appointments (pet_id, vet_id, clinic_id, scheduled_at, duration_mins, status, visit_type, reason, created_at) VALUES
+INSERT INTO appointments (pet_id, vet_id, clinic_id, scheduled_at, duration_mins, status, visit_type, reason, created_at) VALUES
 -- 2023 Appointments
 (1, 7, 1, '2023-01-15 09:00:00', 30, 'completed', 'wellness', 'Annual checkup', '2023-01-10 10:00:00'),
 (2, 7, 1, '2023-01-15 09:30:00', 30, 'completed', 'wellness', 'Annual checkup', '2023-01-10 10:30:00'),
@@ -74,7 +74,7 @@ INSERT INTO pawcare.appointments (pet_id, vet_id, clinic_id, scheduled_at, durat
 ON CONFLICT DO NOTHING;
 
 -- Medical Records
-INSERT INTO pawcare.medical_records (pet_id, vet_id, appointment_id, visit_date, chief_complaint, diagnosis, notes, weight_kg, temperature_f, heart_rate, respiratory_rate, follow_up_date, created_at) VALUES
+INSERT INTO medical_records (pet_id, vet_id, appointment_id, visit_date, chief_complaint, diagnosis, notes, weight_kg, temperature_f, heart_rate, respiratory_rate, follow_up_date, created_at) VALUES
 -- 2023 Records
 (1, 7, 1, '2023-01-15', 'Annual wellness exam', 'Healthy', 'All vitals normal. Continue current diet.', 32.0, 101.5, 80, 18, '2024-01-15', '2023-01-15 09:30:00'),
 (2, 7, 2, '2023-01-15', 'Annual wellness exam', 'Healthy', 'Slight tartar buildup, recommend dental cleaning.', 27.5, 101.3, 85, 20, '2024-01-15', '2023-01-15 10:00:00'),
