@@ -14,20 +14,20 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) 3
 - [ ] B) 5
-- [ ] C) 7
+- [X] C) 7
 - [ ] D) 9
 
 **Q1.1.2** (1 pt): If the course title for CS101 changes from "Introduction to Programming" to "Programming Fundamentals", how many rows need to be updated?
 
 - [ ] A) 2
-- [ ] B) 4
+- [X] B) 4
 - [ ] C) 6
 - [ ] D) 8
 
 **Q1.1.3** (1 pt): If Alice Johnson changes her name to Alice Smith, how many rows need to be updated?
 
 - [ ] A) 1
-- [ ] B) 2
+- [X] B) 2
 - [ ] C) 3
 - [ ] D) 4
 
@@ -35,7 +35,7 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) 6
 - [ ] B) 8
-- [ ] C) 10
+- [X] C) 10
 - [ ] D) 12
 
 ## Part 1.2: Insert Anomalies (3 points)
@@ -43,21 +43,21 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 **Q1.2.1** (1 pt): Can we add a new instructor "Dr. Jane Doe" who hasn't been assigned any courses yet?
 
 - [ ] A) Yes, we can add a row with just instructor information
-- [ ] B) No, we need enrollment_id which requires a student enrollment
+- [X] B) No, we need enrollment_id which requires a student enrollment
 - [ ] C) Yes, if we leave student fields NULL
 - [ ] D) No, but we can add them to a separate instructors table
 
 **Q1.2.2** (1 pt): Can we add a new department "Data Science" in "Analytics Building" without any courses or students?
 
 - [ ] A) Yes, departments are independent entities in this structure
-- [ ] B) No, department info only exists as part of instructor records tied to enrollments
+- [X] B) No, department info only exists as part of instructor records tied to enrollments
 - [ ] C) Yes, by adding a row with NULL enrollment_id
 - [ ] D) No, but we can use a placeholder student
 
 **Q1.2.3** (1 pt): To add a new module "Advanced Topics" to course ML400, what must we do?
 
 - [ ] A) Add a new row with module information only
-- [ ] B) Update the module_id, module_title, module_order columns in ALL ML400 rows
+- [X] B) Update the module_id, module_title, module_order columns in ALL ML400 rows
 - [ ] C) Add a new enrollment with the new module
 - [ ] D) Modules can be added independently without any issues
 
@@ -66,7 +66,7 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 **Q1.3.1** (1 pt): If Frank Garcia (enrollment_id 11) withdraws from CS101, what information is lost?
 
 - [ ] A) Only the enrollment record
-- [ ] B) Frank Garcia's existence as a student (his only enrollment)
+- [X] B) Frank Garcia's existence as a student (his only enrollment)
 - [ ] C) The CS101 course information
 - [ ] D) Dr. Sarah Smith's information
 
@@ -74,14 +74,14 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) Dr. Sarah Smith's information
 - [ ] B) Dr. Michael Jones's information
-- [ ] C) Dr. Robert Chen's information (only teaches STAT250)
+- [X] C) Dr. Robert Chen's information (only teaches STAT250)
 - [ ] D) No instructor information would be lost
 
 **Q1.3.3** (1 pt): What happens if we delete enrollment_id 4 (Bob Williams in WEB300)?
 
 - [ ] A) We lose Bob Williams as a student entirely
 - [ ] B) We lose the WEB300 course information
-- [ ] C) Bob Williams still exists (enrolled in CS101), no course info lost
+- [X] C) Bob Williams still exists (enrolled in CS101), no course info lost
 - [ ] D) Dr. Jennifer Lee's information is lost
 
 ## Part 2.1: First Normal Form (1NF) Violations (2 points)
@@ -89,21 +89,21 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 **Q2.1.1** (1 pt): Which columns violate 1NF by containing multiple comma-separated values? (Select ALL that apply)
 
 - [ ] A) student_email
-- [ ] B) student_phone
+- [X] B) student_phone
 - [ ] C) course_code
-- [ ] D) module_id
-- [ ] E) module_title
-- [ ] F) module_order
-- [ ] G) assignment_names
-- [ ] H) assignment_due_dates
-- [ ] I) assignment_points
+- [X] D) module_id
+- [X] E) module_title
+- [X] F) module_order
+- [X] G) assignment_names
+- [X] H) assignment_due_dates
+- [X] I) assignment_points
 
 **Q2.1.2** (1 pt): How many columns in total violate 1NF (contain multi-valued data)?
 
 - [ ] A) 4
 - [ ] B) 5
 - [ ] C) 6
-- [ ] D) 7
+- [X] D) 7
 
 ## Part 2.2: Second Normal Form (2NF) Violations (3 points)
 
@@ -112,7 +112,7 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 **Q2.2.1** (1 pt): Which attribute depends ONLY on student_email (partial dependency)?
 
 - [ ] A) enrollment_date
-- [ ] B) student_name
+- [X] B) student_name
 - [ ] C) grade
 - [ ] D) completion_date
 
@@ -120,14 +120,14 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) grade_points
 - [ ] B) certificate_issued
-- [ ] C) course_credits
+- [X] C) course_credits
 - [ ] D) enrollment_date
 
 **Q2.2.3** (1 pt): Which attributes depend on the FULL composite key (student_email, course_code)?
 
 - [ ] A) student_name, student_phone
 - [ ] B) course_title, course_description
-- [ ] C) enrollment_date, grade, completion_date
+- [X] C) enrollment_date, grade, completion_date
 - [ ] D) instructor_email, instructor_name
 
 ## Part 2.3: Third Normal Form (3NF) Violations (3 points)
