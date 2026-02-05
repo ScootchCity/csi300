@@ -89,7 +89,7 @@ FROM product_reviews;
 --   - unique_products_stocked: COUNT(DISTINCT product_id)
 --   - avg_stock_per_product: AVG(quantity) rounded to 0 decimals
 --   - out_of_stock_entries: count where quantity = 0
---   - low_stock_entries: count where quantity > 0 AND quantity <= reorder_level
+--   - low_stock_entries: count where quantity > 0 AND quantity <= 10
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 

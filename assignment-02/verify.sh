@@ -109,6 +109,12 @@ if [ "$RUN_MODE" = "host" ]; then
         until docker exec "$CONTAINER_NAME" pg_isready -U "$DB_USER" > /dev/null 2>&1; do
             sleep 1
         done
+        # Additional wait to ensure database is fully initialized
+        sleep 2
+        # Verify we can actually connect and run queries
+        until docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" > /dev/null 2>&1; do
+            sleep 1
+        done
     fi
 fi
 
@@ -349,8 +355,10 @@ else
 fi
 
 # Check for pending old transactions
-PENDING_OLD=$(run_sql "SELECT COUNT(*) FROM neobank.transactions WHERE status = 'pending' AND created_at < NOW() - INTERVAL '24 hours' AND amount > 1000;")
-if [ "$(echo $PENDING_OLD | tr -d ' ')" -ge "3" ]; then
+PENDING_OLD=$(run_sql "SELECT COUNT(*) FROM neobank.transactions WHERE status = 'pending' AND created_at < NOW() - INTERVAL '24 hours' AND amount > 1000;") || true
+PENDING_OLD=$(echo $PENDING_OLD | tr -d ' ')
+PENDING_OLD=${PENDING_OLD:-0}
+if [ "$PENDING_OLD" -ge "3" ] 2>/dev/null; then
     print_result "At least 3 pending transactions > 1000 older than 24h" true 5
 else
     print_result "At least 3 pending transactions > 1000 older than 24h" false 5

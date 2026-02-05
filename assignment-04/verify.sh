@@ -86,6 +86,12 @@ else
         until docker exec "$CONTAINER_NAME" pg_isready -U "$DB_USER" > /dev/null 2>&1; do
             sleep 1
         done
+        # Additional wait to ensure database is fully initialized
+        sleep 2
+        # Verify we can actually connect and run queries
+        until docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" > /dev/null 2>&1; do
+            sleep 1
+        done
     fi
 fi
 echo "${GREEN}PASS:${NC} Database connection successful"

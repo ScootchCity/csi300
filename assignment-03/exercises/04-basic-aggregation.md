@@ -62,7 +62,7 @@ Assess inventory levels across all warehouses.
 - `unique_products_stocked`: Count of distinct product IDs
 - `avg_stock_per_product`: Average quantity (rounded to 0 decimals)
 - `out_of_stock_entries`: Count where quantity = 0
-- `low_stock_entries`: Count where quantity > 0 AND quantity <= reorder_level
+- `low_stock_entries`: Count where quantity > 0 AND quantity <= 10
 
 ## Submission
 
