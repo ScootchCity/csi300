@@ -15,32 +15,32 @@ The customer support team needs to find specific records and clean up data repor
 ### Task 2.1: Product Search (4 points)
 Find all products whose name contains the word "Pro" (case-insensitive).
 
-**Return:** `product_id`, `name`, `price`  
+**Return:** `id`, `name`, `price`  
 **Order by:** `name` ascending
 
 ### Task 2.2: Email Domain Analysis (4 points)
 Find all customers with Gmail email addresses (emails ending in `@gmail.com`).
 
-**Return:** `customer_id`, `first_name`, `last_name`, `email`  
+**Return:** `id`, `first_name`, `last_name`, `email`  
 **Order by:** `last_name` ascending
 
 ### Task 2.3: Customers Without Phone Numbers (4 points)
 Find all customers who have not provided a phone number.
 
-**Return:** `customer_id`, `first_name`, `last_name`, `email`  
-**Order by:** `customer_id` ascending
+**Return:** `id`, `first_name`, `last_name`, `email`  
+**Order by:** `id` ascending
 
 ### Task 2.4: Reviews Without Comments (4 points)
 Find all product reviews where the customer left a rating but no written comment.
 
-**Return:** `review_id`, `product_id`, `customer_id`, `rating`, `title`  
-**Order by:** `rating` descending, `review_id` ascending
+**Return:** `id`, `product_id`, `customer_id`, `rating`, `title`  
+**Order by:** `rating` descending, `id` ascending
 
 ### Task 2.5: Contact List with Default Phone (4 points)
 Generate a customer contact list that displays "No phone on file" for customers without a phone number.
 
 **Return:** 
-- `customer_id`
+- `id`
 - `full_name` (concatenate `first_name` and `last_name` with a space)
 - `contact_phone` (phone or "No phone on file" if NULL)
 

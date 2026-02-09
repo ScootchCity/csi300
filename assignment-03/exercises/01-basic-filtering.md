@@ -15,33 +15,33 @@ ShopFlow's marketing team needs specific product and order data to plan upcoming
 ### Task 1.1: Premium Products (4 points)
 Find all products with a price of $500 or more.
 
-**Return:** `product_id`, `name`, `price`  
+**Return:** `id`, `name`, `price`  
 **Order by:** `price` descending
 
 ### Task 1.2: Budget-Friendly Options (4 points)
 Find all products priced between $20 and $100 (inclusive).
 
-**Return:** `product_id`, `name`, `price`, `category_id`  
+**Return:** `id`, `name`, `price`, `category_id`  
 **Order by:** `price` ascending
 
 ### Task 1.3: Electronics Department (4 points)
 Find all products in the Electronics category (category_id = 1) or any of its subcategories.
 
-> **Hint:** First, find all category IDs that have `parent_category_id = 1` or have `category_id = 1`.
+> **Hint:** First, find all category IDs that have `parent_id = 1` or have `id = 1`.
 
-**Return:** `product_id`, `name`, `category_id`, `price`  
+**Return:** `id`, `name`, `category_id`, `price`  
 **Order by:** `name` ascending
 
 ### Task 1.4: Order Status Filter (4 points)
 Find all orders that are either `pending`, `confirmed`, or `processing` (not yet shipped).
 
-**Return:** `order_id`, `order_number`, `status`, `total_amount`, `created_at`  
+**Return:** `id`, `order_number`, `status`, `total_amount`, `created_at`  
 **Order by:** `created_at` descending
 
 ### Task 1.5: High-Value Completed Orders (4 points)
 Find all delivered orders with a `total_amount` greater than $1000.
 
-**Return:** `order_id`, `order_number`, `customer_id`, `total_amount`, `delivered_at`  
+**Return:** `id`, `order_number`, `customer_id`, `total_amount`, `delivered_at`  
 **Order by:** `total_amount` descending
 
 ## Submission

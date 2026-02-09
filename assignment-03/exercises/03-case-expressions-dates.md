@@ -19,7 +19,7 @@ Categorize products into price tiers:
 - **Premium**: price >= $200 AND price < $500
 - **Luxury**: price >= $500
 
-**Return:** `product_id`, `name`, `price`, `price_tier`  
+**Return:** `id`, `name`, `price`, `price_tier`  
 **Order by:** `price` ascending
 
 ### Task 3.2: Order Status Labels (4 points)
@@ -32,25 +32,25 @@ Create human-readable status labels:
 - `cancelled` → "Cancelled"
 - `refunded` → "Refunded"
 
-**Return:** `order_id`, `order_number`, `status`, `status_label`  
-**Order by:** `order_id` ascending
+**Return:** `id`, `order_number`, `status`, `status_label`  
+**Order by:** `id` ascending
 
 ### Task 3.3: Black Friday Orders (4 points)
 Find all orders placed during Black Friday week 2024 (November 25-29, 2024).
 
-**Return:** `order_id`, `order_number`, `customer_id`, `total_amount`, `created_at`  
+**Return:** `id`, `order_number`, `customer_id`, `total_amount`, `created_at`  
 **Order by:** `created_at` ascending
 
 ### Task 3.4: Monthly Order Distribution 2024 (4 points)
 Find all orders from 2024 and include the month name.
 
 **Return:** 
-- `order_id`
+- `id`
 - `order_number`
 - `order_month` (month number 1-12)
 - `total_amount`
 
-**Order by:** `order_month` ascending, `order_id` ascending
+**Order by:** `order_month` ascending, `id` ascending
 
 > **Hint:** Use `EXTRACT(MONTH FROM created_at)` to get the month number.
 
@@ -63,13 +63,13 @@ Categorize reviews by sentiment:
 Include whether the review has a written comment.
 
 **Return:** 
-- `review_id`
+- `id`
 - `product_id`
 - `rating`
 - `sentiment`
 - `has_comment` (TRUE if comment is not NULL, FALSE otherwise)
 
-**Order by:** `rating` descending, `review_id` ascending
+**Order by:** `rating` descending, `id` ascending
 
 ## Submission
 

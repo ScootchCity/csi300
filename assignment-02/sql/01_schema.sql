@@ -62,9 +62,11 @@ CREATE TABLE IF NOT EXISTS neobank.account_types (
 );
 
 -- =============================================================================
--- Table: accounts (IDENTITY as primary key)
+-- Table: accounts (BIGINT auto-increment primary key)
 -- Requirements:
---   - BIGINT GENERATED ALWAYS AS IDENTITY primary key
+--   - Auto-incrementing BIGINT primary key. You may use either:
+--     Option A: id BIGSERIAL PRIMARY KEY
+--     Option B: id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 --   - Customer ID: UUID, required, foreign key to customers(id) with CASCADE delete
 --   - Account type ID: INTEGER, required, foreign key to account_types(id)
 --   - Account number: CHAR(16), unique, required
@@ -134,9 +136,11 @@ CREATE TABLE IF NOT EXISTS neobank.transactions (
 );
 
 -- =============================================================================
--- Table: audit_log (IDENTITY as primary key)
+-- Table: audit_log (BIGINT auto-increment primary key)
 -- Requirements:
---   - BIGINT GENERATED ALWAYS AS IDENTITY primary key
+--   - Auto-incrementing BIGINT primary key. You may use either:
+--     Option A: id BIGSERIAL PRIMARY KEY
+--     Option B: id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 --   - Table name: VARCHAR(100), required
 --   - Record ID: TEXT, required
 --   - Old values: JSONB, optional
