@@ -1,9 +1,15 @@
 -- =============================================================================
 -- EduLearn LMS - Normalized Schema (3NF)
 -- Assignment 04: Database Normalization
+-- Student: Lloyd Ivester
+-- Date: 2/9/2026
 -- =============================================================================
 
 -- All tables are created in the public schema (default)
+-- changing this since i want them in the edulearn schema
+-- CREATE SCHEMA IF NOT EXISTS edulearn;
+-- SET search_path TO edulearn, public;
+-- decided not to for compatability with verify.sh
 
 -- =============================================================================
 -- ENTITY RELATIONSHIP DIAGRAM
@@ -33,6 +39,12 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS departments (
+    department_id SERIAL PRIMARY KEY,
+    name VARCHAR UNIQUE NOT NULL,
+    building VARCHAR,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================================================
 -- INSTRUCTORS
@@ -43,6 +55,14 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS instructors (
+    instructor_id SERIAL PRIMARY KEY,
+    email VARCHAR UNIQUE NOT NULL,
+    name VARCHAR NOT NULL,
+    office VARCHAR,
+    department_id INT REFERENCES departments(department_id),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================================================
 -- STUDENTS
@@ -51,6 +71,12 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS students (
+    student_id SERIAL PRIMARY KEY,
+    email VARCHAR UNIQUE NOT NULL,
+    name VARCHAR NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================================================
 -- STUDENT_PHONES
@@ -61,6 +87,13 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS student_phones (
+    phone_id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES students(student_id),
+    phone_number VARCHAR,
+    is_primary BOOLEAN,
+    CONSTRAINT uq UNIQUE(student_id, phone_number)
+);
 
 -- =============================================================================
 -- COURSES
@@ -71,6 +104,15 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS courses (
+    course_id SERIAL PRIMARY KEY,
+    code VARCHAR[8] UNIQUE NOT NULL,
+    title VARCHAR,
+    description VARCHAR,
+    credits INT,
+    instructor_id INT REFERENCES instructors(instructor_id),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================================================
 -- MODULES
@@ -81,6 +123,13 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS modules (
+    module_id SERIAL PRIMARY KEY,
+    course_id INT REFERENCES courses(course_id),
+    title VARCHAR,
+    order_position INT,
+    CONSTRAINT uq UNIQUE(course_id, order_position)
+);
 
 -- =============================================================================
 -- ASSIGNMENTS
@@ -91,6 +140,14 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS course_assignments (
+    assignment_id SERIAL PRIMARY KEY,
+    course_id INT REFERENCES courses(course_id),
+    name VARCHAR,
+    due_date DATE,
+    points INT CHECK(points > 0),
+    CONSTRAINT uq UNIQUE(course_id, name)
+);
 
 -- =============================================================================
 -- ENROLLMENTS
@@ -101,6 +158,13 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS enrollments (
+    enrollment_id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES students(student_id),
+    course_id INT REFERENCES courses(course_id),
+    enrollment_date DATE,
+    CONSTRAINT uq UNIQUE(student_id, course_id)
+);
 
 -- =============================================================================
 -- GRADES
@@ -110,6 +174,12 @@
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
+CREATE TABLE IF NOT EXISTS grades (
+    enrollment_id INT PRIMARY KEY REFERENCES enrollments(enrollment_id),
+    grade VARCHAR,
+    grade_points FLOAT,
+    completion_date DATE
+);
 
 -- =============================================================================
 -- CERTIFICATES
@@ -118,3 +188,9 @@
 -- Columns needed: certificate_id (PK), enrollment_id (FK, unique), issued_date
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
+
+CREATE TABLE IF NOT EXISTS  certificates (
+    certificate_id SERIAL PRIMARY KEY,
+    enrollment_id INT REFERENCES enrollments(enrollment_id) UNIQUE,
+    issued_date DATE
+);

@@ -136,7 +136,7 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) Direct dependency
 - [ ] B) Partial dependency
-- [ ] C) Transitive dependency
+- [X] C) Transitive dependency
 - [ ] D) No dependency
 
 **Q2.3.2** (1 pt): Which shows a transitive dependency through instructor_department?
@@ -144,13 +144,13 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 - [ ] A) course_code → instructor_department → department_building
 - [ ] B) student_email → course_code → instructor_department
 - [ ] C) enrollment_id → student_email → student_name
-- [ ] D) instructor_email → instructor_department → department_building
+- [X] D) instructor_email → instructor_department → department_building
 
 **Q2.3.3** (1 pt): How many "hops" are in this transitive chain: enrollment_id → course_code → instructor_email → instructor_department → department_building?
 
 - [ ] A) 2
 - [ ] B) 3
-- [ ] C) 4
+- [X] C) 4
 - [ ] D) 5
 
 ## Part 3: Functional Dependencies (7 points)
@@ -158,7 +158,7 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 **Q3.1** (1 pt): Which is the correct functional dependency for students?
 
 - [ ] A) student_name → student_email, student_phone
-- [ ] B) student_email → student_name, student_phone
+- [X] B) student_email → student_name, student_phone
 - [ ] C) student_phone → student_email, student_name
 - [ ] D) enrollment_id → student_email only
 
@@ -166,19 +166,19 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) instructor_name → instructor_email, instructor_office, instructor_department
 - [ ] B) instructor_department → instructor_email, instructor_name, instructor_office
-- [ ] C) instructor_email → instructor_name, instructor_office, instructor_department
+- [X] C) instructor_email → instructor_name, instructor_office, instructor_department
 - [ ] D) instructor_office → instructor_email, instructor_name
 
 **Q3.3** (1 pt): Which is the correct functional dependency for courses?
 
 - [ ] A) course_title → course_code, course_description, course_credits, instructor_email
-- [ ] B) course_code → course_title, course_description, course_credits, instructor_email
+- [X] B) course_code → course_title, course_description, course_credits, instructor_email
 - [ ] C) course_credits → course_code, course_title, course_description
 - [ ] D) instructor_email → course_code, course_title
 
 **Q3.4** (1 pt): What does module_id functionally determine?
 
-- [ ] A) module_id → module_title, module_order, course_code
+- [X] A) module_id → module_title, module_order, course_code
 - [ ] B) module_id → module_title, module_order only
 - [ ] C) module_id → course_code only
 - [ ] D) module_title → module_id, module_order
@@ -187,13 +187,13 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) student_email → enrollment_date, grade, completion_date
 - [ ] B) course_code → enrollment_date, grade, completion_date
-- [ ] C) enrollment_id → student_email, course_code, enrollment_date, grade, completion_date
+- [X] C) enrollment_id → student_email, course_code, enrollment_date, grade, completion_date
 - [ ] D) grade → enrollment_id, grade_points
 
 **Q3.6** (1 pt): What does instructor_department functionally determine?
 
 - [ ] A) instructor_department → instructor_email, instructor_name
-- [ ] B) instructor_department → department_building
+- [X] B) instructor_department → department_building
 - [ ] C) department_building → instructor_department
 - [ ] D) instructor_department → course_code
 
@@ -201,5 +201,5 @@ Analyze the unnormalized LMS data in `../data/unnormalized_lms.csv` to identify 
 
 - [ ] A) student_name, student_phone
 - [ ] B) course_title, course_description
-- [ ] C) grade, grade_points, enrollment_date, completion_date
+- [X] C) grade, grade_points, enrollment_date, completion_date
 - [ ] D) instructor_email, instructor_name
