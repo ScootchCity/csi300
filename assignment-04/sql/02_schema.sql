@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS student_phones (
 
 CREATE TABLE IF NOT EXISTS courses (
     course_id SERIAL PRIMARY KEY,
-    code VARCHAR[8] UNIQUE NOT NULL,
+    code VARCHAR UNIQUE NOT NULL,
     title VARCHAR,
     description VARCHAR,
     credits INT,
