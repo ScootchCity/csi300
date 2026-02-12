@@ -17,7 +17,7 @@ By completing this assignment, you will:
 
 ## Database Schema
 
-The PawCare database (`pawcare` schema) contains the following tables:
+The PawCare database contains the following tables:
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐

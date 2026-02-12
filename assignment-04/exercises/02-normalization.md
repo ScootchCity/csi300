@@ -12,13 +12,6 @@ Create `sql/02_schema.sql` with DDL statements that implement your normalized de
 
 ## Requirements
 
-### Schema Name
-All tables must be in the `edulearn` schema:
-```sql
-CREATE SCHEMA IF NOT EXISTS edulearn;
-SET search_path TO edulearn, public;
-```
-
 ### Required Entities
 
 Your schema must include tables for at least these entities:
@@ -140,10 +133,6 @@ Legend:
 -- Date: [Date]
 -- =============================================================================
 
--- Create schema
-CREATE SCHEMA IF NOT EXISTS edulearn;
-SET search_path TO edulearn, public;
-
 /*
 ENTITY RELATIONSHIP DIAGRAM
 [Your ER diagram here]
@@ -153,7 +142,7 @@ ENTITY RELATIONSHIP DIAGRAM
 -- DEPARTMENTS
 -- Stores academic departments
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS edulearn.departments (
+CREATE TABLE IF NOT EXISTS departments (
     -- Your columns here
 );
 
@@ -162,7 +151,7 @@ CREATE TABLE IF NOT EXISTS edulearn.departments (
 -- Stores instructor information
 -- Depends on: departments
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS edulearn.instructors (
+CREATE TABLE IF NOT EXISTS instructors (
     -- Your columns here
 );
 

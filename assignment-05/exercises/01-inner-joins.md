@@ -113,7 +113,7 @@ Order by department name, then by appointment count descending.
 <details>
 <summary>💡 Hint</summary>
 
-Join `departments` → `doctors` → `appointments`, then use `GROUP BY` and `HAVING`. You'll need to filter for departments with total appointments > 5 using a subquery or aggregate at the department level first.
+Join `departments` → `doctors` → `appointments`, then use `GROUP BY` on doctor level and `HAVING` to filter. You may need to calculate department totals using window functions or an additional aggregate.
 
 </details>
 

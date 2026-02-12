@@ -122,8 +122,8 @@ ON CONFLICT (email) DO NOTHING;
 -- =============================================================================
 -- Accounts
 -- Insert accounts for customers, linking to account types
--- Tip: Use subqueries to get customer_id by email
--- Example: SELECT c.id FROM neobank.customers c WHERE c.email = 'email@example.com'
+-- Tip: First query the customers and account_types tables to find the IDs you need
+-- Then use those IDs directly in your INSERT statements
 -- Use ON CONFLICT (account_number) DO NOTHING for idempotency
 -- =============================================================================
 -- TODO: Write your INSERT statements here

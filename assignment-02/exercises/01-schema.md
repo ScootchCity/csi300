@@ -50,6 +50,14 @@ Use `IF NOT EXISTS` for idempotency.
 CREATE SCHEMA IF NOT EXISTS neobank;
 ```
 
+After creating the schema, all subsequent table creations should be prefixed with `neobank.`:
+
+```sql
+CREATE TABLE IF NOT EXISTS neobank.customers (
+  -- columns here
+);
+```
+
 ---
 
 ## 1.2 Table: `neobank.customers`

@@ -126,7 +126,7 @@ Join `doctors` to itself where one is the supervisor of the other. Use LEFT JOIN
 
 Using a CROSS JOIN, generate all possible combinations of departments and specialization categories. This could be used to analyze which specialty categories are represented in which departments.
 
-Then, for each combination, use a subquery or join to count how many doctors actually have that department-category pairing.
+Then, join with the doctors and specializations tables to count how many doctors actually have each department-category pairing.
 
 **Expected columns:** `department_name`, `specialization_category`, `doctor_count`
 

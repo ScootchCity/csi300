@@ -111,10 +111,11 @@ WHERE
 -- But transactions referencing those accounts need manual cleanup first
 -- 
 -- Steps:
---   1. Delete transactions referencing test customer accounts
---   2. Delete accounts (or let CASCADE handle it)
---   3. Delete the test customers
--- Tip: Use subqueries with IN to identify records
+--   1. First, query to find the IDs of test customers (WHERE email LIKE '%@test.neobank.local')
+--   2. Delete transactions WHERE account_id IN (list of test account IDs)
+--   3. Delete accounts WHERE customer_id IN (list of test customer IDs)
+--   4. Delete the test customers WHERE email LIKE '%@test.neobank.local'
+-- Tip: You can run SELECT queries first to identify the IDs, then use them in DELETE
 -- -----------------------------------------------------------------------------
 -- TODO: Write your DELETE statements here (multiple steps)
 

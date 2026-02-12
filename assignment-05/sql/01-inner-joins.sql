@@ -50,6 +50,6 @@
 -- Filter: Only departments with more than 5 total appointments
 -- Order by: department_name, appointment_count descending
 -- Tables: departments, doctors, appointments
--- Tip: Use subquery in WHERE to filter departments, then GROUP BY doctor
+-- Tip: Join all three tables, use GROUP BY doctor, then filter with HAVING
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here

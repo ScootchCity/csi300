@@ -238,17 +238,6 @@ DELETE FROM schema.table_name
 WHERE condition;
 ```
 
-### Using Subqueries in WHERE
-
-```sql
--- Delete rows where a column matches values from another table
-DELETE FROM neobank.accounts
-WHERE customer_id IN (
-    SELECT id FROM neobank.customers
-    WHERE some_condition
-);
-```
-
 ### Testing with Transactions
 
 ```bash

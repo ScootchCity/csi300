@@ -195,21 +195,20 @@ Both views should return the same data, but with different performance character
 -- List all views
 SELECT table_name, table_type 
 FROM information_schema.tables 
-WHERE table_schema = 'pawcare' AND table_type = 'VIEW';
+WHERE table_type = 'VIEW';
 
 -- View definition
-SELECT pg_get_viewdef('pawcare.v_pet_directory', true);
+SELECT pg_get_viewdef('v_pet_directory', true);
 
 -- Drop view
-DROP VIEW IF EXISTS pawcare.v_pet_directory;
+DROP VIEW IF EXISTS v_pet_directory;
 
 -- Drop materialized view
-DROP MATERIALIZED VIEW IF EXISTS pawcare.mv_clinic_performance;
+DROP MATERIALIZED VIEW IF EXISTS mv_clinic_performance;
 
 -- Check if materialized view needs refresh
 SELECT relname, last_vacuum, last_analyze 
-FROM pg_stat_user_tables 
-WHERE schemaname = 'pawcare';
+FROM pg_stat_user_tables;
 ```
 
 ---

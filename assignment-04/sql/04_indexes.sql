@@ -93,7 +93,7 @@
 
 -- =============================================================================
 -- INDEX ANALYSIS QUERY
--- Run this to view all indexes in the edulearn schema
+-- Run this to view all indexes
 -- =============================================================================
 SELECT 
     t.relname AS table_name,

@@ -9,7 +9,7 @@
 -- Filter: Only pets with weight recorded (NOT NULL)
 -- Order by: weight_difference descending
 -- Tables: pets
--- Tip: Use (SELECT AVG(weight_kg) FROM pawcare.pets WHERE weight_kg IS NOT NULL) as scalar subquery
+-- Tip: Use (SELECT AVG(weight_kg) FROM pets WHERE weight_kg IS NOT NULL) as scalar subquery
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 

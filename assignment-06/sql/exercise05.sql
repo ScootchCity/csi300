@@ -12,7 +12,7 @@
 -- primary_clinic: Clinic with most visits for this pet
 -- Tables: pets, species, owners, appointments, clinics
 -- -----------------------------------------------------------------------------
--- TODO: CREATE OR REPLACE VIEW pawcare.v_pet_directory AS ...
+-- TODO: CREATE OR REPLACE VIEW v_pet_directory AS ...
 
 
 -- View B: v_staff_directory
@@ -21,7 +21,7 @@
 --          email, phone, manager_name
 -- Tables: staff, clinics
 -- -----------------------------------------------------------------------------
--- TODO: CREATE OR REPLACE VIEW pawcare.v_staff_directory AS ...
+-- TODO: CREATE OR REPLACE VIEW v_staff_directory AS ...
 
 
 -- Task 5.2: Create Updatable View (4 points)
@@ -35,7 +35,7 @@
 -- Explain in a comment why this view is updatable:
 -- (What conditions must a view meet to be updatable?)
 -- -----------------------------------------------------------------------------
--- TODO: CREATE OR REPLACE VIEW pawcare.v_owner_updates AS ...
+-- TODO: CREATE OR REPLACE VIEW v_owner_updates AS ...
 
 
 -- Task 5.3: View with CHECK OPTION (4 points)
@@ -50,7 +50,7 @@
 -- Explain in a comment what happens if someone tries to UPDATE the status
 -- to 'completed' through this view:
 -- -----------------------------------------------------------------------------
--- TODO: CREATE OR REPLACE VIEW pawcare.v_active_appointments AS ...
+-- TODO: CREATE OR REPLACE VIEW v_active_appointments AS ...
 
 
 -- Task 5.4: Materialized View for Performance (4 points)
@@ -64,7 +64,7 @@
 --
 -- This would be refreshed periodically (e.g., nightly) for dashboards
 -- -----------------------------------------------------------------------------
--- TODO: CREATE MATERIALIZED VIEW pawcare.mv_clinic_performance AS ...
+-- TODO: CREATE MATERIALIZED VIEW mv_clinic_performance AS ...
 
 
 -- Task 5.5: Refresh Materialized View (2 points)
@@ -87,4 +87,4 @@
 -- 
 -- Explain how views provide security in a comment:
 -- -----------------------------------------------------------------------------
--- TODO: CREATE OR REPLACE VIEW pawcare.v_patient_records_limited AS ...
+-- TODO: CREATE OR REPLACE VIEW v_patient_records_limited AS ...

@@ -29,8 +29,8 @@ ORDER BY price;
 -- Find all products in Electronics category or its subcategories
 -- Return: product_id, name, category_id, price
 -- Order by: name ascending
--- Tip: Use IN with a subquery to find Electronics and its children
---      OR use explicit category IDs if you know them
+-- Tip: First query the categories table to find the IDs for Electronics and its subcategories
+--      Then use IN operator with those explicit category IDs (e.g., category_id IN (1, 2, 3))
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
