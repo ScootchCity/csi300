@@ -72,14 +72,20 @@ INSERT INTO student_phones (student_id, phone_number, is_primary)
 VALUES
     ((SELECT student_id FROM students WHERE email = 'alice.johnson@university.edu'), '555-1234', TRUE),
     ((SELECT student_id FROM students WHERE email = 'alice.johnson@university.edu'), '555-5678', FALSE),
+
     ((SELECT student_id FROM students WHERE email = 'bob.williams@university.edu'), '555-9999', TRUE),
+
     ((SELECT student_id FROM students WHERE email = 'carol.davis@university.edu'), '555-4444', TRUE),
     ((SELECT student_id FROM students WHERE email = 'carol.davis@university.edu'), '555-4445', FALSE),
     ((SELECT student_id FROM students WHERE email = 'carol.davis@university.edu'), '555-4446', FALSE),
+
     ((SELECT student_id FROM students WHERE email = 'david.miller@university.edu'), '555-7777', TRUE),
+
     ((SELECT student_id FROM students WHERE email = 'emma.wilson@university.edu'), '555-8888', TRUE),
     ((SELECT student_id FROM students WHERE email = 'emma.wilson@university.edu'), '555-8889', FALSE),
+
     ((SELECT student_id FROM students WHERE email = 'grace.hernandez@university.edu'), '555-2222', TRUE),
+
     ((SELECT student_id FROM students WHERE email = 'henry.lopez@university.edu'), '555-3333', TRUE),
     ((SELECT student_id FROM students WHERE email = 'henry.lopez@university.edu'), '555-3334', FALSE)
 ON CONFLICT DO NOTHING;
@@ -114,7 +120,29 @@ ON CONFLICT DO NOTHING;
 -- =============================================================================
 -- TODO: Write your INSERT statements here
 
+INSERT INTO modules (course_id, title, order_position)
+VALUES
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'Variables and Data Types', 1),
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'Control Flow', 2),
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'Functions', 3),
 
+    ((SELECT course_id FROM courses WHERE code = 'DB200'), 'ER Modeling', 1),
+    ((SELECT course_id FROM courses WHERE code = 'DB200'), 'Normalization Theory', 2),
+    ((SELECT course_id FROM courses WHERE code = 'DB200'), 'Advanced SQL', 3),
+
+    ((SELECT course_id FROM courses WHERE code = 'ML400'), 'Supervised Learning', 1),
+    ((SELECT course_id FROM courses WHERE code = 'ML400'), 'Unsupervised Learning', 2),
+    ((SELECT course_id FROM courses WHERE code = 'ML400'), 'Neural Networks', 3),
+
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Descriptive Statistics', 1),
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Probability Theory', 2),
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Inferential Statistics', 3),
+
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'HTML/CSS Fundamentals', 1),
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'JavaScript Essentials', 2),
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'React Basics', 3),
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'Node.js Backend', 4)
+ON CONFLICT DO NOTHING;
 
 -- =============================================================================
 -- ASSIGNMENTS (split multi-valued assignment columns)
@@ -124,6 +152,31 @@ ON CONFLICT DO NOTHING;
 -- =============================================================================
 -- TODO: Write your INSERT statements here
 
+INSERT INTO course_assignments (course_id, name, due_date, points)
+VALUES
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'HW1', '2026-02-01', 100),
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'HW2', '2026-02-15', 100),
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'Quiz1', '2026-02-20', 50),
+    ((SELECT course_id FROM courses WHERE code = 'CS101'), 'HW3', '2026-03-01', 100),
+
+    ((SELECT course_id FROM courses WHERE code = 'DB200'), 'Project1', '2026-02-28', 150),
+    ((SELECT course_id FROM courses WHERE code = 'DB200'), 'Midterm', '2026-03-15', 100),
+    ((SELECT course_id FROM courses WHERE code = 'DB200'), 'Project2', '2026-04-15', 150),
+
+    ((SELECT course_id FROM courses WHERE code = 'ML400'), 'Assignment1', '2026-02-15', 100),
+    ((SELECT course_id FROM courses WHERE code = 'ML400'), 'Assignment2', '2026-03-15', 100),
+    ((SELECT course_id FROM courses WHERE code = 'ML400'), 'FinalProject', '2026-05-01', 250),
+
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Quiz1', '2026-02-08', 50),
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Midterm', '2026-03-01', 100),
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Quiz2', '2026-04-01', 50),
+    ((SELECT course_id FROM courses WHERE code = 'STAT250'), 'Final', '2026-05-10', 100),
+
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'Lab1', '2026-02-10', 75),
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'Lab2', '2026-02-24', 75),
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'Midterm', '2026-03-20', 100),
+    ((SELECT course_id FROM courses WHERE code = 'WEB300'), 'FinalProject', '2026-04-30', 200)
+ON CONFLICT DO NOTHING;
 
 -- =============================================================================
 -- ENROLLMENTS (create junction table entries)
@@ -133,6 +186,31 @@ ON CONFLICT DO NOTHING;
 -- =============================================================================
 -- TODO: Write your INSERT statements here
 
+INSERT INTO enrollments (student_id, course_id, enrollment_date)
+VALUES
+    ((SELECT student_id FROM students where email = 'alice.johnson@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'CS101'), '2026-01-15'),
+    ((SELECT student_id FROM students where email = 'alice.johnson@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'DB200'), '2026-01-15'),
+
+    ((SELECT student_id FROM students where email = 'bob.williams@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'CS101'), '2026-02-01'),
+    ((SELECT student_id FROM students where email = 'bob.williams@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'WEB300'), '2026-01-20'),
+
+    ((SELECT student_id FROM students where email = 'carol.davis@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'DB200'), '2026-01-18'),
+    ((SELECT student_id FROM students where email = 'carol.davis@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'CS101'), '2026-01-18'),
+
+    ((SELECT student_id FROM students where email = 'david.miller@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'ML400'), '2026-02-01'),
+    ((SELECT student_id FROM students where email = 'david.miller@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'STAT250'), '2026-02-01'),
+
+    ((SELECT student_id FROM students where email = 'emma.wilson@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'WEB300'), '2026-01-22'),
+    ((SELECT student_id FROM students where email = 'emma.wilson@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'ML400'), '2026-02-05'),
+
+    ((SELECT student_id FROM students where email = 'frank.garcia@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'CS101'), '2026-03-01'),
+
+    ((SELECT student_id FROM students where email = 'grace.hernandez@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'DB200'), '2026-01-25'),
+    ((SELECT student_id FROM students where email = 'grace.hernandez@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'STAT250'), '2026-01-25'),
+
+    ((SELECT student_id FROM students where email = 'henry.lopez@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'ML400'), '2026-02-10'),
+    ((SELECT student_id FROM students where email = 'henry.lopez@university.edu'), (SELECT course_id FROM courses WHERE CODE = 'WEB300'), '2026-02-10')
+ON CONFLICT DO NOTHING;
 
 -- =============================================================================
 -- GRADES (only for completed enrollments with grades)
@@ -142,6 +220,22 @@ ON CONFLICT DO NOTHING;
 -- =============================================================================
 -- TODO: Write your INSERT statements here
 
+INSERT INTO grades (enrollment_id, grade, grade_points, completion_date)
+VALUES
+    (1, 'A', 4.0, '2026-04-30'),
+    (2, 'B+', 3.3, NULL),
+    (3, 'B', 3.0, '2026-05-15'),
+    (5, 'A-', 3.7, '2026-05-01'),
+    (6, 'A', 4.0, '2026-04-28'),
+    (7, 'C+', 2.3, NULL),
+    (8, 'B+', 3.3, '2026-05-12'),
+    (9, 'A', 4.0, '2026-05-05'),
+    (10, 'B', 3.0, NULL),
+    (12, 'B', 3.0, '2026-05-08'),
+    (13, 'A-', 3.7, NULL),
+    (14, 'A', 4.0, '2026-05-10'),
+    (15, 'B+', 3.3, NULL)
+ON CONFLICT DO NOTHING;
 
 -- =============================================================================
 -- CERTIFICATES (only for students who earned certificates)
@@ -149,3 +243,15 @@ ON CONFLICT DO NOTHING;
 -- From the CSV, insert certificate records where certificate_issued = 'Yes'.
 -- =============================================================================
 -- TODO: Write your INSERT statements here
+
+INSERT INTO certificates (enrollment_id, issued_date)
+VALUES
+    (1, '2026-05-01'),
+    (3, '2026-05-16'),
+    (5, '2026-05-02'),
+    (6, '2026-04-29'),
+    (8, '2026-05-13'),
+    (9, '2026-05-06'),
+    (12, '2026-05-09'),
+    (14, '2026-05-11')
+ON CONFLICT DO NOTHING;

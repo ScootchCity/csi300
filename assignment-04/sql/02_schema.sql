@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS instructors (
     email VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
     office VARCHAR,
-    department_id INT REFERENCES departments(department_id),
+    department_id INT REFERENCES departments(department_id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS students (
 
 CREATE TABLE IF NOT EXISTS student_phones (
     phone_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES students(student_id),
+    student_id INT REFERENCES students(student_id) ON DELETE CASCADE,
     phone_number VARCHAR,
     is_primary BOOLEAN,
-    CONSTRAINT uq UNIQUE(student_id, phone_number)
+    CONSTRAINT uq_phones UNIQUE(student_id, phone_number)
 );
 
 -- =============================================================================
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS courses (
     title VARCHAR,
     description VARCHAR,
     credits INT,
-    instructor_id INT REFERENCES instructors(instructor_id),
+    instructor_id INT REFERENCES instructors(instructor_id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -125,10 +125,10 @@ CREATE TABLE IF NOT EXISTS courses (
 
 CREATE TABLE IF NOT EXISTS modules (
     module_id SERIAL PRIMARY KEY,
-    course_id INT REFERENCES courses(course_id),
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
     title VARCHAR,
     order_position INT,
-    CONSTRAINT uq UNIQUE(course_id, order_position)
+    CONSTRAINT uq_modules UNIQUE(course_id, order_position)
 );
 
 -- =============================================================================
@@ -142,11 +142,11 @@ CREATE TABLE IF NOT EXISTS modules (
 
 CREATE TABLE IF NOT EXISTS course_assignments (
     assignment_id SERIAL PRIMARY KEY,
-    course_id INT REFERENCES courses(course_id),
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
     name VARCHAR,
     due_date DATE,
     points INT CHECK(points > 0),
-    CONSTRAINT uq UNIQUE(course_id, name)
+    CONSTRAINT uq_assignments UNIQUE(course_id, name)
 );
 
 -- =============================================================================
@@ -160,10 +160,10 @@ CREATE TABLE IF NOT EXISTS course_assignments (
 
 CREATE TABLE IF NOT EXISTS enrollments (
     enrollment_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES students(student_id),
-    course_id INT REFERENCES courses(course_id),
+    student_id INT REFERENCES students(student_id) ON DELETE CASCADE,
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
     enrollment_date DATE,
-    CONSTRAINT uq UNIQUE(student_id, course_id)
+    CONSTRAINT uq_enrollments UNIQUE(student_id, course_id)
 );
 
 -- =============================================================================
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS enrollments (
 -- TODO: Write your CREATE TABLE statement here
 
 CREATE TABLE IF NOT EXISTS grades (
-    enrollment_id INT PRIMARY KEY REFERENCES enrollments(enrollment_id),
+    enrollment_id INT PRIMARY KEY REFERENCES enrollments(enrollment_id) ON DELETE CASCADE,
     grade VARCHAR,
     grade_points FLOAT,
     completion_date DATE
@@ -191,6 +191,6 @@ CREATE TABLE IF NOT EXISTS grades (
 
 CREATE TABLE IF NOT EXISTS  certificates (
     certificate_id SERIAL PRIMARY KEY,
-    enrollment_id INT REFERENCES enrollments(enrollment_id) UNIQUE,
+    enrollment_id INT REFERENCES enrollments(enrollment_id) ON DELETE CASCADE UNIQUE,
     issued_date DATE
 );
