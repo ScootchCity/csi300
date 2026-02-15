@@ -18,36 +18,50 @@
 -- Justification: Supports queries filtering instructors by department
 -- TODO: CREATE INDEX IF NOT EXISTS idx_instructors_department ON ...
 
+CREATE INDEX IF NOT EXISTS idx_instructors_department
+ON instructors(department_id);
 
 -- 2. Student Phones -> Students
 -- Justification: Supports cascade deletes and phone lookups by student
 -- TODO: CREATE INDEX IF NOT EXISTS idx_student_phones_student ON ...
 
+CREATE INDEX IF NOT EXISTS idx_student_phones_students
+ON student_phones(student_id);
 
 -- 3. Courses -> Instructors
 -- Justification: Supports "show all courses by instructor" queries
 -- TODO: CREATE INDEX IF NOT EXISTS idx_courses_instructor ON ...
 
+CREATE INDEX IF NOT EXISTS idx_courses_instructors
+ON courses(instructor_id);
 
 -- 4. Modules -> Courses
 -- Justification: Essential for loading course content pages
 -- TODO: CREATE INDEX IF NOT EXISTS idx_modules_course ON ...
 
+CREATE INDEX IF NOT EXISTS idx_modules_course
+ON modules(course_id);
 
 -- 5. Assignments -> Courses
 -- Justification: Required for course assignment pages
 -- TODO: CREATE INDEX IF NOT EXISTS idx_assignments_course ON ...
 
+CREATE INDEX IF NOT EXISTS idx_assignments_course
+ON course_assignments(course_id);
 
 -- 6. Enrollments -> Students
 -- Justification: Critical for student dashboard showing enrolled courses
 -- TODO: CREATE INDEX IF NOT EXISTS idx_enrollments_student ON ...
 
+CREATE INDEX IF NOT EXISTS idx_enrollments_student
+ON enrollments(student_id);
 
 -- 7. Enrollments -> Courses
 -- Justification: Essential for instructor viewing enrolled students
 -- TODO: CREATE INDEX IF NOT EXISTS idx_enrollments_course ON ...
 
+CREATE INDEX IF NOT EXISTS idx_enrollments_course
+ON enrollments(course_id);
 
 -- =============================================================================
 -- QUERY OPTIMIZATION INDEXES (Based on common access patterns)
@@ -57,11 +71,15 @@
 -- Justification: Supports "upcoming assignments" queries
 -- TODO: CREATE INDEX IF NOT EXISTS idx_assignments_due_date ON ...
 
+CREATE INDEX IF NOT EXISTS idx_assignments_due_date
+ON course_assignments(due_date);
 
 -- 9. Grades by grade value
 -- Justification: Supports grade distribution reports
 -- TODO: CREATE INDEX IF NOT EXISTS idx_grades_grade ON ...
 
+CREATE INDEX IF NOT EXISTS idx_grades_grade
+ON grades(grade);
 
 -- =============================================================================
 -- COMPOSITE INDEXES (For multi-column query optimization)
@@ -71,11 +89,15 @@
 -- Justification: Optimizes: SELECT * FROM modules WHERE course_id = ? ORDER BY order_position
 -- TODO: CREATE INDEX IF NOT EXISTS idx_modules_course_order ON ...
 
+CREATE INDEX IF NOT EXISTS idx_modules_course_order
+ON modules(course_id, order_position);
 
 -- 11. Enrollments with date for reporting
 -- Justification: Supports enrollment trend reports by course over time
 -- TODO: CREATE INDEX IF NOT EXISTS idx_enrollments_course_date ON ...
 
+CREATE INDEX IF NOT EXISTS idx_enrollments_course_date
+ON enrollments(course_id, enrollment_date);
 
 -- =============================================================================
 -- ADDITIONAL INDEXES (Performance tuning)
@@ -85,11 +107,15 @@
 -- Justification: Supports autocomplete and search-as-you-type
 -- TODO: CREATE INDEX IF NOT EXISTS idx_students_name ON ...
 
+CREATE INDEX IF NOT EXISTS idx_students_name
+ON students(name);
 
 -- 13. Certificates by issue date
 -- Justification: Supports "certificates issued this month" reports
 -- TODO: CREATE INDEX IF NOT EXISTS idx_certificates_issued_date ON ...
 
+CREATE INDEX IF NOT EXISTS idx_certificates_issued_date
+ON certificates(issued_date);
 
 -- =============================================================================
 -- INDEX ANALYSIS QUERY
@@ -108,7 +134,7 @@ FROM
     JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ANY(ix.indkey)
     JOIN pg_namespace n ON n.oid = t.relnamespace
 WHERE 
-    n.nspname = 'edulearn'
+    n.nspname = 'public'
     AND t.relkind = 'r'
 ORDER BY 
     t.relname, i.relname;
