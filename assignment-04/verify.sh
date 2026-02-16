@@ -188,11 +188,11 @@ check_count "instructors" 4
 check_count "students" 8
 check_count "student_phones" 12
 check_count "courses" 5
-check_count "modules" 18
-check_count "assignments" 15
+check_count "modules" 16
+check_count "assignments" 18
 check_count "enrollments" 15
-check_count "grades" 9
-check_count "certificates" 7
+check_count "grades" 8
+check_count "certificates" 8
 echo ""
 
 # ============================================

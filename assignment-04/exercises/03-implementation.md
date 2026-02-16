@@ -41,10 +41,10 @@ After running your seed script:
 | `student_phones` | 12 | Alice(2), Bob(1), Carol(3), David(1), Emma(2), Grace(1), Henry(2) |
 | `courses` | 5 | CS101, DB200, WEB300, ML400, STAT250 |
 | `modules` | 16 | 3+3+4+3+3 per course |
-| `assignments` | 16 | Varies per course |
+| `assignments` | 18 | Varies per course |
 | `enrollments` | 15 | Same as original rows |
-| `grades` | 9 | Only completed enrollments with grades |
-| `certificates` | 7 | Only enrollments with certificates issued |
+| `grades` | 8 | Only completed enrollments with grades |
+| `certificates` | 8 | Only enrollments with certificates issued |
 
 ### Data Integrity
 
