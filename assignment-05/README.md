@@ -154,11 +154,11 @@ MedCare is a multi-specialty health clinic managing:
 ## Submission Requirements
 
 1. Create SQL files in the `sql/` directory:
-   - `exercise01.sql`
-   - `exercise02.sql`
-   - `exercise03.sql`
-   - `exercise04.sql`
-   - `exercise05.sql`
+   - `01-inner-joins.sql`
+   - `02-left-joins.sql`
+   - `03-right-full-joins.sql`
+   - `04-self-joins.sql`
+   - `05-multi-table-joins.sql`
 
 2. Each file should:
    - Include comments identifying each task

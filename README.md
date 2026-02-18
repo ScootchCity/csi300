@@ -120,7 +120,6 @@ databases/
     ├── docker-compose.yml   # Database container setup
     ├── verify.sh            # Verification/grading script
     ├── exercises/           # Exercise markdown files
-    ├── solutions/           # Model solutions (instructor only)
     ├── sql/                 # Student submission folder
     ├── base/                # (Optional) Pre-built schema
     ├── data/                # (Optional) Sample data files
@@ -135,7 +134,6 @@ databases/
     - `docker-compose.yml`: Docker Compose file for the database environment
     - `verify.sh`: Verification script for automated grading
     - `exercises/`: Markdown files with exercise instructions
-    - `solutions/`: Model solutions (may be hidden from students)
     - `sql/`: Directory for student SQL submissions
 
 ### Running Tests

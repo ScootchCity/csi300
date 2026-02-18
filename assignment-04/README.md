@@ -47,7 +47,6 @@ assignment-04/
 │   ├── 03-implementation.md    # Write DDL & seed data
 │   └── 04-indexing.md          # Add appropriate indexes
 └── sql/                        # Your solutions go here
-    ├── 01_analysis.md          # Written analysis (Markdown)
     ├── 02_schema.sql           # Normalized DDL
     ├── 03_seed.sql             # Insert statements
     └── 04_indexes.sql          # Index definitions
@@ -71,7 +70,7 @@ Complete each exercise in order:
 
 | Exercise | File to Create | Topic | Points |
 |----------|----------------|-------|--------|
-| [Exercise 1](exercises/01-analysis.md) | `sql/01_analysis.md` | Identify anomalies & functional dependencies | 25 |
+| [Exercise 1](exercises/01-analysis.md) | Canvas Quiz | Identify anomalies & functional dependencies | 25 |
 | [Exercise 2](exercises/02-normalization.md) | `sql/02_schema.sql` | Design normalized schema (3NF) | 35 |
 | [Exercise 3](exercises/03-implementation.md) | `sql/03_seed.sql` | Populate with seed data | 20 |
 | [Exercise 4](exercises/04-indexing.md) | `sql/04_indexes.sql` | Create appropriate indexes | 20 |

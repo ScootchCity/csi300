@@ -101,7 +101,7 @@ This starts:
 
 ### Step 2: Load the Base Data
 
-The database comes pre-loaded! The `base/00_complete_setup.sql` file runs automatically on container startup.
+The database comes pre-loaded! The files in `base/` run automatically on container startup via Docker's `initdb.d` mechanism.
 
 To verify the data loaded correctly:
 
@@ -166,11 +166,11 @@ Create SQL files in the `sql/` folder:
 
 ```
 sql/
-├── 01_basic_filtering.sql      # Exercise 1 queries
-├── 02_pattern_matching.sql     # Exercise 2 queries
-├── 03_case_dates.sql           # Exercise 3 queries
-├── 04_aggregation.sql          # Exercise 4 queries
-└── 05_grouping.sql             # Exercise 5 queries
+├── exercise_01.sql      # Exercise 1: Basic Filtering
+├── exercise_02.sql      # Exercise 2: Pattern Matching & NULLs
+├── exercise_03.sql      # Exercise 3: CASE Expressions & Dates
+├── exercise_04.sql      # Exercise 4: Basic Aggregation
+└── exercise_05.sql      # Exercise 5: GROUP BY & HAVING
 ```
 
 Each file should contain numbered queries matching the exercise requirements.
@@ -213,22 +213,23 @@ assignment/
 ├── README.md                    # This file
 ├── docker-compose.yml           # Container configuration
 ├── verify.sh                    # Grading script
-├── base/
-│   └── 00_complete_setup.sql    # Pre-built database (DO NOT MODIFY)
+├── base/                        # Pre-built database (DO NOT MODIFY)
+│   ├── 01_schema.sql
+│   ├── 02_seed_categories.sql
+│   ├── ...
+│   └── 08_seed_inventory.sql
 ├── exercises/
 │   ├── 01-basic-filtering.md
 │   ├── 02-pattern-matching-nulls.md
 │   ├── 03-case-expressions-dates.md
 │   ├── 04-basic-aggregation.md
 │   └── 05-grouping-having.md
-├── sql/                         # YOUR WORK GOES HERE
-│   └── README.md
-└── solutions/                   # Instructor reference (not distributed)
-    ├── 01_basic_filtering_solution.sql
-    ├── 02_pattern_matching_solution.sql
-    ├── 03_case_dates_solution.sql
-    ├── 04_aggregation_solution.sql
-    └── 05_grouping_solution.sql
+└── sql/                         # YOUR WORK GOES HERE
+    ├── exercise_01.sql
+    ├── exercise_02.sql
+    ├── exercise_03.sql
+    ├── exercise_04.sql
+    └── exercise_05.sql
 ```
 
 ## Tips for Success

@@ -3,52 +3,52 @@
 -- =============================================================================
 
 -- Departments
-INSERT INTO departments (name, building, floor, phone, email) VALUES
-('Cardiology', 'Main Building', 3, '802-555-0101', 'cardiology@com'),
-('Neurology', 'Main Building', 4, '802-555-0102', 'neurology@com'),
-('Orthopedics', 'West Wing', 2, '802-555-0103', 'orthopedics@com'),
-('Pediatrics', 'East Wing', 1, '802-555-0104', 'pediatrics@com'),
-('Internal Medicine', 'Main Building', 2, '802-555-0105', 'internalmedicine@com'),
-('Dermatology', 'West Wing', 1, '802-555-0106', 'dermatology@com'),
-('Oncology', 'Main Building', 5, '802-555-0107', 'oncology@com'),
-('Psychiatry', 'East Wing', 3, '802-555-0108', 'psychiatry@com'),
-('Obstetrics & Gynecology', 'East Wing', 2, '802-555-0109', 'obgyn@com'),
-('Emergency Medicine', 'Main Building', 1, '802-555-0110', 'emergency@com'),
-('Radiology', 'Main Building', 1, '802-555-0111', 'radiology@com'),
-('Gastroenterology', 'West Wing', 3, '802-555-0112', 'gastro@com')
+INSERT INTO medcare.departments (name, building, floor, phone, email) VALUES
+('Cardiology', 'Main Building', 3, '802-555-0101', 'cardiology@medcare.com'),
+('Neurology', 'Main Building', 4, '802-555-0102', 'neurology@medcare.com'),
+('Orthopedics', 'West Wing', 2, '802-555-0103', 'orthopedics@medcare.com'),
+('Pediatrics', 'East Wing', 1, '802-555-0104', 'pediatrics@medcare.com'),
+('Internal Medicine', 'Main Building', 2, '802-555-0105', 'internalmedicine@medcare.com'),
+('Dermatology', 'West Wing', 1, '802-555-0106', 'dermatology@medcare.com'),
+('Oncology', 'Main Building', 5, '802-555-0107', 'oncology@medcare.com'),
+('Psychiatry', 'East Wing', 3, '802-555-0108', 'psychiatry@medcare.com'),
+('Obstetrics & Gynecology', 'East Wing', 2, '802-555-0109', 'obgyn@medcare.com'),
+('Emergency Medicine', 'Main Building', 1, '802-555-0110', 'emergency@medcare.com'),
+('Radiology', 'Main Building', 1, '802-555-0111', 'radiology@medcare.com'),
+('Gastroenterology', 'West Wing', 3, '802-555-0112', 'gastro@medcare.com')
 ON CONFLICT DO NOTHING;
 
 -- Specializations
-INSERT INTO specializations (name, description, requires_certification) VALUES
-('Interventional Cardiology', 'Catheter-based treatment of heart diseases', true),
-('Electrophysiology', 'Diagnosis and treatment of heart rhythm disorders', true),
-('General Cardiology', 'Diagnosis and treatment of heart conditions', true),
-('Stroke Neurology', 'Specialized care for stroke patients', true),
-('Epilepsy', 'Treatment of seizure disorders', true),
-('Movement Disorders', 'Parkinson''s and other movement conditions', true),
-('Sports Medicine', 'Treatment of sports-related injuries', true),
-('Joint Replacement', 'Hip, knee, and shoulder replacement surgery', true),
-('Spine Surgery', 'Surgical treatment of spinal conditions', true),
-('General Pediatrics', 'Primary care for children', true),
-('Pediatric Cardiology', 'Heart conditions in children', true),
-('Primary Care', 'General adult healthcare', false),
-('Geriatrics', 'Care for elderly patients', true),
-('Medical Dermatology', 'Skin disease treatment', true),
-('Cosmetic Dermatology', 'Aesthetic skin procedures', false),
-('Surgical Oncology', 'Cancer surgery', true),
-('Medical Oncology', 'Cancer treatment with medications', true),
-('Child Psychiatry', 'Mental health for children', true),
-('Adult Psychiatry', 'Mental health for adults', true),
-('Addiction Medicine', 'Treatment of substance use disorders', true),
-('Maternal-Fetal Medicine', 'High-risk pregnancy care', true),
-('Emergency Medicine', 'Acute care and trauma', true),
-('Diagnostic Radiology', 'Medical imaging interpretation', true),
-('Interventional Radiology', 'Image-guided procedures', true),
-('Hepatology', 'Liver disease treatment', true)
+INSERT INTO medcare.specializations (name, category, description, requires_certification) VALUES
+('Interventional Cardiology', 'Cardiology', 'Catheter-based treatment of heart diseases', true),
+('Electrophysiology', 'Cardiology', 'Diagnosis and treatment of heart rhythm disorders', true),
+('General Cardiology', 'Cardiology', 'Diagnosis and treatment of heart conditions', true),
+('Stroke Neurology', 'Neurology', 'Specialized care for stroke patients', true),
+('Epilepsy', 'Neurology', 'Treatment of seizure disorders', true),
+('Movement Disorders', 'Neurology', 'Parkinson''s and other movement conditions', true),
+('Sports Medicine', 'Orthopedics', 'Treatment of sports-related injuries', true),
+('Joint Replacement', 'Orthopedics', 'Hip, knee, and shoulder replacement surgery', true),
+('Spine Surgery', 'Orthopedics', 'Surgical treatment of spinal conditions', true),
+('General Pediatrics', 'Pediatrics', 'Primary care for children', true),
+('Pediatric Cardiology', 'Pediatrics', 'Heart conditions in children', true),
+('Primary Care', 'Internal Medicine', 'General adult healthcare', false),
+('Geriatrics', 'Internal Medicine', 'Care for elderly patients', true),
+('Medical Dermatology', 'Dermatology', 'Skin disease treatment', true),
+('Cosmetic Dermatology', 'Dermatology', 'Aesthetic skin procedures', false),
+('Surgical Oncology', 'Oncology', 'Cancer surgery', true),
+('Medical Oncology', 'Oncology', 'Cancer treatment with medications', true),
+('Child Psychiatry', 'Psychiatry', 'Mental health for children', true),
+('Adult Psychiatry', 'Psychiatry', 'Mental health for adults', true),
+('Addiction Medicine', 'Psychiatry', 'Treatment of substance use disorders', true),
+('Maternal-Fetal Medicine', 'Obstetrics & Gynecology', 'High-risk pregnancy care', true),
+('Emergency Medicine', 'Emergency Medicine', 'Acute care and trauma', true),
+('Diagnostic Radiology', 'Radiology', 'Medical imaging interpretation', true),
+('Interventional Radiology', 'Radiology', 'Image-guided procedures', true),
+('Hepatology', 'Gastroenterology', 'Liver disease treatment', true)
 ON CONFLICT DO NOTHING;
 
 -- Insurance Providers
-INSERT INTO insurance_providers (name, plan_type, coverage_level, phone, email, website, is_active) VALUES
+INSERT INTO medcare.insurance_providers (name, plan_type, coverage_level, phone, email, website, is_active) VALUES
 ('Blue Cross Blue Shield VT', 'PPO', 'premium', '800-247-2583', 'members@bcbsvt.com', 'www.bcbsvt.com', true),
 ('Blue Cross Blue Shield VT', 'HMO', 'standard', '800-247-2583', 'members@bcbsvt.com', 'www.bcbsvt.com', true),
 ('MVP Health Care', 'HMO', 'standard', '800-687-6277', 'member@mvphealthcare.com', 'www.mvphealthcare.com', true),
@@ -67,7 +67,7 @@ INSERT INTO insurance_providers (name, plan_type, coverage_level, phone, email, 
 ON CONFLICT DO NOTHING;
 
 -- Medications
-INSERT INTO medications (name, generic_name, category, dosage_form, strength, manufacturer, requires_prescription, controlled_substance) VALUES
+INSERT INTO medcare.medications (name, generic_name, category, dosage_form, strength, manufacturer, requires_prescription, controlled_substance) VALUES
 -- Cardiovascular
 ('Lipitor', 'Atorvastatin', 'Cardiovascular', 'tablet', '10mg', 'Pfizer', true, false),
 ('Lipitor', 'Atorvastatin', 'Cardiovascular', 'tablet', '20mg', 'Pfizer', true, false),
@@ -118,7 +118,7 @@ INSERT INTO medications (name, generic_name, category, dosage_form, strength, ma
 ON CONFLICT DO NOTHING;
 
 -- Lab Tests
-INSERT INTO lab_tests (name, code, category, description, normal_range, unit, turnaround_hours, base_cost, requires_fasting) VALUES
+INSERT INTO medcare.lab_tests (name, code, category, description, normal_range, unit, turnaround_hours, base_cost, requires_fasting) VALUES
 -- Blood Tests
 ('Complete Blood Count', 'CBC', 'Hematology', 'Measures different components of blood', 'Varies by component', 'cells/μL', 4, 35.00, false),
 ('Basic Metabolic Panel', 'BMP', 'Chemistry', 'Measures glucose, calcium, and electrolytes', 'Varies by component', 'Various', 4, 45.00, true),
