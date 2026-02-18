@@ -3,6 +3,7 @@
 -- MedCare Health Clinic - SQL Joins Assignment
 -- =============================================================================
 
+
 -- Problem 5.1 (4 points)
 -- Comprehensive Patient Visit Report
 -- Return: patient_name, insurance_provider (or 'Self-Pay'), doctor_name, 

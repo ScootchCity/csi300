@@ -2,6 +2,7 @@
 -- MedCare Seed Data - Part 7: Insurance Claims
 -- =============================================================================
 
+
 -- Insurance Claims (linked to patients, appointments, and insurance providers)
 -- Schema: patient_id, appointment_id, provider_id, claim_number, amount_billed, amount_covered, amount_owed, status, filed_at, processed_at, denial_reason
 INSERT INTO medcare.claims (patient_id, appointment_id, provider_id, claim_number, amount_billed, amount_covered, amount_owed, status, filed_at, processed_at, denial_reason) VALUES

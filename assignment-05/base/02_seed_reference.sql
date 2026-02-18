@@ -2,8 +2,9 @@
 -- MedCare Seed Data - Part 1: Reference Tables
 -- =============================================================================
 
+
 -- Departments
-INSERT INTO medcare.departments (name, building, floor, phone, email) VALUES
+INSERT INTO departments (name, building, floor, phone, email) VALUES
 ('Cardiology', 'Main Building', 3, '802-555-0101', 'cardiology@medcare.com'),
 ('Neurology', 'Main Building', 4, '802-555-0102', 'neurology@medcare.com'),
 ('Orthopedics', 'West Wing', 2, '802-555-0103', 'orthopedics@medcare.com'),
@@ -19,7 +20,7 @@ INSERT INTO medcare.departments (name, building, floor, phone, email) VALUES
 ON CONFLICT DO NOTHING;
 
 -- Specializations
-INSERT INTO medcare.specializations (name, category, description, requires_certification) VALUES
+INSERT INTO specializations (name, category, description, requires_certification) VALUES
 ('Interventional Cardiology', 'Cardiology', 'Catheter-based treatment of heart diseases', true),
 ('Electrophysiology', 'Cardiology', 'Diagnosis and treatment of heart rhythm disorders', true),
 ('General Cardiology', 'Cardiology', 'Diagnosis and treatment of heart conditions', true),
@@ -48,7 +49,7 @@ INSERT INTO medcare.specializations (name, category, description, requires_certi
 ON CONFLICT DO NOTHING;
 
 -- Insurance Providers
-INSERT INTO medcare.insurance_providers (name, plan_type, coverage_level, phone, email, website, is_active) VALUES
+INSERT INTO insurance_providers (name, plan_type, coverage_level, phone, email, website, is_active) VALUES
 ('Blue Cross Blue Shield VT', 'PPO', 'premium', '800-247-2583', 'members@bcbsvt.com', 'www.bcbsvt.com', true),
 ('Blue Cross Blue Shield VT', 'HMO', 'standard', '800-247-2583', 'members@bcbsvt.com', 'www.bcbsvt.com', true),
 ('MVP Health Care', 'HMO', 'standard', '800-687-6277', 'member@mvphealthcare.com', 'www.mvphealthcare.com', true),
@@ -67,7 +68,7 @@ INSERT INTO medcare.insurance_providers (name, plan_type, coverage_level, phone,
 ON CONFLICT DO NOTHING;
 
 -- Medications
-INSERT INTO medcare.medications (name, generic_name, category, dosage_form, strength, manufacturer, requires_prescription, controlled_substance) VALUES
+INSERT INTO medications (name, generic_name, category, dosage_form, strength, manufacturer, requires_prescription, controlled_substance) VALUES
 -- Cardiovascular
 ('Lipitor', 'Atorvastatin', 'Cardiovascular', 'tablet', '10mg', 'Pfizer', true, false),
 ('Lipitor', 'Atorvastatin', 'Cardiovascular', 'tablet', '20mg', 'Pfizer', true, false),
@@ -118,7 +119,7 @@ INSERT INTO medcare.medications (name, generic_name, category, dosage_form, stre
 ON CONFLICT DO NOTHING;
 
 -- Lab Tests
-INSERT INTO medcare.lab_tests (name, code, category, description, normal_range, unit, turnaround_hours, base_cost, requires_fasting) VALUES
+INSERT INTO lab_tests (name, code, category, description, normal_range, unit, turnaround_hours, base_cost, requires_fasting) VALUES
 -- Blood Tests
 ('Complete Blood Count', 'CBC', 'Hematology', 'Measures different components of blood', 'Varies by component', 'cells/μL', 4, 35.00, false),
 ('Basic Metabolic Panel', 'BMP', 'Chemistry', 'Measures glucose, calcium, and electrolytes', 'Varies by component', 'Various', 4, 45.00, true),

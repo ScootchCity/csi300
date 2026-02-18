@@ -3,6 +3,7 @@
 -- MedCare Health Clinic - SQL Joins Assignment
 -- =============================================================================
 
+
 -- Problem 1.1 (4 points)
 -- Basic Two-Table Join: Completed appointments with patient and doctor names
 -- Return: patient_name (full name), doctor_name (full name), scheduled_at, visit_type, reason

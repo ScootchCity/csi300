@@ -3,6 +3,7 @@
 -- MedCare Health Clinic - SQL Joins Assignment
 -- =============================================================================
 
+
 -- Problem 2.1 (4 points)
 -- Finding Patients Without Insurance
 -- Return: patient_name (full name), date_of_birth, phone

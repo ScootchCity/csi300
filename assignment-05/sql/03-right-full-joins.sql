@@ -3,6 +3,7 @@
 -- MedCare Health Clinic - SQL Joins Assignment
 -- =============================================================================
 
+
 -- Problem 3.1 (4 points)
 -- RIGHT JOIN: All Departments with Doctor Counts
 -- Return: department_name, location, doctor_count
