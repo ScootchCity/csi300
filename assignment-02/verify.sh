@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# set -e removed: verify script must handle errors gracefully for partial student submissions
 
 # NeoBank Assignment 2 - Automated Verification Script
 # This script tests student submissions for correctness and idempotency
@@ -42,11 +42,13 @@ echo ""
 
 # Function to run SQL and capture result
 run_sql() {
+    local result
     if [ "$RUN_MODE" = "container" ]; then
-        psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+        result=$(psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>/dev/null) || true
     else
-        docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>&1
+        result=$(docker exec "$CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -t -c "$1" 2>/dev/null) || true
     fi
+    echo "$result"
 }
 
 # Function to run SQL file
@@ -268,7 +270,8 @@ echo "----------------------------------------"
 
 # Check account_types count
 ACCOUNT_TYPES_COUNT=$(run_sql "SELECT COUNT(*) FROM neobank.account_types;")
-if [ "$(echo $ACCOUNT_TYPES_COUNT | tr -d ' ')" -ge "5" ]; then
+ACCOUNT_TYPES_COUNT=$(echo $ACCOUNT_TYPES_COUNT | tr -d ' ')
+if [ "${ACCOUNT_TYPES_COUNT:-0}" -ge "5" ] 2>/dev/null; then
     print_result "At least 5 account types exist" true 3
 else
     print_result "At least 5 account types exist" false 3
@@ -276,7 +279,8 @@ fi
 
 # Check customers count
 CUSTOMERS_COUNT=$(run_sql "SELECT COUNT(*) FROM neobank.customers;")
-if [ "$(echo $CUSTOMERS_COUNT | tr -d ' ')" -ge "10" ]; then
+CUSTOMERS_COUNT=$(echo $CUSTOMERS_COUNT | tr -d ' ')
+if [ "${CUSTOMERS_COUNT:-0}" -ge "10" ] 2>/dev/null; then
     print_result "At least 10 customers exist" true 5
 else
     print_result "At least 10 customers exist (found: $CUSTOMERS_COUNT)" false 5
@@ -284,7 +288,8 @@ fi
 
 # Check accounts count
 ACCOUNTS_COUNT=$(run_sql "SELECT COUNT(*) FROM neobank.accounts;")
-if [ "$(echo $ACCOUNTS_COUNT | tr -d ' ')" -ge "15" ]; then
+ACCOUNTS_COUNT=$(echo $ACCOUNTS_COUNT | tr -d ' ')
+if [ "${ACCOUNTS_COUNT:-0}" -ge "15" ] 2>/dev/null; then
     print_result "At least 15 accounts exist" true 5
 else
     print_result "At least 15 accounts exist (found: $ACCOUNTS_COUNT)" false 5
@@ -292,7 +297,8 @@ fi
 
 # Check transactions count
 TRANSACTIONS_COUNT=$(run_sql "SELECT COUNT(*) FROM neobank.transactions;")
-if [ "$(echo $TRANSACTIONS_COUNT | tr -d ' ')" -ge "30" ]; then
+TRANSACTIONS_COUNT=$(echo $TRANSACTIONS_COUNT | tr -d ' ')
+if [ "${TRANSACTIONS_COUNT:-0}" -ge "30" ] 2>/dev/null; then
     print_result "At least 30 transactions exist" true 5
 else
     print_result "At least 30 transactions exist (found: $TRANSACTIONS_COUNT)" false 5
@@ -332,7 +338,9 @@ echo "----------------------------------------"
 
 # Check for test customer
 TEST_CUSTOMER=$(run_sql "SELECT COUNT(*) FROM neobank.customers WHERE email LIKE '%@test.neobank.local';")
-if [ "$(echo $TEST_CUSTOMER | tr -d ' ')" -ge "1" ]; then
+TEST_CUSTOMER=$(echo $TEST_CUSTOMER | tr -d ' ')
+TEST_CUSTOMER=${TEST_CUSTOMER:-0}
+if [ "$TEST_CUSTOMER" -ge "1" ] 2>/dev/null; then
     print_result "Test customer with @test.neobank.local exists" true 3
 else
     print_result "Test customer with @test.neobank.local exists" false 3
@@ -340,7 +348,9 @@ fi
 
 # Check for frozen account
 FROZEN_ACCOUNT=$(run_sql "SELECT COUNT(*) FROM neobank.accounts WHERE status = 'frozen';")
-if [ "$(echo $FROZEN_ACCOUNT | tr -d ' ')" -ge "1" ]; then
+FROZEN_ACCOUNT=$(echo $FROZEN_ACCOUNT | tr -d ' ')
+FROZEN_ACCOUNT=${FROZEN_ACCOUNT:-0}
+if [ "$FROZEN_ACCOUNT" -ge "1" ] 2>/dev/null; then
     print_result "At least one frozen account exists" true 3
 else
     print_result "At least one frozen account exists" false 3
@@ -348,7 +358,9 @@ fi
 
 # Check for high-balance account
 HIGH_BALANCE=$(run_sql "SELECT COUNT(*) FROM neobank.accounts WHERE balance > 25000;")
-if [ "$(echo $HIGH_BALANCE | tr -d ' ')" -ge "1" ]; then
+HIGH_BALANCE=$(echo $HIGH_BALANCE | tr -d ' ')
+HIGH_BALANCE=${HIGH_BALANCE:-0}
+if [ "$HIGH_BALANCE" -ge "1" ] 2>/dev/null; then
     print_result "At least one account with balance > 25000" true 3
 else
     print_result "At least one account with balance > 25000" false 3

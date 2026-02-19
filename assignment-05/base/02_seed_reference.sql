@@ -2,6 +2,7 @@
 -- MedCare Seed Data - Part 1: Reference Tables
 -- =============================================================================
 
+SET search_path TO medcare, public;
 
 -- Departments
 INSERT INTO departments (name, building, floor, phone, email) VALUES
