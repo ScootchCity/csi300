@@ -56,10 +56,10 @@ print_result() {
     _points=$3
 
     if [ "$_passed" = "true" ]; then
-        echo "${GREEN}PASS${NC}: $_test_name (+$_points pts)"
+        echo -e "${GREEN}PASS${NC}: $_test_name (+$_points pts)"
         TOTAL_POINTS=$((TOTAL_POINTS + _points))
     else
-        echo "${RED}FAIL${NC}: $_test_name (0/$_points pts)"
+        echo -e "${RED}FAIL${NC}: $_test_name (0/$_points pts)"
     fi
 }
 
@@ -72,7 +72,7 @@ echo "----------------------------------------"
 
 if [ "$RUN_MODE" = "container" ]; then
     if ! psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" > /dev/null 2>&1; then
-        echo "${RED}Error: Cannot connect to database.${NC}"
+        echo -e "${RED}Error: Cannot connect to database.${NC}"
         echo "Please make sure the database is running with: docker-compose up -d"
         exit 1
     fi
@@ -94,7 +94,7 @@ else
         done
     fi
 fi
-echo "${GREEN}PASS:${NC} Database connection successful"
+echo -e "${GREEN}PASS:${NC} Database connection successful"
 echo ""
 
 # ============================================
@@ -235,20 +235,20 @@ echo "========================================"
 echo "           FINAL SCORE"
 echo "========================================"
 echo ""
-echo "Total Points: ${GREEN}$TOTAL_POINTS${NC} / $MAX_POINTS"
+echo -e "Total Points: ${GREEN}$TOTAL_POINTS${NC} / $MAX_POINTS"
 echo ""
 
 # Grade calculation
 if [ $TOTAL_POINTS -ge 90 ]; then
-    echo "Grade: ${GREEN}A${NC}"
+    echo -e "Grade: ${GREEN}A${NC}"
 elif [ $TOTAL_POINTS -ge 80 ]; then
-    echo "Grade: ${GREEN}B${NC}"
+    echo -e "Grade: ${GREEN}B${NC}"
 elif [ $TOTAL_POINTS -ge 70 ]; then
-    echo "Grade: ${YELLOW}C${NC}"
+    echo -e "Grade: ${YELLOW}C${NC}"
 elif [ $TOTAL_POINTS -ge 60 ]; then
-    echo "Grade: ${YELLOW}D${NC}"
+    echo -e "Grade: ${YELLOW}D${NC}"
 else
-    echo "Grade: ${RED}F${NC}"
+    echo -e "Grade: ${RED}F${NC}"
 fi
 
 echo ""

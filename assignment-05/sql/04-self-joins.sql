@@ -3,6 +3,7 @@
 -- MedCare Health Clinic - SQL Joins Assignment
 -- =============================================================================
 
+
 -- Problem 4.1 (4 points)
 -- Basic Self-Join: Doctor-Supervisor Pairs
 -- Return: doctor_name, doctor_title, supervisor_name, supervisor_title

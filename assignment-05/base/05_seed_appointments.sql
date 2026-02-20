@@ -2,6 +2,8 @@
 -- MedCare Seed Data - Part 4: Appointments
 -- =============================================================================
 
+SET search_path TO medcare, public;
+
 -- Appointments (2023-2025)
 INSERT INTO medcare.appointments (patient_id, doctor_id, scheduled_at, duration_mins, status, visit_type, reason, notes, room_number, created_at) VALUES
 -- 2023 Appointments
