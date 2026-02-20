@@ -13,6 +13,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    CONCAT(patients.first_name, ' ', patients.last_name) AS patient_name,
+    patients.date_of_birth,
+    patients.phone
+FROM medcare.patients
+LEFT OUTER JOIN medcare.insurance_providers ON patients.insurance_id = insurance_providers.provider_id
+WHERE patients.insurance_id IS NULL
+ORDER BY patients.last_name;
 
 -- Problem 2.2 (4 points)
 -- Patients Without Appointments
@@ -24,6 +32,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    CONCAT(patients.first_name, ' ', patients.last_name) AS patient_name,
+    patients.email,
+    patients.created_at,
+    CURRENT_DATE - patients.created_at::date AS days_since_registration
+FROM medcare.patients
+LEFT OUTER JOIN medcare.appointments ON patients.patient_id = appointments.patient_id
+WHERE appointment_id IS NULL;
 
 -- Problem 2.3 (4 points)
 -- Medications Never Prescribed
@@ -34,6 +50,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    medications.name AS medication_name,
+    medications.category,
+    medications.controlled_substance AS is_controlled
+FROM medcare.medications
+LEFT OUTER JOIN medcare.prescriptions ON medications.medication_id = prescriptions.prescription_id
+WHERE prescriptions.prescription_id IS NULL
+ORDER BY medications.category, medications.name;
 
 -- Problem 2.4 (4 points)
 -- All Patients with Their Insurance Status
@@ -45,6 +69,18 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    CONCAT(patients.first_name, ' ', patients.last_name) AS patient_name,
+    insurance_providers.name AS provider_name,
+    insurance_providers.plan_type,
+    CASE
+        WHEN insurance_providers.plan_type IS NULL THEN 'Uninsured'
+        WHEN insurance_providers.plan_type IS NOT NULL THEN 'Insured'
+    END
+    AS insurance_status
+FROM medcare.patients
+LEFT OUTER JOIN medcare.insurance_providers ON patients.insurance_id = insurance_providers.provider_id
+ORDER BY insurance_status DESC, patients.last_name; -- just used desc for status. is this fine?
 
 -- Problem 2.5 (4 points)
 -- Lab Tests Never Ordered
@@ -54,3 +90,13 @@
 -- Tables: lab_tests, lab_results
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
+
+SELECT
+    lab_tests.name AS test_name,
+    lab_tests.category,
+    lab_tests.base_cost AS base_price,
+    lab_tests.turnaround_hours
+FROM medcare.lab_tests
+LEFT OUTER JOIN medcare.lab_results ON lab_tests.test_id = lab_results.test_id
+WHERE lab_results.test_id IS NULL
+ORDER BY lab_tests.category, lab_tests.base_cost DESC;

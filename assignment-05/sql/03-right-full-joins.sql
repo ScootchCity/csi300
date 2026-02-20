@@ -13,6 +13,14 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    departments.name AS department_name,
+    CONCAT (departments.building, ' ', departments.floor) AS location,
+    COUNT(doctor_id) AS doctor_count
+FROM medcare.doctors
+RIGHT OUTER JOIN medcare.departments ON doctors.department_id = departments.department_id
+GROUP BY departments.name, location
+ORDER BY doctor_count DESC, department_name;
 
 -- Problem 3.2 (4 points)
 -- RIGHT JOIN: Specializations with Certified Doctors
@@ -24,6 +32,18 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    specializations.name AS specialization_name,
+    specializations.category,
+    COALESCE(
+        --use nullif to make sure the concat isn't just the space
+        NULLIF(CONCAT(doctors.first_name, ' ', doctors.last_name), ' '),
+        'No certified doctors'
+    ) AS doctor_name
+FROM medcare.doctors
+RIGHT OUTER JOIN medcare.doctor_specializations ON doctors.doctor_id = doctor_specializations.doctor_id
+RIGHT OUTER JOIN medcare.specializations ON doctor_specializations.specialization_id = specializations.specialization_id
+ORDER BY specializations.category, specializations.name;
 
 -- Problem 3.3 (4 points)
 -- FULL OUTER JOIN: Insurance Provider Coverage Analysis
@@ -38,6 +58,16 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    insurance_providers.name,
+    CONCAT(patients.first_name, ' ', patients.last_name),
+    CASE
+        WHEN 
+    END
+    AS relationship_status
+FROM medcare.insurance_providers
+FULL OUTER JOIN medcare.patients ON insurance_providers.provider_id = patients.insurance_id
+ORDER BY
 
 -- Problem 3.4 (4 points)
 -- FULL OUTER JOIN: Department-Specialization Matrix

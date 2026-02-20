@@ -94,10 +94,16 @@ WHERE departments.name = 'Cardiology' AND EXTRACT(YEAR FROM appointments.schedul
 -- TODO: Write your SELECT statement here
 
 SELECT
-
+    name AS department_name,
+    CONCAT(doctors.first_name, ' ', doctors.last_name) AS doctor_name,
+    COUNT(appointments.appointment_id)
 FROM medcare.departments
 INNER JOIN medcare.doctors ON departments.department_id = doctors.department_id
 INNER JOIN medcare.appointments ON doctors.doctor_id = appointments.doctor_id
-GROUP BY doctors.doctor_id
-HAVING COUNT(appointments) > 5
-ORDER BY departments.name, COUNT(appointments) DESC
+GROUP BY department_name, doctor_name
+HAVING COUNT(appointments.appointment_id) > 5
+ORDER BY department_name, COUNT(appointments) DESC;
+
+-- is this whats wanted? i cant rlly tell it not super clear
+-- whether we want to see all doctors in a dept with more than 5 appts
+-- or all departments that have more than 5 appts (with the doctors those appts are assigned to)
