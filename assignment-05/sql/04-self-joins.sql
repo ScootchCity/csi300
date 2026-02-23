@@ -14,6 +14,12 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    CONCAT(doctors.first_name, ' ', doctors.last_name) AS doctor_name,
+    CONCAT(supervisors.first_name, ' ', supervisors.last_name) AS supervisor_name
+FROM doctors
+LEFT JOIN doctors supervisors ON doctors.supervisor_id = supervisors.doctor_id
+ORDER BY supervisors.last_name NULLS FIRST, doctors.last_name;
 
 -- Problem 4.2 (4 points)
 -- Organizational Hierarchy: Multiple Levels
@@ -25,6 +31,16 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    CONCAT(doctors.first_name, ' ', doctors.last_name) AS doctor_name,
+    CONCAT(l1s.first_name, ' ', l1s.last_name) AS level_1_supervisor,
+    CONCAT(l2s.first_name, ' ', l2s.last_name) AS level_2_supervisor,
+    CONCAT(l3s.first_name, ' ', l3s.last_name) AS level_3_supervisor
+FROM doctors
+LEFT JOIN doctors l1s ON doctors.supervisor_id = l1s.doctor_id
+LEFT JOIN doctors l2s ON l1s.supervisor_id = l2s.doctor_id
+LEFT JOIN doctors l3s ON l2s.supervisor_id = l3s.doctor_id
+ORDER BY l3s.last_name, l2s.last_name, l1s.last_name, doctors.last_name;
 
 -- Problem 4.3 (4 points)
 -- Self-Join: Counting Direct Reports

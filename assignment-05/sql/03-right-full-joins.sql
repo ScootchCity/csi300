@@ -61,14 +61,17 @@ ORDER BY specializations.category, specializations.name;
 
 SELECT
     insurance_providers.name,
-    CONCAT(patients.first_name, ' ', patients.last_name),
+    CONCAT(patients.first_name, ' ', patients.last_name) AS patient_name,
     CASE
-        WHEN 
+        WHEN insurance_providers.provider_id IS NOT NULL AND patients.patient_id IS NULL THEN 'Provider has no patients'
+        WHEN insurance_providers.provider_id IS NULL AND patients.patient_id IS NOT NULL THEN 'Patient is uninsured'
+        WHEN insurance_providers.provider_id IS NOT NULL AND patients.patient_id IS NOT NULL THEN 'Active relationship'
+        ELSE 'Undefined'
     END
     AS relationship_status
 FROM insurance_providers
 FULL OUTER JOIN patients ON insurance_providers.provider_id = patients.insurance_id
-ORDER BY
+ORDER BY relationship_status DESC, insurance_providers.name;
 
 -- Problem 3.4 (4 points)
 -- FULL OUTER JOIN: Department-Specialization Coverage
@@ -80,6 +83,13 @@ ORDER BY
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    departments.name AS department_name,
+    specializations.name AS specialization_name,
+    specializations.category
+FROM departments
+FULL OUTER JOIN specializations ON specializations.category = departments.name
+ORDER BY departments.name, specializations.name;
 
 -- Problem 3.5 (4 points)
 -- Data Reconciliation: Insurance Claims Check
@@ -91,3 +101,22 @@ ORDER BY
 -- Tip: Use CASE to identify missing claims
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
+
+SELECT
+    appointments.appointment_id,
+    CONCAT(patients.first_name, ' ', patients.last_name) AS patient_name,
+    CASE
+        WHEN claims.claim_id IS NULL THEN FALSE
+        ELSE TRUE
+    END
+    AS has_claim,
+    claims.status AS claim_status,
+    CASE
+        WHEN patients.insurance_id IS NOT NULL AND claims.claim_id IS NULL THEN 'Missing claim'
+    END
+    AS issue_flag
+FROM appointments
+FULL OUTER JOIN patients ON appointments.patient_id = patients.patient_id
+FULL OUTER JOIN claims ON appointments.patient_id = claims.patient_id
+WHERE appointments.status = 'completed'
+ORDER BY issue_flag, appointments.scheduled_at DESC;
