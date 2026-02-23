@@ -113,23 +113,20 @@ FULL OUTER JOIN `insurance_providers` with `patients` on `insurance_id`. Use a C
 ---
 
 ### Problem 3.4 (4 points)
-**FULL OUTER JOIN: Department-Specialization Matrix**
+**FULL OUTER JOIN: Department-Specialization Coverage**
 
-Using a creative application of FULL OUTER JOIN, create a query that shows the relationship between departments and specializations. Many specializations should logically align with certain departments (e.g., "Interventional Cardiology" with "Cardiology" department).
+Using FULL OUTER JOIN, create a query that shows how departments and specializations relate to each other. Each specialization has a `category` column that corresponds to a department name (e.g., category 'Cardiology' maps to the Cardiology department).
 
-Use FULL OUTER JOIN between `departments` and `specializations` where the specialization name contains the department name (using ILIKE for case-insensitive matching).
+Join `departments` and `specializations` on `specializations.category = departments.name` to see which departments have specializations and list all matches.
 
-**Expected columns:** `department_name`, `specialization_name`, `match_status`
+**Expected columns:** `department_name`, `specialization_name`, `category`
 
-Where `match_status` is:
-- 'Matched' when both exist and names align
-- 'Department only' when department has no matching specializations
-- 'Specialization only' when specialization has no matching department
+Order by department name, then by specialization name.
 
 <details>
 <summary>💡 Hint</summary>
 
-This is a conceptual join using: `FULL OUTER JOIN specializations s ON s.name ILIKE '%' || d.name || '%' OR s.name ILIKE d.name || '%'`
+Use: `FULL OUTER JOIN specializations s ON s.category = d.name`. Since every specialization category maps to a department in this dataset, you won't see unmatched rows—but the FULL OUTER JOIN ensures they would appear if the data changed.
 
 </details>
 

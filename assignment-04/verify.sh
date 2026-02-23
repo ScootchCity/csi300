@@ -25,7 +25,7 @@ DB_SCHEMA="public"
 if [ -n "$PGHOST" ]; then
     RUN_MODE="container"
     DB_HOST="$PGHOST"
-    SQL_DIR="/sql"
+    SQL_DIR="/app/sql"
 else
     RUN_MODE="host"
     SQL_DIR="./sql"

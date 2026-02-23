@@ -6,7 +6,7 @@
 
 -- Problem 4.1 (4 points)
 -- Basic Self-Join: Doctor-Supervisor Pairs
--- Return: doctor_name, doctor_title, supervisor_name, supervisor_title
+-- Return: doctor_name, supervisor_name
 -- Include: All doctors, even those without supervisors
 -- Order by: supervisor last_name (NULLS FIRST), then doctor last_name
 -- Table: doctors (self-join)
@@ -28,7 +28,7 @@
 
 -- Problem 4.3 (4 points)
 -- Self-Join: Counting Direct Reports
--- Return: supervisor_name, title, department_name, direct_report_count
+-- Return: supervisor_name, department_name, direct_report_count
 -- Filter: Only active doctors
 -- Order by: direct_report_count descending, then last_name
 -- Tables: doctors (self-join), departments

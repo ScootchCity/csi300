@@ -2,8 +2,6 @@
 -- MedCare Seed Data - Part 6: Lab Results
 -- =============================================================================
 
-SET search_path TO medcare, public;
-
 -- Lab Results (linked to patients, tests, and ordering doctors)
 -- Schema: patient_id, test_id, doctor_id, appointment_id, ordered_at, collected_at, resulted_at, result_value, is_abnormal, status, notes
 INSERT INTO medcare.lab_results (patient_id, test_id, doctor_id, appointment_id, ordered_at, collected_at, resulted_at, result_value, is_abnormal, status, notes) VALUES

@@ -2,8 +2,6 @@
 -- MedCare Seed Data - Part 3: Patients
 -- =============================================================================
 
-SET search_path TO medcare, public;
-
 -- Patients (some with insurance, some without for LEFT JOIN practice)
 INSERT INTO medcare.patients (first_name, last_name, date_of_birth, gender, email, phone, address, city, state, zip_code, insurance_id, policy_number, emergency_contact_name, emergency_contact_phone, blood_type, allergies, is_active) VALUES
 -- Patients with insurance

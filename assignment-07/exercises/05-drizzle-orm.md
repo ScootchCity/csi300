@@ -1,4 +1,6 @@
-# Exercise 5: Drizzle ORM (20 points)
+# Bonus Exercise 5: Drizzle ORM (20 bonus points)
+
+> This exercise is **optional** and counts as **bonus** points. It is not required for the core assignment.
 
 ## Learning Objectives
 
@@ -25,7 +27,7 @@ ORMs (Object-Relational Mappers) provide a type-safe way to interact with databa
 cd drizzle
 ```
 
-### Step 2: Install dependencies
+### Step 2: Install dependencies (optional)
 
 ```bash
 npm install
@@ -38,7 +40,7 @@ Ensure Docker containers are running:
 docker compose up -d
 ```
 
-### Step 4: Run the initial test
+### Step 4: Run the initial test (optional)
 
 ```bash
 npm run test:connection
@@ -293,7 +295,7 @@ npm test
 | 5.3 | 5 | Joins return correct structure, all relations included |
 | 5.4 | 4 | Aggregations calculate correctly, proper grouping |
 | 5.5 | 3 | Transaction creates both order and items atomically |
-| **Total** | **20** | |
+| **Total (bonus)** | **20** | |
 
 ## Helpful Resources
 

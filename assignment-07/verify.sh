@@ -21,7 +21,7 @@ DB_NAME="${PGDATABASE:-postgres}"
 if [ -n "$PGHOST" ]; then
     RUN_MODE="container"
     DB_HOST="$PGHOST"
-    SQL_DIR="/sql"
+    SQL_DIR="/app/sql"
 else
     RUN_MODE="host"
     SQL_DIR="./sql"
@@ -30,10 +30,14 @@ fi
 OUTPUT_DIR="/tmp/output"
 TOTAL_POINTS=0
 MAX_POINTS=100
+BONUS_POINTS=0
+MAX_BONUS=20
 
 echo "========================================"
 echo "  PrecisionParts Assignment 7 - Verification"
 echo "========================================"
+echo ""
+echo "Note: Drizzle ORM (Exercise 5) is an optional bonus and is not required."
 echo ""
 
 mkdir -p "$OUTPUT_DIR"
@@ -66,6 +70,33 @@ print_result() {
     else
         echo -e "${RED}FAIL${NC}: $_test_name (0/$_points pts)"
     fi
+}
+
+print_bonus_result() {
+    _test_name=$1
+    _passed=$2
+    _points=$3
+    if [ "$_passed" = "true" ]; then
+        echo -e "${GREEN}BONUS PASS${NC}: $_test_name (+$_points pts)"
+        BONUS_POINTS=$((BONUS_POINTS + _points))
+    else
+        echo -e "${YELLOW}BONUS SKIP${NC}: $_test_name (0/$_points pts)"
+    fi
+}
+
+run_bonus_cmd() {
+    local log_file=$1
+    shift
+    if [ -z "$DRIZZLE_DIR" ]; then
+        return 1
+    fi
+    pushd "$DRIZZLE_DIR" >/dev/null || return 1
+    set +e
+    "$@" > "$log_file" 2>&1
+    local status=$?
+    set -e
+    popd >/dev/null || true
+    return $status
 }
 
 # ============================================
@@ -353,13 +384,97 @@ fi
 echo ""
 
 # ============================================
+# STEP 7: Bonus Exercise 5 - Drizzle ORM (20 pts)
+# ============================================
+echo "----------------------------------------"
+echo "Step 7: Bonus Exercise 5 - Drizzle ORM (20 pts)"
+echo "----------------------------------------"
+
+if [ -d "/app" ]; then
+    BASE_DIR="/app"
+else
+    BASE_DIR="."
+fi
+
+DRIZZLE_DIR="$BASE_DIR/drizzle"
+PACKAGE_JSON="$DRIZZLE_DIR/package.json"
+NODE_MODULES_DIR="$DRIZZLE_DIR/node_modules"
+
+if [ -f "$PACKAGE_JSON" ]; then
+    if ! command -v npm >/dev/null 2>&1; then
+        echo -e "${YELLOW}BONUS SKIP${NC}: npm not available (0/20 pts)"
+    else
+        INSTALL_OK=true
+        if [ ! -d "$NODE_MODULES_DIR" ]; then
+            INSTALL_LOG="$OUTPUT_DIR/drizzle_install.txt"
+            echo "Installing Drizzle dependencies..."
+            if ! run_bonus_cmd "$INSTALL_LOG" npm install; then
+                echo -e "${YELLOW}BONUS SKIP${NC}: Drizzle dependencies install failed (0/20 pts)"
+                echo -e "${YELLOW}BONUS SKIP${NC}: Check $INSTALL_LOG for details"
+                INSTALL_OK=false
+            fi
+        fi
+
+        if [ "$INSTALL_OK" = "true" ]; then
+            CONN_LOG="$OUTPUT_DIR/drizzle_connection.txt"
+            if run_bonus_cmd "$CONN_LOG" npm run test:connection; then
+                print_bonus_result "Drizzle connection test" "true" 0
+
+            CRUD_LOG="$OUTPUT_DIR/drizzle_crud.txt"
+            if run_bonus_cmd "$CRUD_LOG" npm run test:crud; then
+                print_bonus_result "5.1 CRUD tests" "true" 4
+            else
+                print_bonus_result "5.1 CRUD tests" "false" 4
+            fi
+
+            FILTERS_LOG="$OUTPUT_DIR/drizzle_filters.txt"
+            if run_bonus_cmd "$FILTERS_LOG" npm run test:filters; then
+                print_bonus_result "5.2 Filter tests" "true" 4
+            else
+                print_bonus_result "5.2 Filter tests" "false" 4
+            fi
+
+            JOINS_LOG="$OUTPUT_DIR/drizzle_joins.txt"
+            if run_bonus_cmd "$JOINS_LOG" npm run test:joins; then
+                print_bonus_result "5.3 Joins tests" "true" 5
+            else
+                print_bonus_result "5.3 Joins tests" "false" 5
+            fi
+
+            AGG_LOG="$OUTPUT_DIR/drizzle_aggregation.txt"
+            if run_bonus_cmd "$AGG_LOG" npm run test:aggregation; then
+                print_bonus_result "5.4 Aggregation tests" "true" 4
+            else
+                print_bonus_result "5.4 Aggregation tests" "false" 4
+            fi
+
+            TX_LOG="$OUTPUT_DIR/drizzle_transactions.txt"
+            if run_bonus_cmd "$TX_LOG" npm run test:transactions; then
+                print_bonus_result "5.5 Transaction tests" "true" 3
+            else
+                print_bonus_result "5.5 Transaction tests" "false" 3
+            fi
+            else
+                print_bonus_result "Drizzle connection test" "false" 0
+                echo -e "${YELLOW}BONUS SKIP${NC}: Drizzle tests skipped due to connection failure"
+            fi
+        fi
+    fi
+else
+    echo -e "${YELLOW}BONUS SKIP${NC}: Drizzle package.json not found (0/20 pts)"
+fi
+echo ""
+
+# ============================================
 # FINAL SCORE
 # ============================================
 echo "========================================"
 echo "           FINAL SCORE"
 echo "========================================"
 echo ""
-echo -e "Total Points: ${GREEN}$TOTAL_POINTS${NC} / $MAX_POINTS"
+echo -e "Total Points (required): ${GREEN}$TOTAL_POINTS${NC} / $MAX_POINTS"
+echo -e "Bonus Points: ${GREEN}$BONUS_POINTS${NC} / $MAX_BONUS"
+echo -e "Overall: ${GREEN}$((TOTAL_POINTS + BONUS_POINTS))${NC} / $((MAX_POINTS + MAX_BONUS))"
 echo ""
 
 if [ $TOTAL_POINTS -ge 90 ]; then

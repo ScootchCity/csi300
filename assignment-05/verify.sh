@@ -21,7 +21,7 @@ DB_NAME="${PGDATABASE:-postgres}"
 if [ -n "$PGHOST" ]; then
     RUN_MODE="container"
     DB_HOST="$PGHOST"
-    SQL_DIR="/sql"
+    SQL_DIR="/app/sql"
 else
     RUN_MODE="host"
     SQL_DIR="./sql"
@@ -99,14 +99,14 @@ else
 fi
 echo -e "${GREEN}PASS:${NC} Database connection successful"
 
-# Verify medcare schema
-PATIENT_COUNT=$(run_sql "SELECT COUNT(*) FROM medcare.patients;")
+# Verify database tables
+PATIENT_COUNT=$(run_sql "SELECT COUNT(*) FROM patients;")
 PATIENT_COUNT=${PATIENT_COUNT:-0}
 if [ "$PATIENT_COUNT" -lt 1 ]; then
-    echo -e "${RED}Error: MedCare schema not initialized properly.${NC}"
+    echo -e "${RED}Error: MedCare database not initialized properly.${NC}"
     exit 1
 fi
-echo -e "${GREEN}PASS:${NC} MedCare schema loaded ($PATIENT_COUNT patients)"
+echo -e "${GREEN}PASS:${NC} MedCare database loaded ($PATIENT_COUNT patients)"
 echo ""
 
 # ============================================
@@ -133,13 +133,13 @@ if [ $FILES_MISSING -eq 5 ]; then
 fi
 
 # Pre-compute expected values from database
-COMPLETED_APPTS=$(run_sql "SELECT COUNT(*) FROM medcare.appointments WHERE status = 'completed';")
-ACTIVE_DOCTORS=$(run_sql "SELECT COUNT(*) FROM medcare.doctors WHERE is_active = true;")
-ALL_DOCTORS=$(run_sql "SELECT COUNT(*) FROM medcare.doctors;")
-UNINSURED=$(run_sql "SELECT COUNT(*) FROM medcare.patients WHERE insurance_id IS NULL;")
-ALL_PATIENTS=$(run_sql "SELECT COUNT(*) FROM medcare.patients;")
-ALL_DEPTS=$(run_sql "SELECT COUNT(*) FROM medcare.departments;")
-ALL_PROVIDERS=$(run_sql "SELECT COUNT(*) FROM medcare.insurance_providers;")
+COMPLETED_APPTS=$(run_sql "SELECT COUNT(*) FROM appointments WHERE status = 'completed';")
+ACTIVE_DOCTORS=$(run_sql "SELECT COUNT(*) FROM doctors WHERE is_active = true;")
+ALL_DOCTORS=$(run_sql "SELECT COUNT(*) FROM doctors;")
+UNINSURED=$(run_sql "SELECT COUNT(*) FROM patients WHERE insurance_id IS NULL;")
+ALL_PATIENTS=$(run_sql "SELECT COUNT(*) FROM patients;")
+ALL_DEPTS=$(run_sql "SELECT COUNT(*) FROM departments;")
+ALL_PROVIDERS=$(run_sql "SELECT COUNT(*) FROM insurance_providers;")
 
 # ============================================
 # STEP 3: Exercise 1 - Inner Joins (20 pts)

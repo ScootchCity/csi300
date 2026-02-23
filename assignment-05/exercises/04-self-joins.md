@@ -60,7 +60,7 @@ The `doctors` table has a hierarchical structure:
 
 Write a query that shows each doctor along with their direct supervisor's name. Doctors without supervisors (like the CMO) should still appear with NULL for the supervisor name.
 
-**Expected columns:** `doctor_name`, `doctor_title`, `supervisor_name`, `supervisor_title`
+**Expected columns:** `doctor_name`, `supervisor_name`
 
 Order by supervisor name (NULLs first), then by doctor name.
 
@@ -108,7 +108,7 @@ LEFT JOIN doctors l3 ON l2.supervisor_id = l3.id
 
 Write a query that shows how many direct reports each supervisor has. Include doctors who have no direct reports (show 0). Only include active doctors.
 
-**Expected columns:** `supervisor_name`, `title`, `department_name`, `direct_report_count`
+**Expected columns:** `supervisor_name`, `department_name`, `direct_report_count`
 
 Order by direct report count descending, then by supervisor name.
 

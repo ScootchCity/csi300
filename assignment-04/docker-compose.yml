@@ -34,8 +34,8 @@ services:
     image: postgres:16-alpine
     container_name: verify
     volumes:
-      - ./sql:/sql:ro
-      - ./verify.sh:/verify.sh:ro
+      - .:/app
+    working_dir: /app
     environment:
       PGHOST: postgres
       PGUSER: postgres
@@ -44,7 +44,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    entrypoint: ["/bin/bash", "/verify.sh"]
+    entrypoint: ["/bin/sh", "-c", "sed -i 's/\r$//' /app/verify.sh && bash /app/verify.sh"]
     profiles:
       - tools
 

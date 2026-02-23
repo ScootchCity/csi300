@@ -24,7 +24,7 @@ if [ -n "$PGHOST" ]; then
     # Running inside container (docker-compose run verify)
     RUN_MODE="container"
     DB_HOST="$PGHOST"
-    SQL_DIR="/sql"
+    SQL_DIR="/app/sql"
 else
     # Running on host (GitHub Actions or local bash)
     RUN_MODE="host"

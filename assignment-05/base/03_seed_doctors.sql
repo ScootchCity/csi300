@@ -2,8 +2,6 @@
 -- MedCare Seed Data - Part 2: Doctors with Hierarchy
 -- =============================================================================
 
-SET search_path TO medcare, public;
-
 -- Doctors (with supervisor hierarchy for self-join practice)
 INSERT INTO medcare.doctors (first_name, last_name, email, phone, department_id, hire_date, license_number, supervisor_id, is_active) VALUES
 -- Chief Medical Officer (no supervisor)
