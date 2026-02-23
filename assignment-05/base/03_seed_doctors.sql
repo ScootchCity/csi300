@@ -3,7 +3,7 @@
 -- =============================================================================
 
 -- Doctors (with supervisor hierarchy for self-join practice)
-INSERT INTO medcare.doctors (first_name, last_name, email, phone, department_id, hire_date, license_number, supervisor_id, is_active) VALUES
+INSERT INTO doctors (first_name, last_name, email, phone, department_id, hire_date, license_number, supervisor_id, is_active) VALUES
 -- Chief Medical Officer (no supervisor)
 ('Margaret', 'Chen', 'margaret.chen@medcare.com', '802-555-1000', 5, '2010-03-15', 'VT-MD-10001', NULL, true),
 
@@ -72,21 +72,21 @@ INSERT INTO medcare.doctors (first_name, last_name, email, phone, department_id,
 ON CONFLICT DO NOTHING;
 
 -- Update department heads
-UPDATE medcare.departments SET head_doctor_id = 2 WHERE department_id = 1;
-UPDATE medcare.departments SET head_doctor_id = 3 WHERE department_id = 2;
-UPDATE medcare.departments SET head_doctor_id = 4 WHERE department_id = 3;
-UPDATE medcare.departments SET head_doctor_id = 5 WHERE department_id = 4;
-UPDATE medcare.departments SET head_doctor_id = 6 WHERE department_id = 5;
-UPDATE medcare.departments SET head_doctor_id = 7 WHERE department_id = 6;
-UPDATE medcare.departments SET head_doctor_id = 8 WHERE department_id = 7;
-UPDATE medcare.departments SET head_doctor_id = 9 WHERE department_id = 8;
-UPDATE medcare.departments SET head_doctor_id = 10 WHERE department_id = 9;
-UPDATE medcare.departments SET head_doctor_id = 11 WHERE department_id = 10;
-UPDATE medcare.departments SET head_doctor_id = 12 WHERE department_id = 11;
-UPDATE medcare.departments SET head_doctor_id = 13 WHERE department_id = 12;
+UPDATE departments SET head_doctor_id = 2 WHERE department_id = 1;
+UPDATE departments SET head_doctor_id = 3 WHERE department_id = 2;
+UPDATE departments SET head_doctor_id = 4 WHERE department_id = 3;
+UPDATE departments SET head_doctor_id = 5 WHERE department_id = 4;
+UPDATE departments SET head_doctor_id = 6 WHERE department_id = 5;
+UPDATE departments SET head_doctor_id = 7 WHERE department_id = 6;
+UPDATE departments SET head_doctor_id = 8 WHERE department_id = 7;
+UPDATE departments SET head_doctor_id = 9 WHERE department_id = 8;
+UPDATE departments SET head_doctor_id = 10 WHERE department_id = 9;
+UPDATE departments SET head_doctor_id = 11 WHERE department_id = 10;
+UPDATE departments SET head_doctor_id = 12 WHERE department_id = 11;
+UPDATE departments SET head_doctor_id = 13 WHERE department_id = 12;
 
 -- Doctor Specializations (many-to-many)
-INSERT INTO medcare.doctor_specializations (doctor_id, specialization_id, is_primary, certified_at, expires_at) VALUES
+INSERT INTO doctor_specializations (doctor_id, specialization_id, is_primary, certified_at, expires_at) VALUES
 -- CMO
 (1, 12, true, '2008-06-15', '2028-06-15'),
 (1, 13, false, '2012-03-01', '2027-03-01'),

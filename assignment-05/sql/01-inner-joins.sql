@@ -20,9 +20,9 @@ SELECT
     scheduled_at,
     visit_type,
     reason
-FROM medcare.appointments
-INNER JOIN medcare.patients ON appointments.patient_id = patients.patient_id
-INNER JOIN medcare.doctors ON appointments.doctor_id = doctors.doctor_id
+FROM appointments
+INNER JOIN patients ON appointments.patient_id = patients.patient_id
+INNER JOIN doctors ON appointments.doctor_id = doctors.doctor_id
 ORDER BY scheduled_at DESC;
 
 -- Problem 1.2 (4 points)
@@ -39,8 +39,8 @@ SELECT
     departments.name AS department_name,
     CONCAT(departments.building, ' ', departments.floor) AS location, --TODO: check what is meant by location
     doctors.hire_date
-FROM medcare.doctors
-INNER JOIN medcare.departments ON doctors.department_id = departments.department_id
+FROM doctors
+INNER JOIN departments ON doctors.department_id = departments.department_id
 WHERE doctors.is_active = TRUE
 ORDER BY departments.name, doctors.last_name;
 
@@ -58,9 +58,9 @@ SELECT
     specializations.name AS specialization_name,
     doctor_specializations.is_primary,
     doctor_specializations.certified_at AS certified_date
-FROM medcare.doctors
-INNER JOIN medcare.doctor_specializations ON doctors.doctor_id = doctor_specializations.doctor_id
-INNER JOIN medcare.specializations ON doctor_specializations.specialization_id = specializations.specialization_id
+FROM doctors
+INNER JOIN doctor_specializations ON doctors.doctor_id = doctor_specializations.doctor_id
+INNER JOIN specializations ON doctor_specializations.specialization_id = specializations.specialization_id
 ORDER BY doctors.last_name, doctor_specializations,is_primary, specializations.name;
 
 -- Problem 1.4 (4 points)
@@ -78,10 +78,10 @@ SELECT
     appointments.scheduled_at,
     appointments.visit_type,
     appointments.reason
-FROM medcare.appointments
-INNER JOIN medcare.patients ON appointments.patient_id = patients.patient_id
-INNER JOIN medcare.doctors ON appointments.doctor_id = doctors.doctor_id
-INNER JOIN medcare.departments ON doctors.department_id = departments.department_id
+FROM appointments
+INNER JOIN patients ON appointments.patient_id = patients.patient_id
+INNER JOIN doctors ON appointments.doctor_id = doctors.doctor_id
+INNER JOIN departments ON doctors.department_id = departments.department_id
 WHERE departments.name = 'Cardiology' AND EXTRACT(YEAR FROM appointments.scheduled_at) = 2024;
 
 -- Problem 1.5 (4 points)
@@ -98,9 +98,9 @@ SELECT
     name AS department_name,
     CONCAT(doctors.first_name, ' ', doctors.last_name) AS doctor_name,
     COUNT(appointments.appointment_id)
-FROM medcare.departments
-INNER JOIN medcare.doctors ON departments.department_id = doctors.department_id
-INNER JOIN medcare.appointments ON doctors.doctor_id = appointments.doctor_id
+FROM departments
+INNER JOIN doctors ON departments.department_id = doctors.department_id
+INNER JOIN appointments ON doctors.doctor_id = appointments.doctor_id
 GROUP BY department_name, doctor_name
 HAVING COUNT(appointments.appointment_id) > 5
 ORDER BY department_name, COUNT(appointments) DESC;

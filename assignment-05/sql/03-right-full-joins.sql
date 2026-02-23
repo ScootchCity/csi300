@@ -18,8 +18,8 @@ SELECT
     departments.name AS department_name,
     CONCAT (departments.building, ' ', departments.floor) AS location,
     COUNT(doctor_id) AS doctor_count
-FROM medcare.doctors
-RIGHT OUTER JOIN medcare.departments ON doctors.department_id = departments.department_id
+FROM doctors
+RIGHT OUTER JOIN departments ON doctors.department_id = departments.department_id
 GROUP BY departments.name, location
 ORDER BY doctor_count DESC, department_name;
 
@@ -41,9 +41,9 @@ SELECT
         NULLIF(CONCAT(doctors.first_name, ' ', doctors.last_name), ' '),
         'No certified doctors'
     ) AS doctor_name
-FROM medcare.doctors
-RIGHT OUTER JOIN medcare.doctor_specializations ON doctors.doctor_id = doctor_specializations.doctor_id
-RIGHT OUTER JOIN medcare.specializations ON doctor_specializations.specialization_id = specializations.specialization_id
+FROM doctors
+RIGHT OUTER JOIN doctor_specializations ON doctors.doctor_id = doctor_specializations.doctor_id
+RIGHT OUTER JOIN specializations ON doctor_specializations.specialization_id = specializations.specialization_id
 ORDER BY specializations.category, specializations.name;
 
 -- Problem 3.3 (4 points)
@@ -66,8 +66,8 @@ SELECT
         WHEN 
     END
     AS relationship_status
-FROM medcare.insurance_providers
-FULL OUTER JOIN medcare.patients ON insurance_providers.provider_id = patients.insurance_id
+FROM insurance_providers
+FULL OUTER JOIN patients ON insurance_providers.provider_id = patients.insurance_id
 ORDER BY
 
 -- Problem 3.4 (4 points)
