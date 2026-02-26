@@ -52,15 +52,27 @@ ORDER BY l3s.last_name, l2s.last_name, l1s.last_name, doctors.last_name;
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+--misunderstood the structure and wrote this one all wrong, fixed in the other non commented
+--SELECT
+--    CONCAT(supervisors.first_name, ' ', supervisors.last_name) AS supervisor_name,
+--    departments.name AS department_name,
+--    COUNT(doctors.doctor_id) AS direct_report_count
+--FROM doctors
+--LEFT JOIN doctors supervisors ON doctors.supervisor_id = supervisors.doctor_id
+--LEFT JOIN departments ON doctors.department_id = departments.department_id
+--WHERE doctors.is_active = TRUE
+--GROUP BY supervisor_name, department_name
+--ORDER BY direct_report_count, supervisor_name;
+
 SELECT
-    CONCAT(supervisors.first_name, ' ', supervisors.last_name) AS supervisor_name,
+    CONCAT(doctors.first_name, ' ', doctors.last_name) AS supervisor_name,
     departments.name AS department_name,
-    COUNT(doctors.doctor_id) AS direct_report_count
+    COUNT(supervisees.doctor_id) AS direct_report_count
 FROM doctors
-LEFT JOIN doctors supervisors ON doctors.supervisor_id = supervisors.doctor_id
+LEFT JOIN doctors supervisees ON doctors.doctor_id = supervisees.supervisor_id
 LEFT JOIN departments ON doctors.department_id = departments.department_id
 WHERE doctors.is_active = TRUE
-GROUP BY CONCAT(supervisors.first_name, ' ', supervisors.last_name), department_name
+GROUP BY supervisor_name, department_name
 ORDER BY direct_report_count, supervisor_name;
 
 -- Problem 4.4 (4 points)

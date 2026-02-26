@@ -59,6 +59,7 @@ LEFT JOIN doctors supervisors ON doctors.supervisor_id = supervisors.doctor_id
 LEFT JOIN appointments ON doctors.doctor_id = appointments.doctor_id
 LEFT JOIN diagnoses ON appointments.appointment_id = diagnoses.appointment_id
 LEFT JOIN prescriptions ON diagnoses.diagnosis_id = prescriptions.diagnosis_id
+WHERE doctors.is_active = TRUE
 GROUP BY doctor_name, department, supervisor_name
 ORDER BY completed_appointments DESC;
 

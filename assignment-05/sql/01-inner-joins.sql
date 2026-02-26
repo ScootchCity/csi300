@@ -23,6 +23,7 @@ SELECT
 FROM appointments
 INNER JOIN patients ON appointments.patient_id = patients.patient_id
 INNER JOIN doctors ON appointments.doctor_id = doctors.doctor_id
+WHERE appointments.status = 'completed'
 ORDER BY scheduled_at DESC;
 
 -- Problem 1.2 (4 points)
