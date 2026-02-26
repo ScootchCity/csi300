@@ -25,7 +25,7 @@
 
 
 -- Task 3.3: INTERSECT - Multi-Clinic Pets (4 points)
--- Find pets that visited both Burlington (clinic_id = 1) and Williston (clinic_id = 2) clinics
+-- Find pets that visited both Burlington Downtown (clinic_id = 1) and Williston (clinic_id = 3) clinics
 -- Return: pet_name, species_name, owner_name
 -- Tables: pets, species, owners, appointments
 -- Tip: Use INTERSECT to find pet_ids that appear in both clinic's appointments

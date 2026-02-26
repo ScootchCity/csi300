@@ -89,6 +89,14 @@ INSERT INTO treatments (record_id, procedure_id, quantity, unit_price, notes, cr
 (48, 25, 1, 85.00, 'IV fluid support', '2024-09-25 20:00:00')
 ON CONFLICT DO NOTHING;
 
+-- In-clinic medication administrations (Task 3.5 Part B: medications given as treatment but never prescribed)
+-- Schema: record_id, procedure_id, medication_id, quantity, unit_price, notes, created_at
+INSERT INTO treatments (record_id, procedure_id, medication_id, quantity, unit_price, notes, created_at) VALUES
+(10, NULL, 25, 1, 85.00, 'Cytopoint injection - in-clinic allergy treatment', '2023-05-08 10:30:00'),
+(27, NULL, 25, 1, 85.00, 'Cytopoint injection - new patient allergy consult', '2024-03-15 10:00:00'),
+(18, NULL, 28, 1, 15.00, 'Cosequin sample - joint support', '2023-09-02 10:15:00'),
+(31, NULL, 25, 1, 85.00, 'Cytopoint injection - dermatology visit', '2024-05-05 10:30:00');
+
 -- Vaccinations
 -- Schema: pet_id, vaccine_id, administered_by, record_id, administered_at, next_due_date, batch_number, notes
 INSERT INTO vaccinations (pet_id, vaccine_id, administered_by, administered_at, next_due_date, batch_number, notes) VALUES

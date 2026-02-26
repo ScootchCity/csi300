@@ -119,15 +119,19 @@ Find all species that have NO vaccines defined for them in the vaccines table. D
 
 Use NOT EXISTS.
 
-### Task 2.4: ANY Operator - Above Average Invoices (4 points)
+### Task 2.4: ANY Operator - Above Emergency Minimum (4 points)
 
-Find all invoices where the total is greater than ANY invoice from the Emergency 24/7 clinic (clinic_id = 4). Display:
+Find invoices whose total is **greater than at least one** emergency clinic invoice. In other words: invoices that beat the *cheapest* emergency visit (since emergency visits tend to be expensive, this filters for the higher-priced invoices).
+
+Display:
 - `invoice_number`
 - `total`
 - `clinic_name` (from the appointment's clinic)
 
-Exclude invoices from the emergency clinic itself.
+Exclude invoices from the emergency clinic itself (clinic_id = 4).
 Order by total descending.
+
+Hint: `> ANY (subquery)` is true when the value is greater than the **minimum** returned by the subquery.
 
 ### Task 2.5: ALL Operator - Top Performers (4 points)
 
@@ -155,7 +159,7 @@ Should return veterinarians who saw patients in 2024 - likely 4-5 vets based on 
 Returns species like reptiles, amphibians, or exotic pets that may not have specific vaccines in the system.
 
 ### Task 2.4
-Returns most invoices since emergency visits tend to be expensive, but excludes the emergency clinic's own invoices.
+Returns the higher-priced invoices (non-emergency only) whose total exceeds the cheapest emergency visit. Expect a smaller result set since the bar is high.
 
 ### Task 2.5
 The top-performing vet(s) - may return 1 or more if there are ties.

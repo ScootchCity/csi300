@@ -8,7 +8,10 @@
 -- Return: month_name, monthly_revenue, running_total, above_average (boolean)
 -- Filter: Year 2024, paid invoices only
 -- Tables: invoices
--- Tip: Use WITH clause for monthly_revenue, then calculate running total with window function
+-- Tip: Use TO_CHAR(invoice_date, 'Month') or EXTRACT(MONTH FROM invoice_date) to get
+--       the month, and GROUP BY that expression — do NOT group by invoice_date itself,
+--       or you'll get one row per date instead of one row per month.
+--       Use WITH clause for monthly_revenue, then calculate running total with window function
 -- -----------------------------------------------------------------------------
 -- TODO: Write your CTE and SELECT statement here
 
@@ -39,9 +42,16 @@
 -- Task 4.4: Recursive CTE - Organizational Tree (3 points)
 -- Count direct and total reports per manager
 -- Return: manager_name, role, direct_reports, total_reports
+--   direct_reports = number of staff who report directly to this manager
+--   total_reports  = number of all subordinates (direct + indirect, at any depth)
 -- Order by: total_reports descending
 -- Tables: staff
--- Tip: Use recursive CTE to find all subordinates, then aggregate counts
+-- Tip: Build the recursive CTE walking DOWNWARD through the tree. Each row should
+--       carry the original manager_id so you can attribute deep subordinates back
+--       to their top-level manager. Base case: all (manager, direct_report) pairs.
+--       Recursive case: find each subordinate's own reports, keeping the original
+--       manager_id. Then GROUP BY manager to count total_reports.
+--       direct_reports can be a simple count of staff WHERE reports_to = manager_id.
 -- -----------------------------------------------------------------------------
 -- TODO: Write your recursive CTE here
 

@@ -33,8 +33,8 @@
 -- TODO: Write your SELECT statement here
 
 
--- Task 2.4: ANY Operator - Above Average Invoices (4 points)
--- Find invoices greater than ANY emergency clinic invoice
+-- Task 2.4: ANY Operator - Above Emergency Minimum (4 points)
+-- Find invoices greater than at least one emergency clinic invoice (i.e., > min emergency total)
 -- Return: invoice_number, total, clinic_name
 -- Filter: Exclude emergency clinic (clinic_id = 4) from results
 -- Order by: total descending

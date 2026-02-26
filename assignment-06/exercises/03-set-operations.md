@@ -99,7 +99,7 @@ Order by event_date.
 
 ### Task 3.3: INTERSECT - Multi-Clinic Pets (4 points)
 
-Find pets that have visited BOTH the Burlington Main Clinic (clinic_id = 1) AND the Williston Branch (clinic_id = 2). 
+Find pets that have visited BOTH the Burlington Downtown clinic (clinic_id = 1) AND the Williston branch (clinic_id = 3). 
 
 Display:
 - `pet_name`

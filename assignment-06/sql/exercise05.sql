@@ -47,6 +47,12 @@
 -- Filter: status IN ('scheduled', 'confirmed')
 -- Add: WITH CHECK OPTION
 --
+-- IMPORTANT: WITH CHECK OPTION requires the view to be "automatically updatable",
+-- which means the FROM clause must reference exactly ONE base table (no JOINs).
+-- To still display pet_name, owner_phone, vet_name, and clinic_name, use
+-- correlated scalar subqueries in the SELECT list instead of JOINs.
+-- Example: (SELECT p.pet_name FROM pets p WHERE p.pet_id = a.pet_id) AS pet_name
+--
 -- Explain in a comment what happens if someone tries to UPDATE the status
 -- to 'completed' through this view:
 -- -----------------------------------------------------------------------------

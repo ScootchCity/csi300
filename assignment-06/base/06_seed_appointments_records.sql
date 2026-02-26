@@ -70,7 +70,11 @@ INSERT INTO appointments (pet_id, vet_id, clinic_id, scheduled_at, duration_mins
 
 -- Cancelled/no-show
 (15, 7, 1, '2024-04-05 09:00:00', 30, 'cancelled', 'wellness', 'Annual checkup', '2024-03-28 10:00:00'),
-(19, 9, 2, '2024-07-15 10:00:00', 30, 'no_show', 'follow_up', 'Recheck', '2024-07-10 09:00:00')
+(19, 9, 2, '2024-07-15 10:00:00', 30, 'no_show', 'follow_up', 'Recheck', '2024-07-10 09:00:00'),
+
+-- Multi-clinic pets (Task 3.3: pets that visit both Burlington Downtown and Williston)
+(1, 7, 3, '2024-03-15 14:00:00', 30, 'completed', 'wellness', 'Visit to Williston branch', '2024-03-10 10:00:00'),
+(6, 11, 3, '2024-04-20 10:00:00', 30, 'completed', 'wellness', 'Consultation at Williston', '2024-04-15 09:00:00')
 ON CONFLICT DO NOTHING;
 
 -- Medical Records
@@ -134,3 +138,11 @@ INSERT INTO medical_records (pet_id, vet_id, appointment_id, visit_date, chief_c
 (9, 12, 47, '2024-08-10', 'Bloat symptoms', 'Gastric dilatation - no volvulus', 'Decompressed via tube. No surgery needed.', 30.5, 103.0, 150, 40, '2024-08-12', '2024-08-10 04:00:00'),
 (28, 13, 48, '2024-09-25', 'Chocolate ingestion', 'Theobromine toxicity - mild', 'Induced vomiting. Activated charcoal. Monitoring.', 45.0, 102.2, 120, 28, '2024-09-26', '2024-09-25 20:00:00')
 ON CONFLICT DO NOTHING;
+
+-- Medical records for multi-clinic appointments (Task 3.3)
+INSERT INTO medical_records (pet_id, vet_id, appointment_id, visit_date, chief_complaint, diagnosis, notes, weight_kg, temperature_f, heart_rate, respiratory_rate, follow_up_date, created_at)
+SELECT 1, 7, a.appointment_id, '2024-03-15', 'Wellness at Williston branch', 'Healthy', 'Routine check at Williston location.', 32.0, 101.4, 80, 18, NULL, '2024-03-15 14:30:00'
+FROM appointments a WHERE a.pet_id = 1 AND a.clinic_id = 3 AND a.scheduled_at = '2024-03-15 14:00:00';
+INSERT INTO medical_records (pet_id, vet_id, appointment_id, visit_date, chief_complaint, diagnosis, notes, weight_kg, temperature_f, heart_rate, respiratory_rate, follow_up_date, created_at)
+SELECT 6, 11, a.appointment_id, '2024-04-20', 'Consultation at Williston', 'Stable', 'Breathing recheck at Williston branch.', 11.5, 101.6, 108, 28, NULL, '2024-04-20 10:30:00'
+FROM appointments a WHERE a.pet_id = 6 AND a.clinic_id = 3 AND a.scheduled_at = '2024-04-20 10:00:00';
