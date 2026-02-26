@@ -52,6 +52,16 @@ ORDER BY l3s.last_name, l2s.last_name, l1s.last_name, doctors.last_name;
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    CONCAT(supervisors.first_name, ' ', supervisors.last_name) AS supervisor_name,
+    departments.name AS department_name,
+    COUNT(doctors.doctor_id) AS direct_report_count
+FROM doctors
+LEFT JOIN doctors supervisors ON doctors.supervisor_id = supervisors.doctor_id
+LEFT JOIN departments ON doctors.department_id = departments.department_id
+WHERE doctors.is_active = TRUE
+GROUP BY CONCAT(supervisors.first_name, ' ', supervisors.last_name), department_name
+ORDER BY direct_report_count, supervisor_name;
 
 -- Problem 4.4 (4 points)
 -- Cross Join: Department-Specialization Combinations
@@ -62,6 +72,15 @@ ORDER BY l3s.last_name, l2s.last_name, l1s.last_name, doctors.last_name;
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    departments.name AS department_name,
+    cj.category AS specialization_category,
+    COUNT(doctors.doctor_id)
+FROM departments
+CROSS JOIN(SELECT DISTINCT category FROM specializations) cj
+LEFT JOIN doctors ON departments.department_id = doctors.department_id
+LEFT JOIN doctor_specializations ON doctors.doctor_id = doctor_specializations.doctor_id
+GROUP BY departments.name, cj.category;
 
 -- Problem 4.5 (4 points)
 -- Self-Join: Finding Peer Doctors
@@ -72,3 +91,13 @@ ORDER BY l3s.last_name, l2s.last_name, l1s.last_name, doctors.last_name;
 -- Tip: Join d1.supervisor_id = d2.supervisor_id with d1.id < d2.id to avoid duplicates
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
+
+SELECT
+    CONCAT(d1.first_name, ' ', d1.last_name) AS doctor_name,
+    CONCAT(d2.first_name, ' ', d2.last_name) AS peer_name,
+    CONCAT(supervisor.first_name, ' ', supervisor.last_name) AS shared_supervisor
+FROM doctors supervisor
+LEFT JOIN doctors d1 ON supervisor.doctor_id = d1.supervisor_id
+INNER JOIN doctors d2 ON d1.supervisor_id = d2.supervisor_id
+WHERE d1.supervisor_id = d2.supervisor_id AND d1.doctor_id < d2.doctor_id
+ORDER BY supervisor.last_name, d1.last_name;
