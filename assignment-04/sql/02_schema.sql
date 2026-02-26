@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS modules (
 -- =============================================================================
 -- TODO: Write your CREATE TABLE statement here
 
-CREATE TABLE IF NOT EXISTS course_assignments (
+CREATE TABLE IF NOT EXISTS assignments (
     assignment_id SERIAL PRIMARY KEY,
     course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
     name VARCHAR,
