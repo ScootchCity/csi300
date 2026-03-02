@@ -56,12 +56,12 @@
 -- TODO: Write your recursive CTE here
 
 
--- Task 4.5: CTE for Complex Calculations (4 points)
--- Clinic performance comparison with rankings
--- Return: clinic_name, monthly metrics (revenue, appointments, unique_pets),
---         rankings for each metric, overall_rank
+-- Task 4.5: CTE for Readability - Complex Business Query (4 points)
+-- Find the top 3 clinics by revenue in 2024, show their most common procedure,
+-- busiest vet, and average patient weight.
+-- Return: clinic_name, total_revenue, most_common_procedure, busiest_vet, avg_patient_weight
 -- Filter: Year 2024
--- Tables: clinics, appointments, invoices
--- Tip: Use CTEs to calculate metrics, then window functions for rankings
+-- Tables: clinics, appointments, invoices, medical_records, treatments, procedures, staff, pets
+-- Tip: Use at least 3 named CTEs to break down this query logically
 -- -----------------------------------------------------------------------------
 -- TODO: Write your CTEs and SELECT statement here
