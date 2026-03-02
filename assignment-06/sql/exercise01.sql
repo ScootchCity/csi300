@@ -13,6 +13,13 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    pet_name,
+    weight_kg,
+    ROUND((SELECT AVG(weight_kg) FROM pets), 2) AS avg_all_pets,
+    ROUND((weight_kg - (SELECT AVG(weight_kg) FROM pets)), 2) AS weight_difference
+FROM pets
+ORDER BY weight_difference DESC;
 
 -- Task 1.2: Scalar Subquery in WHERE (4 points)
 -- Find pets whose weight is above the average weight of their species
@@ -23,6 +30,19 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    p.pet_name,
+    species.species_name,
+    p.weight_kg
+FROM pets p
+LEFT JOIN species ON p.species_id = species.species_id
+WHERE p.weight_kg > (
+    SELECT
+        AVG(pets.weight_kg)
+    FROM pets
+    WHERE pets.species_id = p.species_id
+        )
+ORDER BY species.species_name, p.weight_kg DESC;
 
 -- Task 1.3: Using IN with Subqueries (4 points)
 -- Find owners who have pets that have been seen by the emergency clinic (clinic_id = 4)
@@ -32,6 +52,22 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    owners.first_name,
+    owners.last_name,
+    owners.email
+FROM owners
+WHERE owners.owner_id IN (
+    SELECT
+        pets.owner_id
+    FROM pets
+    WHERE pets.pet_id IN (
+        SELECT
+            appointments.pet_id
+        FROM appointments
+        WHERE appointments.clinic_id = 4
+        )
+    );
 
 -- Task 1.4: Using NOT IN (4 points)
 -- Find pets that have NEVER had a vaccination recorded
@@ -42,6 +78,19 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    pets.pet_name,
+    species.species_name,
+    CONCAT(owners.first_name, ' ', owners.last_name) AS owner_full_name
+FROM pets
+LEFT JOIN species ON pets.species_id = species.species_id
+LEFT JOIN owners ON pets.owner_id = owners.owner_id
+WHERE pets.pet_id NOT IN (
+    SELECT
+        DISTINCT vaccinations.pet_id
+    FROM vaccinations
+    )
+ORDER BY species.species_name, pets.pet_name;
 
 -- Task 1.5: Subquery in FROM Clause (Derived Table) (4 points)
 -- Calculate total revenue by clinic using a subquery in FROM
@@ -51,3 +100,13 @@
 -- Tip: Join clinics to a subquery that aggregates invoices by clinic
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
+
+SELECT
+    clinic_name,
+
+FROM (
+    SELECT
+
+    FROM clinics
+    LEFT JOIN invoices
+     )
