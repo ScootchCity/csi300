@@ -101,12 +101,3 @@ ORDER BY species.species_name, pets.pet_name;
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
-SELECT
-    clinic_name,
-
-FROM (
-    SELECT
-
-    FROM clinics
-    LEFT JOIN invoices
-     )

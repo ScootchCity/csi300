@@ -13,6 +13,10 @@
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    
+FROM pets
+WHERE pets.weight_kg IS NOT NULL
 
 -- Task 2.2: EXISTS - Active Vets (4 points)
 -- Find veterinarians who completed at least one appointment in 2024
