@@ -101,3 +101,20 @@ ORDER BY species.species_name, pets.pet_name;
 -- -----------------------------------------------------------------------------
 -- TODO: Write your SELECT statement here
 
+SELECT
+    c.clinic_name,
+    rev.total_revenue,
+    ROUND(rev.avg_invoice::NUMERIC, 2) AS avg_invoice
+FROM clinics c
+JOIN (
+    SELECT
+        a.clinic_id,
+        SUM(i.total)  AS total_revenue,
+        AVG(i.total)  AS avg_invoice
+    FROM invoices i
+    JOIN medical_records mr ON i.record_id = mr.record_id
+    JOIN appointments a     ON mr.appointment_id = a.appointment_id
+    GROUP BY a.clinic_id
+) rev ON c.clinic_id = rev.clinic_id
+ORDER BY rev.total_revenue DESC;
+
